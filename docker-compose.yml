@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: laravel-backend
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=mongodb
+      - DB_HOST=127.0.0.1
+      - DB_PORT=27017
+      - DB_DATABASE=laraveldb
+      - DB_USERNAME=app_root
+      - DB_PASSWORD=1234
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: react-frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: [ "npm", "start" ]
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: app_root
+      MONGO_INITDB_ROOT_PASSWORD: 1234
