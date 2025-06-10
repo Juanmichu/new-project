@@ -12,6 +12,7 @@ services:
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
+      - MONGODB_URI=mongodb://localhost:27017
       - DB_CONNECTION=mongodb
       - DB_HOST=127.0.0.1
       - DB_PORT=27017
@@ -34,6 +35,8 @@ services:
     container_name: mongo-db
     ports:
       - "27017:27017"
+    volumes:
+      - ./backend/mongodb_data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: app_root
       MONGO_INITDB_ROOT_PASSWORD: 1234
