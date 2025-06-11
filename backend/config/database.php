@@ -36,12 +36,9 @@ return [
             'host'     => env('DB_HOST', '127.0.0.1'),
             'port'     => env('DB_PORT', 27017),
 			'dsn' 	   => env('MONGODB_URI', 'mongodb://localhost:27017'),
-            'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
-            'options'  => [
-                'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'),
-            ],
+            'database' => env('DB_DATABASE', 'laraveldb'),
+            'username' => env('DB_USERNAME', 'app_root'),
+            'password' => env('DB_PASSWORD', '1234')
         ],
 
         'sqlite' => [
@@ -138,10 +135,7 @@ return [
     |
     */
 
-    'migrations' => [
-        'table' => 'migrations',
-        'update_date_on_publish' => true,
-    ],
+    'migrations' => 'migrations',
 
     /*
     |--------------------------------------------------------------------------

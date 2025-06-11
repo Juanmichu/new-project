@@ -2,8 +2,18 @@ FROM php:8.2-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl libpng-dev libonig-dev libxml2-dev
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libssl-dev \
+    pkg-config
 
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql zip mbstring bcmath pcntl exif gd
@@ -19,13 +29,13 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copy application files
-COPY . .
+COPY . /var/www/html
 
 # Install PHP dependencies
-RUN composer install --optimize-autoloader
+RUN composer install --optimize-autoloader --no-dev
 
-# Set permissions for Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Generate application key
+RUN php artisan key:generate
 
 USER www-data
 

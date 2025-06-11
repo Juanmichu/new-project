@@ -5,38 +5,63 @@ services:
     container_name: laravel-backend
     volumes:
       - ./backend:/var/www/html
+      - /var/www/html/vendor
     ports:
       - "8000:8000"
     depends_on:
-      - mongo
+      - mongodb
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
+      - APP_KEY=base64:zhbPBk81SFLfSLwnd7owA9bb/SfA0gxX6k5G79gk4kk=
       - MONGODB_URI=mongodb://localhost:27017
       - DB_CONNECTION=mongodb
-      - DB_HOST=127.0.0.1
+      - DB_HOST=mongodb
       - DB_PORT=27017
       - DB_DATABASE=laraveldb
       - DB_USERNAME=app_root
       - DB_PASSWORD=1234
+      - JWT_SECRET=only_for_production
+    networks:
+      - new-project-network
 
+  # React frontend
   frontend:
     build:
       context: ./frontend
     container_name: react-frontend
     volumes:
       - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000/api
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
     ports:
       - "3000:3000"
+    networks:
+      - new-project-network
     command: [ "npm", "start" ]
 
-  mongo:
-    image: mongo:latest
+  #MongoDB Database
+  mongodb:
+    image: mongo:7.0
     container_name: mongo-db
     ports:
       - "27017:27017"
     volumes:
       - ./backend/mongodb_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: app_root
-      MONGO_INITDB_ROOT_PASSWORD: 1234
+      - MONGO_INITDB_DATABASE=new_project
+      - MONGO_INITDB_ROOT_USERNAME=app_root
+      - MONGO_INITDB_ROOT_PASSWORD=1234
+    networks:
+      - new-project-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  new-project-network:
+    driver: bridge
