@@ -14,14 +14,17 @@ services:
       - APP_ENV=local
       - APP_DEBUG=true
       - APP_KEY=base64:zhbPBk81SFLfSLwnd7owA9bb/SfA0gxX6k5G79gk4kk=
-      - MONGODB_URI=mongodb://localhost:27017
+      - MONGODB_URI=mongodb://mongodb:27017
       - DB_CONNECTION=mongodb
       - DB_HOST=mongodb
       - DB_PORT=27017
       - DB_DATABASE=laraveldb
       - DB_USERNAME=app_root
       - DB_PASSWORD=1234
+      - DB_AUTHENTICATION_DATABASE=admin
       - JWT_SECRET=only_for_production
+    extra_hosts:
+      - backend-laravel.com=127.0.0.1
     networks:
       - new-project-network
 
@@ -36,6 +39,8 @@ services:
     environment:
       - REACT_APP_API_URL=http://localhost:8000/api
       - CHOKIDAR_USEPOLLING=true
+    extra_hosts:
+      - frontend-react.com=127.0.0.1
     depends_on:
       - backend
     ports:
@@ -51,9 +56,9 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./backend/mongodb_data:/data/db
+      - mongodb_data:/data/db
     environment:
-      - MONGO_INITDB_DATABASE=new_project
+      - MONGO_INITDB_DATABASE=laraveldb
       - MONGO_INITDB_ROOT_USERNAME=app_root
       - MONGO_INITDB_ROOT_PASSWORD=1234
     networks:
