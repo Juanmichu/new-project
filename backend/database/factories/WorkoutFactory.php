@@ -24,7 +24,19 @@ class WorkoutFactory extends Factory
 					'exercise_id' => Exercise::factory(),
 					'sets' => $this->faker->numberBetween(3, 5),
 					'reps' => $this->faker->numberBetween(5, 12),
-					'weight_kg' => $this->faker->optional(0.7)->numberBetween(5, 100)
+					'weight_kg' => $this->faker->optional(0.7)->numberBetween(5, 100) // 70% chance of having weight
+				],
+				[
+					'exercise_id' => Exercise::factory(),
+					'sets' => $this->faker->numberBetween(2, 4),
+					'reps' => $this->faker->numberBetween(8, 15),
+					'weight_kg' => $this->faker->optional(0.5)->numberBetween(5, 80) // 50% chance of having weight
+				],
+				[
+					'exercise_id' => Exercise::factory(),
+					'sets' => $this->faker->numberBetween(1, 3),
+					'reps' => $this->faker->numberBetween(10, 20),
+					'weight_kg' => null // bodyweight exercise
 				]
 			]
 		];

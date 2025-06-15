@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 			[
 				'name' => 'John Doe',
 				'email' => 'john@example.com',
-				'password' => Hash::make('password123'),
+				'password' => 1234,
 				'age' => 30,
 				'height' => 180,
 				'weight' => 80,
@@ -49,7 +49,7 @@ class DatabaseSeeder extends Seeder
 		]);
 
 		// Create sample exercises
-		$exercises = [
+		$exercises = Exercise::factory()->createMany([
 			[
 				'name' => 'Push-ups',
 				'description' => 'A basic upper body exercise targeting chest, shoulders, and triceps.',
@@ -131,11 +131,7 @@ class DatabaseSeeder extends Seeder
 				'calories_per_minute' => 12,
 				'is_active' => true
 			]
-		];
-
-		foreach ($exercises as $exercise) {
-			Exercise::create($exercise);
-		}
+		]);
 
 		// Create sample workouts
 		$workouts = Workout::factory()->createMany([
@@ -198,8 +194,9 @@ class DatabaseSeeder extends Seeder
 			]
 		]);
 
+
 		// Create blog articles
-		$articles = [
+		$articles = Article::factory()->createMany([
 			[
 				'user_id' => '1',
 				'title' => '10 Best Exercises for Building Core Strength',
@@ -228,14 +225,10 @@ class DatabaseSeeder extends Seeder
 				'likes' => 15,
 				'is_featured' => false
 			]
-		];
-
-		foreach ($articles as $article) {
-			Article::create($article);
-		}
+		]);
 
 		// Create news articles
-		$newsArticles = [
+		$newsArticles = NewsArticle::factory()->createMany([
 			[
 				'title' => 'New Study Reveals Benefits of Morning Workouts',
 				'slug' => 'new-study-morning-workouts-benefits',
@@ -262,10 +255,7 @@ class DatabaseSeeder extends Seeder
 				'views' => 120,
 				'is_breaking' => true
 			]
-		];
+		]);
 
-		foreach ($newsArticles as $article) {
-			NewsArticle::create($article);
-		}
 	}
 }
