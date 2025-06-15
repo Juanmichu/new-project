@@ -8,7 +8,7 @@ echo "Waiting for MongoDB to be ready..."
 # Create a simple connection test script
 cat > /tmp/test_mongo.php << 'EOF'
 <?php
-$maxAttempts = 30;
+$maxAttempts = 10;
 $attempt = 0;
 
 while ($attempt < $maxAttempts) {

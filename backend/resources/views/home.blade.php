@@ -7,11 +7,11 @@
 		<!-- Hero Section -->
 		<div class="bg-white rounded-xl shadow-sm p-8 sm:p-12 mb-8 text-center">
 			<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-				¡Bienvenido a FitTracker! 💪
+				¡Bienvenido a FitCoacher! 💪
 			</h1>
 			<p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-				Tu aplicación completa para entrenamientos, ejercicios y consejos de fitness.
-				Transforma tu cuerpo y alcanza tus objetivos con nuestras herramientas profesionales.
+				Tu aplicación completa para crear entrenamientos, ejercicios y consejos de fitness.
+				Entrena y transforma tu cuerpo, ayuda a alcanzar los objetivos de tus clientes con nuestras herramientas profesionales.
 			</p>
 			@guest
 				<div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -47,7 +47,7 @@
 				</div>
 				<h3 class="text-xl font-semibold mb-3">Ejercicios Variados</h3>
 				<p class="text-gray-600 mb-6">
-					Accede a una amplia biblioteca de ejercicios para todos los niveles y objetivos de fitness.
+					Accede a una amplia biblioteca de ejercicios para todos los niveles y objetivos de fitness, ¡o crea nuevos!
 				</p>
 				<a href="{{ route('exercises.index') }}"
 				   class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200 inline-block">
@@ -62,7 +62,7 @@
 				</div>
 				<h3 class="text-xl font-semibold mb-3">Blog de Fitness</h3>
 				<p class="text-gray-600 mb-6">
-					Lee artículos sobre nutrición, entrenamiento y consejos para mejorar tu forma física.
+					Lee artículos sobre nutrición, entrenamiento y consejos para mejorar su forma física.
 				</p>
 				<a href="{{ route('blog.index') }}"
 				   class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200 inline-block">
@@ -77,7 +77,7 @@
 				</div>
 				<h3 class="text-xl font-semibold mb-3">Seguimiento Personal</h3>
 				<p class="text-gray-600 mb-6">
-					Registra tu progreso y mantén un seguimiento detallado de tus entrenamientos.
+					Registra su progreso y mantén un seguimiento detallado de sus entrenamientos.
 				</p>
 				@auth
 					<a href="{{ route('dashboard') }}"
@@ -97,7 +97,7 @@
 		<div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-sm p-8 mb-12 text-white">
 			<div class="text-center mb-8">
 				<h2 class="text-3xl font-bold mb-2">Únete a Nuestra Comunidad</h2>
-				<p class="text-blue-100">Miles de personas ya están transformando sus vidas</p>
+				<p class="text-blue-100">Miles de entrenadores ya están transformando sus vidas</p>
 			</div>
 
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">

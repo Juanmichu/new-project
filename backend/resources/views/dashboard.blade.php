@@ -11,7 +11,7 @@
                 ¡Hola, {{ Auth::user()->name }}! 👋
             </h1>
             <p class="text-gray-600">
-                Aquí tienes un resumen de tu actividad en FitTracker
+                Aquí tienes un resumen de tu actividad en FitCoacher
             </p>
         </div>
     </div>

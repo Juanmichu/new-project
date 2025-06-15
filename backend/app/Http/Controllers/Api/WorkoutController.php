@@ -14,29 +14,49 @@ class WorkoutController extends Controller
 {
 	public function index(Request $request)
 	{
-		$workouts = Workout::where('user_id', $request->user()->id)
-			->with(['exercises.exercise'])
-			->orderBy('workout_date', 'desc')
-			->paginate(10);
+		try {
+			$workouts = Workout::where('user_id', $request->user()->_id)
+				->with(['exercises.exercise'])
+				->orderBy('workout_date', 'desc')
+				->paginate(10);
 
-		return response()->json($workouts);
+			return response()->json([
+				'success' => true,
+				'data' => $workouts
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to fetch workouts: ' . $e->getMessage()
+			], 500);
+		}
 	}
 
 	public function todayWorkout(Request $request)
 	{
-		$today = Carbon::today();
+		try {
+			$today = Carbon::today();
 
-		$workout = Workout::where('user_id', $request->user()->id)
-			->whereDate('workout_date', $today)
-			->with(['exercises.exercise'])
-			->first();
+			$workout = Workout::where('user_id', $request->user()->_id)
+				->whereDate('workout_date', $today)
+				->with(['exercises.exercise'])
+				->first();
 
-		if (!$workout) {
-			// Generate a default workout if none exists
-			$workout = $this->generateDefaultWorkout($request->user());
+			if (!$workout) {
+				// Generate a default workout if none exists
+				$workout = $this->generateDefaultWorkout($request->user());
+			}
+
+			return response()->json([
+				'success' => true,
+				'data' => $workout
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to fetch today\'s workout: ' . $e->getMessage()
+			], 500);
 		}
-
-		return response()->json($workout);
 	}
 
 	public function store(Request $request)
@@ -54,116 +74,184 @@ class WorkoutController extends Controller
 
 		if ($validator->fails()) {
 			return response()->json([
+				'success' => false,
 				'message' => 'Validation errors',
 				'errors' => $validator->errors()
 			], 422);
 		}
 
-		$workout = Workout::create([
-			'user_id' => $request->user()->id,
-			'name' => $request->name,
-			'description' => $request->description,
-			'workout_date' => $request->workout_date,
-			'status' => 'planned'
-		]);
-
-		foreach ($request->exercises as $index => $exerciseData) {
-			WorkoutExercise::create([
-				'workout_id' => $workout->id,
-				'exercise_id' => $exerciseData['exercise_id'],
-				'sets' => $exerciseData['sets'],
-				'reps' => $exerciseData['reps'],
-				'rest_time' => $exerciseData['rest_time'] ?? 60,
-				'order' => $index + 1,
-				'completed' => false
+		try {
+			$workout = Workout::create([
+				'user_id' => $request->user()->_id,
+				'name' => $request->name,
+				'description' => $request->description,
+				'workout_date' => $request->workout_date,
+				'status' => 'planned'
 			]);
-		}
 
-		return response()->json([
-			'message' => 'Workout created successfully',
-			'workout' => $workout->load(['exercises.exercise'])
-		], 201);
+			foreach ($request->exercises as $index => $exerciseData) {
+				WorkoutExercise::create([
+					'workout_id' => $workout->_id,
+					'exercise_id' => $exerciseData['exercise_id'],
+					'sets' => $exerciseData['sets'],
+					'reps' => $exerciseData['reps'],
+					'rest_time' => $exerciseData['rest_time'] ?? 60,
+					'order' => $index + 1,
+					'completed' => false
+				]);
+			}
+
+			return response()->json([
+				'success' => true,
+				'message' => 'Workout created successfully',
+				'data' => $workout->load(['exercises.exercise'])
+			], 201);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to create workout: ' . $e->getMessage()
+			], 500);
+		}
 	}
 
 	public function show(Request $request, $id)
 	{
-		$workout = Workout::where('user_id', $request->user()->id)
-			->where('id', $id)
-			->with(['exercises.exercise'])
-			->firstOrFail();
+		try {
+			$workout = Workout::where('user_id', $request->user()->_id)
+				->where('_id', $id)
+				->with(['exercises.exercise'])
+				->firstOrFail();
 
-		return response()->json($workout);
+			return response()->json([
+				'success' => true,
+				'data' => $workout
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Workout not found'
+			], 404);
+		}
 	}
 
 	public function update(Request $request, $id)
 	{
-		$workout = Workout::where('user_id', $request->user()->id)
-			->where('id', $id)
-			->firstOrFail();
+		try {
+			$workout = Workout::where('user_id', $request->user()->_id)
+				->where('_id', $id)
+				->firstOrFail();
 
-		$validator = Validator::make($request->all(), [
-			'name' => 'sometimes|string|max:255',
-			'description' => 'sometimes|string',
-			'status' => 'sometimes|in:planned,in_progress,completed,skipped',
-			'notes' => 'sometimes|string'
-		]);
+			$validator = Validator::make($request->all(), [
+				'name' => 'sometimes|string|max:255',
+				'description' => 'sometimes|string',
+				'status' => 'sometimes|in:planned,in_progress,completed,skipped',
+				'notes' => 'sometimes|string'
+			]);
 
-		if ($validator->fails()) {
+			if ($validator->fails()) {
+				return response()->json([
+					'success' => false,
+					'message' => 'Validation errors',
+					'errors' => $validator->errors()
+				], 422);
+			}
+
+			$workout->update($request->only(['name', 'description', 'status', 'notes']));
+
 			return response()->json([
-				'message' => 'Validation errors',
-				'errors' => $validator->errors()
-			], 422);
+				'success' => true,
+				'message' => 'Workout updated successfully',
+				'data' => $workout
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to update workout: ' . $e->getMessage()
+			], 500);
 		}
-
-		$workout->update($request->only(['name', 'description', 'status', 'notes']));
-
-		return response()->json([
-			'message' => 'Workout updated successfully',
-			'workout' => $workout
-		]);
 	}
 
 	public function markExerciseComplete(Request $request, $workoutId, $exerciseId)
 	{
-		$workoutExercise = WorkoutExercise::where('workout_id', $workoutId)
-			->where('id', $exerciseId)
-			->firstOrFail();
+		try {
+			$workoutExercise = WorkoutExercise::where('workout_id', $workoutId)
+				->where('_id', $exerciseId)
+				->firstOrFail();
 
-		$workoutExercise->update(['completed' => true]);
+			$workoutExercise->update(['completed' => true]);
 
-		return response()->json([
-			'message' => 'Exercise marked as completed',
-			'exercise' => $workoutExercise
-		]);
+			return response()->json([
+				'success' => true,
+				'message' => 'Exercise marked as completed',
+				'data' => $workoutExercise
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to mark exercise as complete: ' . $e->getMessage()
+			], 500);
+		}
+	}
+
+	public function destroy(Request $request, $id)
+	{
+		try {
+			$workout = Workout::where('user_id', $request->user()->_id)
+				->where('_id', $id)
+				->firstOrFail();
+
+			// Delete associated exercises
+			WorkoutExercise::where('workout_id', $workout->_id)->delete();
+			$workout->delete();
+
+			return response()->json([
+				'success' => true,
+				'message' => 'Workout deleted successfully'
+			]);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to delete workout: ' . $e->getMessage()
+			], 500);
+		}
 	}
 
 	private function generateDefaultWorkout($user)
 	{
-		// Get random exercises
-		$exercises = Exercise::where('is_active', true)
-			->take(5)
-			->get();
+		try {
+			// Get random exercises
+			$exercises = Exercise::where('is_active', true)
+				->take(5)
+				->get();
 
-		$workout = Workout::create([
-			'user_id' => $user->id,
-			'name' => 'Today\'s Workout',
-			'description' => 'Your daily workout routine',
-			'workout_date' => Carbon::today(),
-			'status' => 'planned'
-		]);
+			if ($exercises->isEmpty()) {
+				return null;
+			}
 
-		foreach ($exercises as $index => $exercise) {
-			WorkoutExercise::create([
-				'workout_id' => $workout->id,
-				'exercise_id' => $exercise->id,
-				'sets' => 3,
-				'reps' => 12,
-				'rest_time' => 60,
-				'order' => $index + 1,
-				'completed' => false
+			$workout = Workout::create([
+				'user_id' => $user->_id,
+				'name' => 'Today\'s Workout',
+				'description' => 'Your daily workout routine',
+				'workout_date' => Carbon::today(),
+				'status' => 'planned'
 			]);
-		}
 
-		return $workout->load(['exercises.exercise']);
+			foreach ($exercises as $index => $exercise) {
+				WorkoutExercise::create([
+					'workout_id' => $workout->_id,
+					'exercise_id' => $exercise->_id,
+					'sets' => 3,
+					'reps' => 12,
+					'rest_time' => 60,
+					'order' => $index + 1,
+					'completed' => false
+				]);
+			}
+
+			return $workout->load(['exercises.exercise']);
+		} catch (\Exception $e) {
+			\Log::error('Failed to generate default workout: ' . $e->getMessage());
+			return null;
+		}
 	}
 }

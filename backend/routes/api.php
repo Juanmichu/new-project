@@ -1,8 +1,9 @@
 <?php
-// routes/api.php
+
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ApiAuthController;
 use App\Http\Controllers\Api\WorkoutController;
 use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\ArticleController;
@@ -12,11 +13,6 @@ use App\Http\Controllers\Api\NewsController;
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
 */
 
 // Public routes
@@ -59,10 +55,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
 		Route::put('/profile', function (Request $request) {
 			$user = $request->user();
-			$user->update($request->only([
-				'name', 'age', 'weight', 'height',
-				'fitness_level', 'goals', 'preferences'
-			]));
+			$validated = $request->validate([
+				'name' => 'sometimes|string|max:255',
+				'age' => 'sometimes|integer|min:13|max:120',
+				'weight' => 'sometimes|numeric|min:30|max:500',
+				'height' => 'sometimes|numeric|min:100|max:250',
+				'fitness_level' => 'sometimes|in:beginner,intermediate,advanced',
+				'goals' => 'sometimes|array',
+				'preferences' => 'sometimes|array'
+			]);
+
+			$user->update($validated);
 			return response()->json($user);
 		});
 	});
@@ -93,11 +96,16 @@ Route::middleware('auth:sanctum')->group(function () {
 		});
 
 		Route::post('/', function (Request $request) {
+			$validated = $request->validate([
+				'workout_id' => 'required|string',
+				'total_exercises' => 'nullable|integer|min:0'
+			]);
+
 			$session = $request->user()->workoutSessions()->create([
-				'workout_id' => $request->workout_id,
+				'workout_id' => $validated['workout_id'],
 				'started_at' => now(),
 				'exercises_completed' => 0,
-				'total_exercises' => $request->total_exercises ?? 0
+				'total_exercises' => $validated['total_exercises'] ?? 0
 			]);
 
 			return response()->json($session, 201);
@@ -105,13 +113,22 @@ Route::middleware('auth:sanctum')->group(function () {
 
 		Route::put('/{id}/complete', function (Request $request, $id) {
 			$session = $request->user()->workoutSessions()->findOrFail($id);
+
+			$validated = $request->validate([
+				'duration' => 'nullable|integer|min:0',
+				'calories_burned' => 'nullable|integer|min:0',
+				'exercises_completed' => 'nullable|integer|min:0',
+				'notes' => 'nullable|string',
+				'rating' => 'nullable|integer|min:1|max:5'
+			]);
+
 			$session->update([
 				'completed_at' => now(),
-				'duration' => $request->duration,
-				'calories_burned' => $request->calories_burned,
-				'exercises_completed' => $request->exercises_completed,
-				'notes' => $request->notes,
-				'rating' => $request->rating
+				'duration' => $validated['duration'] ?? null,
+				'calories_burned' => $validated['calories_burned'] ?? null,
+				'exercises_completed' => $validated['exercises_completed'] ?? null,
+				'notes' => $validated['notes'] ?? null,
+				'rating' => $validated['rating'] ?? null
 			]);
 
 			return response()->json($session);
@@ -131,7 +148,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 			// Calculate completion percentage
 			$completionRate = 0;
-			if ($todayWorkout && $todayWorkout->exercises->count() > 0) {
+			if ($todayWorkout && $todayWorkout->exercises && $todayWorkout->exercises->count() > 0) {
 				$completedExercises = $todayWorkout->exercises->where('completed', true)->count();
 				$totalExercises = $todayWorkout->exercises->count();
 				$completionRate = round(($completedExercises / $totalExercises) * 100);
@@ -172,8 +189,8 @@ Route::middleware('auth:sanctum')->group(function () {
 			return response()->json([
 				'total_calories' => $totalCalories,
 				'total_workouts' => $totalWorkouts,
-				'avg_duration' => round($avgDuration),
-				'avg_rating' => round($avgRating, 1),
+				'avg_duration' => round($avgDuration ?? 0),
+				'avg_rating' => round($avgRating ?? 0, 1),
 				'sessions' => $sessions
 			]);
 		});

@@ -6,8 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
@@ -16,24 +14,26 @@ class AuthController extends Controller
 	 */
 	public function __construct()
 	{
-		$this->middleware('auth:api', ['except' => ['login', 'register']]);
+		$this->middleware('auth:sanctum', ['except' => ['login', 'register']]);
 	}
 
-	/**
-	 * Register a new user
-	 */
 	public function register(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
 			'name' => 'required|string|max:255',
 			'email' => 'required|string|email|max:255|unique:users',
 			'password' => 'required|string|min:8|confirmed',
+			'age' => 'nullable|integer|min:13|max:120',
+			'weight' => 'nullable|numeric|min:30|max:500',
+			'height' => 'nullable|numeric|min:100|max:250',
+			'fitness_level' => 'nullable|in:beginner,intermediate,advanced',
+			'goals' => 'nullable|array'
 		]);
 
 		if ($validator->fails()) {
 			return response()->json([
 				'success' => false,
-				'message' => 'Validation failed',
+				'message' => 'Validation errors',
 				'errors' => $validator->errors()
 			], 422);
 		}
@@ -42,11 +42,17 @@ class AuthController extends Controller
 			'name' => $request->name,
 			'email' => $request->email,
 			'password' => Hash::make($request->password),
+			'age' => $request->age,
+			'weight' => $request->weight,
+			'height' => $request->height,
+			'fitness_level' => $request->fitness_level ?? 'beginner',
+			'goals' => $request->goals ?? [],
+			'preferences' => [],
 			'role' => 'user',
-			'is_active' => true,
+			'is_active' => true
 		]);
 
-		$token = JWTAuth::fromUser($user);
+		$token = $user->createToken('auth_token')->plainTextToken;
 
 		return response()->json([
 			'success' => true,
@@ -56,14 +62,79 @@ class AuthController extends Controller
 		], 201);
 	}
 
-	/**
-	 * Get a JWT via given credentials.
-	 */
 	public function login(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
-			'email' => 'required|string|email',
-			'password' => 'required|string',
+			'email' => 'required|email',
+			'password' => 'required'
+		]);
+
+		if ($validator->fails()) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Validation errors',
+				'errors' => $validator->errors()
+			], 422);
+		}
+
+		$user = User::where('email', $request->email)->first();
+
+		if (!$user || !Hash::check($request->password, $user->password)) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Invalid credentials'
+			], 401);
+		}
+
+		if (!$user->is_active) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Account is inactive'
+			], 401);
+		}
+
+		$token = $user->createToken('auth_token')->plainTextToken;
+
+		return response()->json([
+			'success' => true,
+			'message' => 'Login successful',
+			'user' => $user,
+			'token' => $token
+		]);
+	}
+
+	public function logout(Request $request)
+	{
+		$request->user()->currentAccessToken()->delete();
+
+		return response()->json([
+			'success' => true,
+			'message' => 'Logged out successfully'
+		]);
+	}
+
+	public function user(Request $request)
+	{
+		return response()->json([
+			'success' => true,
+			'user' => $request->user()
+		]);
+	}
+
+	public function updateProfile(Request $request)
+	{
+		$user = $request->user();
+
+		$validator = Validator::make($request->all(), [
+			'name' => 'sometimes|string|max:255',
+			'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->_id,
+			'current_password' => 'required_with:password|string',
+			'password' => 'nullable|string|min:8|confirmed',
+			'age' => 'sometimes|integer|min:13|max:120',
+			'weight' => 'sometimes|numeric|min:30|max:500',
+			'height' => 'sometimes|numeric|min:100|max:250',
+			'fitness_level' => 'sometimes|in:beginner,intermediate,advanced',
+			'goals' => 'sometimes|array'
 		]);
 
 		if ($validator->fails()) {
@@ -74,85 +145,28 @@ class AuthController extends Controller
 			], 422);
 		}
 
-		$credentials = $request->only('email', 'password');
-
-		try {
-			if (!$token = JWTAuth::attempt($credentials)) {
+		// Check current password if changing password
+		if ($request->filled('password')) {
+			if (!Hash::check($request->current_password, $user->password)) {
 				return response()->json([
 					'success' => false,
-					'message' => 'Invalid credentials'
-				], 401);
+					'message' => 'Current password is incorrect'
+				], 422);
 			}
-		} catch (JWTException $e) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Could not create token'
-			], 500);
 		}
 
-		$user = auth()->user();
+		$data = $request->only(['name', 'email', 'age', 'weight', 'height', 'fitness_level', 'goals']);
 
-		if (!$user->is_active) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Account is inactive'
-			], 401);
+		if ($request->filled('password')) {
+			$data['password'] = Hash::make($request->password);
 		}
+
+		$user->update($data);
 
 		return response()->json([
 			'success' => true,
-			'message' => 'Login successful',
-			'user' => $user,
-			'token' => $token
+			'message' => 'Profile updated successfully',
+			'user' => $user->fresh()
 		]);
-	}
-
-	/**
-	 * Get the authenticated User.
-	 */
-	public function me()
-	{
-		return response()->json([
-			'success' => true,
-			'user' => auth()->user()
-		]);
-	}
-
-	/**
-	 * Log the user out (Invalidate the token).
-	 */
-	public function logout()
-	{
-		try {
-			JWTAuth::invalidate(JWTAuth::getToken());
-			return response()->json([
-				'success' => true,
-				'message' => 'Successfully logged out'
-			]);
-		} catch (JWTException $e) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Failed to logout'
-			], 500);
-		}
-	}
-
-	/**
-	 * Refresh a token.
-	 */
-	public function refresh()
-	{
-		try {
-			$token = JWTAuth::refresh(JWTAuth::getToken());
-			return response()->json([
-				'success' => true,
-				'token' => $token
-			]);
-		} catch (JWTException $e) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Token cannot be refreshed'
-			], 401);
-		}
 	}
 }
