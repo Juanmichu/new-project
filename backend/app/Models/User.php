@@ -1,99 +1,59 @@
 <?php
-
+// app/Models/User.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use MongoDB\Laravel\Eloquent\Model;
-use MongoDB\Laravel\Auth\User as MongoUser;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use MongoDB\Laravel\Auth\User as MongoAuthenticatable;
 
-class User extends MongoUser implements JWTSubject
+class User extends MongoAuthenticatable
 {
 	use HasApiTokens, HasFactory, Notifiable;
 
 	protected $connection = 'mongodb';
 	protected $collection = 'users';
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array<int, string>
-	 */
 	protected $fillable = [
 		'name',
 		'email',
 		'password',
-		'role',
-		'is_active',
+		'age',
+		'weight',
+		'height',
+		'fitness_level',
+		'goals',
+		'avatar',
+		'preferences'
 	];
 
-	/**
-	 * The attributes that should be hidden for serialization.
-	 *
-	 * @var array<int, string>
-	 */
 	protected $hidden = [
 		'password',
 		'remember_token',
 	];
 
-	/**
-	 * The attributes that should be cast.
-	 *
-	 * @var array<string, string>
-	 */
 	protected $casts = [
 		'email_verified_at' => 'datetime',
 		'password' => 'hashed',
-		'is_active' => 'boolean',
+		'goals' => 'array',
+		'preferences' => 'array',
+		'created_at' => 'datetime',
+		'updated_at' => 'datetime'
 	];
 
-	/**
-	 * Get the identifier that will be stored in the subject claim of the JWT.
-	 *
-	 * @return mixed
-	 */
-	public function getJWTIdentifier()
-	{
-		return $this->getKey();
-	}
-
-	/**
-	 * Return a key value array, containing any custom claims to be added to the JWT.
-	 *
-	 * @return array
-	 */
-	public function getJWTCustomClaims()
-	{
-		return [];
-	}
-
-	/**
-	 * Get the workouts for the user.
-	 */
+	// Relationships
 	public function workouts()
 	{
 		return $this->hasMany(Workout::class);
 	}
 
-	/**
-	 * Check if user is admin
-	 */
-	public function isAdmin()
+	public function workoutSessions()
 	{
-		return $this->role === 'admin';
+		return $this->hasMany(WorkoutSession::class);
 	}
 
-	/**
-	 * Get today's workout for the user
-	 */
-	public function getTodayWorkout()
+	public function articles()
 	{
-		return $this->workouts()
-			->whereDate('scheduled_date', today())
-			->first();
+		return $this->hasMany(Article::class);
 	}
 }

@@ -1,5 +1,5 @@
 # Stage 1: Node.js para construir assets
-FROM node:18-alpine as node-builder
+FROM node:18-alpine AS node-builder
 
 WORKDIR /app
 
@@ -77,7 +77,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Generate app key if .env exists
-RUN if [ -f .env ]; then php artisan key:generate --force; fi
+RUN php artisan key:generate
 
 USER www-data
 

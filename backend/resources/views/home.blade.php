@@ -7,7 +7,7 @@
 		<!-- Hero Section -->
 		<div class="bg-white rounded-xl shadow-sm p-8 sm:p-12 mb-8 text-center">
 			<h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-				¡Bienvenido a FitnessApp! 💪
+				¡Bienvenido a FitTracker! 💪
 			</h1>
 			<p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
 				Tu aplicación completa para entrenamientos, ejercicios y consejos de fitness.

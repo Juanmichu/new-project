@@ -16,8 +16,8 @@
 
 			<div class="card">
 				<div class="card-body">
-					<form method="POST" action="{{ route('register') }}">
-						@csrf
+    <form method="POST" action="{{ route('register') }}">
+        @csrf
 
 						<div class="space-y-4">
 							<div>
@@ -31,7 +31,7 @@
 								@enderror
 							</div>
 
-							<div>
+        <div>
 								<label for="email" class="block text-sm font-medium text-gray-700 mb-1">
 									Email
 								</label>
@@ -51,7 +51,7 @@
 								@error('password')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
-							</div>
+        </div>
 
 							<div>
 								<label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">
@@ -59,7 +59,7 @@
 								</label>
 								<input type="password" id="password_confirmation" name="password_confirmation"
 									   class="form-input" required>
-							</div>
+        </div>
 
 							<div class="flex items-center">
 								<input type="checkbox" id="terms" name="terms" required
@@ -68,8 +68,8 @@
 									Acepto los
 									<a href="{{ route('terms') }}" class="text-blue-600 hover:text-blue-500">términos y condiciones</a>
 								</label>
-							</div>
-						</div>
+        </div>
+        </div>
 
 						<button type="submit" class="btn-primary w-full mt-6">
 							Crear Cuenta
@@ -81,10 +81,10 @@
 							¿Ya tienes una cuenta?
 							<a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-500 font-medium">
 								Iniciar Sesión
-							</a>
+            </a>
 						</p>
 					</div>
-				</div>
+        </div>
 			</div>
 		</div>
 	</div>

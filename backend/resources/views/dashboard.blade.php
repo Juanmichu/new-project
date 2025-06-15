@@ -11,7 +11,7 @@
                 ¡Hola, {{ Auth::user()->name }}! 👋
             </h1>
             <p class="text-gray-600">
-                Aquí tienes un resumen de tu actividad en FitnessApp
+                Aquí tienes un resumen de tu actividad en FitTracker
             </p>
         </div>
     </div>
@@ -24,21 +24,21 @@
                 <p class="text-gray-600">Entrenamientos Completados</p>
             </div>
         </div>
-        
+
         <div class="card">
             <div class="card-body text-center">
                 <div class="text-3xl font-bold text-green-600 mb-2">0</div>
                 <p class="text-gray-600">Ejercicios Favoritos</p>
             </div>
         </div>
-        
+
         <div class="card">
             <div class="card-body text-center">
                 <div class="text-3xl font-bold text-purple-600 mb-2">0</div>
                 <p class="text-gray-600">Días Activos</p>
             </div>
         </div>
-        
+
         <div class="card">
             <div class="card-body text-center">
                 <div class="text-3xl font-bold text-orange-600 mb-2">0</div>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                     </a>
-                    
+
                     <a href="{{ route('blog.index') }}" class="block bg-green-50 hover:bg-green-100 p-3 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <div class="text-2xl mr-3">📝</div>
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                     </a>
-                    
+
                     <a href="{{ route('profile') }}" class="block bg-purple-50 hover:bg-purple-100 p-3 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <div class="text-2xl mr-3">⚙️</div>
