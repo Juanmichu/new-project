@@ -7,7 +7,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\WebAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,14 +25,14 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Rutas de autenticación
 Route::middleware('guest')->group(function () {
-	Route::get('/login', [AuthController::class, 'create'])->name('login');
-	Route::post('/login', [AuthController::class, 'store']);
-	Route::get('/register', [AuthController::class, 'create'])->name('register');
-	Route::post('/register', [AuthController::class, 'store']);
+	Route::get('/login', [WebAuthController::class, 'showLoginForm'])->name('login');
+	Route::post('/login', [WebAuthController::class, 'login']);
+	Route::get('/register', [WebAuthController::class, 'showRegisterForm'])->name('register');
+	Route::post('/register', [WebAuthController::class, 'register']);
 });
 
 Route::middleware('auth')->group(function () {
-	Route::post('/logout', [AuthController::class, 'destroy'])->name('logout');
+	Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 
 	// Dashboard (solo para usuarios autenticados)
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -115,11 +115,6 @@ Route::get('/terms', function () {
 
 // Redirección para compatibilidad
 Route::redirect('/home', '/dashboard');
-
-// Catch-all route for React Router (SPA)
-Route::get('/{path}', function () {
-	return redirect(env('FRONTEND_URL', 'http://localhost:3000'));
-})->where('path', '.*');
 
 // Route for testing MongoDB connection
 Route::get('/test-mongo', function () {

@@ -1,3 +1,224 @@
+
+
+# FitCoacher - Aplicación de Gestión de Fitness y Entrenamientos
+
+Una aplicación integral de fitness construida con Laravel y MongoDB que ayuda a los usuarios a crear, rastrear y gestionar sus rutinas de entrenamiento, explorar ejercicios y mantenerse informados con artículos y noticias sobre fitness.
+
+## 🚀 Características
+
+Autenticación y Perfiles de Usuario: Sistema seguro de registro e inicio de sesión con perfiles de usuario personalizables
+Biblioteca de Ejercicios: Navega y busca ejercicios por grupo muscular, nivel de dificultad y equipo
+Gestión de Entrenamientos: Crea, programa y rastrea rutinas de entrenamiento personalizadas
+Seguimiento de Progreso: Monitorea la finalización de entrenamientos, calorías quemadas y estadísticas de fitness
+Sistema de Blog: Lee artículos, consejos y guías sobre fitness
+Sección de Noticias: Mantente actualizado con las últimas noticias y tendencias de fitness
+Diseño Responsivo: Funciona perfectamente en dispositivos de escritorio y móviles
+Arquitectura API-First: API RESTful para integración con frontend
+
+## 🛠️ Stack Tecnológico
+
+### Backend
+
+Framework: Laravel 12.x
+Base de Datos: MongoDB
+Autenticación: Laravel Sanctum
+Versión PHP: 8.2+
+Gestor de Paquetes: Composer
+
+### Assets Frontend
+
+Framework CSS: Tailwind CSS 4.0
+Herramienta de Construcción: Vite
+JavaScript: Vanilla JS con Axios para llamadas API
+
+## 📋 Prerequisitos
+
+PHP 8.2 o superior
+Composer
+MongoDB 4.4+
+Node.js 18+ y npm
+Docker y Docker Compose (opcional)
+
+## 🔧 Instalación
+
+### Usando Docker (Recomendado)
+
+#### Clona el repositorio:
+
+bashgit clone <url-del-repositorio>
+cd fitcoacher
+
+### Inicia los contenedores Docker:
+
+bashcd backend
+docker-compose up -d
+La aplicación estará disponible en:
+
+Backend: http://localhost:8000
+MongoDB: mongodb://localhost:27017
+
+### Instalación Manual
+
+#### Clona el repositorio:
+
+bashgit clone <url-del-repositorio>
+cd fitcoacher/backend
+
+#### Instala las dependencias PHP:
+
+bashcomposer install
+
+#### Instala las dependencias Node:
+
+bashnpm install
+
+#### Copia el archivo de entorno:
+
+bashcp .env.example .env
+
+#### Configura tu conexión MongoDB en .env:
+
+envDB_CONNECTION=mongodb
+DB_HOST=127.0.0.1
+DB_PORT=27017
+DB_DATABASE=laraveldb
+DB_USERNAME=app_root
+DB_PASSWORD=1234
+
+#### Genera la clave de aplicación:
+
+bashphp artisan key:generate
+
+#### Ejecuta los seeders de la base de datos:
+
+bashphp artisan db:seed
+
+#### Construye los assets del frontend:
+
+bashnpm run build
+
+#### Inicia el servidor de desarrollo:
+
+bashphp artisan serve
+
+## 📱 Endpoints de API
+
+### Autenticación
+
+POST /api/auth/register - Registro de usuario
+POST /api/auth/login - Inicio de sesión
+POST /api/auth/logout - Cerrar sesión (requiere auth)
+GET /api/auth/user - Obtener usuario autenticado
+
+### Ejercicios
+
+GET /api/exercises - Listar todos los ejercicios
+GET /api/exercises/{id} - Obtener detalles del ejercicio
+GET /api/exercises/categories - Obtener categorías de ejercicios
+
+### Entrenamientos (Requiere Autenticación)
+
+GET /api/workouts - Listar entrenamientos del usuario
+POST /api/workouts - Crear nuevo entrenamiento
+GET /api/workouts/today - Obtener entrenamiento de hoy
+GET /api/workouts/{id} - Obtener detalles del entrenamiento
+PUT /api/workouts/{id} - Actualizar entrenamiento
+DELETE /api/workouts/{id} - Eliminar entrenamiento
+
+### Artículos y Noticias
+
+GET /api/articles - Listar artículos
+GET /api/articles/{slug} - Obtener detalles del artículo
+GET /api/news - Listar noticias
+GET /api/news/breaking - Obtener noticias de última hora
+
+### Estadísticas del Usuario (Requiere Autenticación)
+
+GET /api/stats/dashboard - Obtener estadísticas del dashboard
+GET /api/stats/progress - Obtener datos de progreso
+
+## 🗄️ Esquema de Base de Datos
+
+### Colecciones
+
+users: Perfiles de usuario con objetivos y preferencias de fitness
+exercises: Biblioteca de ejercicios con instrucciones y categorías
+workouts: Planes de entrenamiento creados por usuarios
+workout_exercises: Ejercicios dentro de los entrenamientos
+workout_sessions: Seguimiento del rendimiento real del entrenamiento
+articles: Artículos del blog de fitness
+news_articles: Noticias y actualizaciones de fitness
+
+## 🔐 Credenciales por Defecto
+
+Después de ejecutar los seeders de la base de datos, puedes usar estas credenciales:
+
+### Usuario Administrador
+
+Email: admin@fittracker.com
+Contraseña: password
+
+
+### Usuarios Regulares
+
+Email: john@example.com
+Contraseña: 1234
+Email: jane@example.com
+Contraseña: password123
+
+## 🧪 Pruebas
+
+Ejecuta el conjunto de pruebas:
+bashphp artisan test
+
+## 🚀 Despliegue
+
+Configura las variables de entorno apropiadas para producción
+Ejecuta migraciones y seeders
+Construye los assets del frontend: npm run build
+Configura tu servidor web (Nginx/Apache)
+Configura certificados SSL
+Configura MongoDB para uso en producción
+
+## 📝 Variables de Entorno
+
+Variables de entorno clave para configurar:
+envAPP_NAME=FitCoacher
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://tu-dominio.com
+
+DB_CONNECTION=mongodb
+MONGODB_URI=mongodb://usuario:contraseña@host:puerto/basededatos
+
+FRONTEND_URL=http://localhost:3000
+
+SANCTUM_STATEFUL_DOMAINS=localhost,localhost:3000,tu-dominio.com
+
+## 🤝 Contribuir
+
+Haz fork del repositorio
+Crea tu rama de características (git checkout -b feature/caracteristica-asombrosa)
+Confirma tus cambios (git commit -m 'Añadir alguna característica asombrosa')
+Empuja a la rama (git push origin feature/caracteristica-asombrosa)
+Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está licenciado bajo la Licencia MIT.
+
+## 👥 Autores
+
+Juan Manuel Serrano Pérez
+
+## 🙏 Agradecimientos
+
+Laravel Framework
+MongoDB
+Tailwind CSS
+Profesorado de DAW de IES Carlos III (Cartagena)
+
+
 # 🚀 GUÍA COMPLETA: Docker + MongoDB + Laravel + React
 
 # ===============================
@@ -5,7 +226,7 @@
 # ===============================
 
 # Estructura de carpetas recomendada:
-fittracker/
+new-project/
 ├── docker-compose.yml
 ├── backend/
 │   ├── Dockerfile
@@ -53,25 +274,25 @@ docker-compose ps
 # ===============================
 
 # Conectarse al contenedor de MongoDB
-docker exec -it fittracker_mongodb bash
+docker exec -it mongodb bash
 
 # Conectarse directamente a MongoDB shell
-docker exec -it fittracker_mongodb mongosh
+docker exec -it mongodb mongosh
 
 # Conectarse con autenticación
-docker exec -it fittracker_mongodb mongosh -u admin -p admin123 --authenticationDatabase admin
+docker exec -it mongodb mongosh -u admin -p admin123 --authenticationDatabase admin
 
 # Conectarse a la base de datos específica
-docker exec -it fittracker_mongodb mongosh fittracker -u fittracker_user -p fittracker_pass
+docker exec -it mongodb mongosh laraveldb -u user -p pass
 
 # Ejecutar comandos MongoDB desde host
-docker exec fittracker_mongodb mongosh --eval "db.adminCommand('listCollections')" fittracker
+docker exec mongodb mongosh --eval "db.adminCommand('listCollections')" laraveldb
 
 # Crear backup de la base de datos
-docker exec fittracker_mongodb mongodump --db fittracker --out /data/backup
+docker exec mongodb mongodump --db laraveldb --out /data/backup
 
 # Restaurar backup
-docker exec fittracker_mongodb mongorestore --db fittracker /data/backup/fittracker
+docker exec mongodb mongorestore --db laraveldb /data/backup/laraveldb
 
 # ===============================
 # 4. COMANDOS ÚTILES MONGODB
@@ -83,7 +304,7 @@ docker exec fittracker_mongodb mongorestore --db fittracker /data/backup/fittrac
 show dbs
 
 # Usar base de datos
-use fittracker
+use laraveldb
 
 # Mostrar colecciones
 show collections
@@ -118,38 +339,38 @@ db.users.stats()
 # ===============================
 
 # Acceder al contenedor del backend
-docker exec -it fittracker_backend bash
+docker exec -it backend bash
 
 # Ejecutar comandos Artisan
-docker exec fittracker_backend php artisan migrate
-docker exec fittracker_backend php artisan db:seed
-docker exec fittracker_backend php artisan config:clear
-docker exec fittracker_backend php artisan cache:clear
+docker exec backend php artisan migrate
+docker exec backend php artisan db:seed
+docker exec backend php artisan config:clear
+docker exec backend php artisan cache:clear
 
 # Instalar dependencias Composer
-docker exec fittracker_backend composer install
+docker exec backend composer install
 
 # Generar clave de aplicación
-docker exec fittracker_backend php artisan key:generate
+docker exec backend php artisan key:generate
 
 # Ver rutas
-docker exec fittracker_backend php artisan route:list
+docker exec backend php artisan route:list
 
 # ===============================
 # 6. COMANDOS REACT EN DOCKER
 # ===============================
 
 # Acceder al contenedor del frontend
-docker exec -it fittracker_frontend sh
+docker exec -it frontend sh
 
 # Instalar nuevas dependencias
-docker exec fittracker_frontend npm install nueva-dependencia
+docker exec frontend npm install nueva-dependencia
 
 # Ver logs del frontend
-docker exec fittracker_frontend npm run start
+docker exec frontend npm run start
 
 # Construir para producción
-docker exec fittracker_frontend npm run build
+docker exec frontend npm run build
 
 # ===============================
 # 7. DEBUGGING Y TROUBLESHOOTING
@@ -162,10 +383,10 @@ docker ps -a
 docker stats
 
 # Inspeccionar un contenedor
-docker inspect fittracker_mongodb
+docker inspect mongodb
 
 # Ver logs de un contenedor específico
-docker logs fittracker_backend --tail 50
+docker logs backend --tail 50
 
 # Limpiar sistema Docker (¡CUIDADO!)
 docker system prune -a
@@ -174,13 +395,13 @@ docker system prune -a
 docker volume ls
 
 # Inspeccionar volumen de MongoDB
-docker volume inspect fittracker_mongodb_data
+docker volume inspect mongodb_data
 
 # Ver redes
 docker network ls
 
 # Inspeccionar red
-docker network inspect fittracker_fittracker-network
+docker network inspect new-project-network
 
 # ===============================
 # 8. SCRIPTS DE DESARROLLO
@@ -201,10 +422,10 @@ echo "Esperando que MongoDB esté listo..."
 sleep 30
 
 echo "Ejecutando migraciones..."
-docker exec fittracker_backend php artisan migrate --force
+docker exec backend php artisan migrate --force
 
 echo "Ejecutando seeders..."
-docker exec fittracker_backend php artisan db:seed --force
+docker exec backend php artisan db:seed --force
 
 echo "¡Entorno reseteado completamente!"
 
@@ -214,10 +435,10 @@ BACKUP_DIR="./backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p $BACKUP_DIR
 
 echo "Creando backup de MongoDB..."
-docker exec fittracker_mongodb mongodump --db fittracker --out /data/backup
+docker exec mongodb mongodump --db laraveldb --out /data/backup
 
 echo "Copiando backup al host..."
-docker cp fittracker_mongodb:/data/backup $BACKUP_DIR
+docker cp mongodb:/data/backup $BACKUP_DIR
 
 echo "Backup creado en: $BACKUP_DIR"
 
@@ -253,13 +474,13 @@ export DB_PASSWORD=tu-password
 docker-compose logs -f --tail=100
 
 # Ver conexiones a MongoDB
-docker exec fittracker_mongodb mongosh --eval "db.serverStatus().connections"
+docker exec mongodb mongosh --eval "db.serverStatus().connections"
 
 # Ver performance de MongoDB
-docker exec fittracker_mongodb mongosh --eval "db.serverStatus().opcounters"
+docker exec mongodb mongosh --eval "db.serverStatus().opcounters"
 
 # Verificar conexión entre servicios
-docker exec fittracker_backend ping mongodb
+docker exec backend ping mongodb
 
 # ===============================
 # 12. COMANDOS DE LIMPIEZA
@@ -282,16 +503,16 @@ docker network prune
 # ===============================
 
 # Cambiar contraseñas en producción
-docker exec fittracker_mongodb mongosh --eval "
+docker exec mongodb mongosh --eval "
 db.getSiblingDB('admin').changeUserPassword('admin', 'nueva_password_segura')
 "
 
 # Verificar usuarios de MongoDB
-docker exec fittracker_mongodb mongosh --eval "
+docker exec mongodb mongosh --eval "
 db.getSiblingDB('admin').getUsers()
 "
 
 # Ver configuración de seguridad
-docker exec fittracker_mongodb mongosh --eval "
+docker exec mongodb mongosh --eval "
 db.getSiblingDB('admin').runCommand({getParameter: 1, authenticationMechanisms: 1})
 "

@@ -10,14 +10,14 @@
 					Crear Cuenta
 				</h2>
 				<p class="mt-2 text-gray-600">
-					Únete a FitnessApp y comienza tu transformación
+					Únete a FitCoacher y comienza tu transformación
 				</p>
 			</div>
 
 			<div class="card">
 				<div class="card-body">
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+					<form method="POST" action="{{ route('register') }}">
+						@csrf
 
 						<div class="space-y-4">
 							<div>
@@ -25,18 +25,18 @@
 									Nombre
 								</label>
 								<input type="text" id="name" name="name" value="{{ old('name') }}"
-									   class="form-input" required autofocus>
+									   class="form-input @error('name') border-red-500 @enderror" required autofocus>
 								@error('name')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
 							</div>
 
-        <div>
+							<div>
 								<label for="email" class="block text-sm font-medium text-gray-700 mb-1">
 									Email
 								</label>
 								<input type="email" id="email" name="email" value="{{ old('email') }}"
-									   class="form-input" required>
+									   class="form-input @error('email') border-red-500 @enderror" required>
 								@error('email')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
@@ -47,29 +47,47 @@
 									Contraseña
 								</label>
 								<input type="password" id="password" name="password"
-									   class="form-input" required>
+									   class="form-input @error('password') border-red-500 @enderror" required>
 								@error('password')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
-        </div>
+							</div>
 
 							<div>
 								<label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-1">
 									Confirmar Contraseña
 								</label>
 								<input type="password" id="password_confirmation" name="password_confirmation"
-									   class="form-input" required>
-        </div>
+									   class="form-input @error('password_confirmation') border-red-500 @enderror" required>
+								@error('password_confirmation')
+								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+								@enderror
+							</div>
 
 							<div class="flex items-center">
-								<input type="checkbox" id="terms" name="terms" required
-									   class="rounded border-gray-300 text-blue-600">
+								<input type="checkbox" id="terms" name="terms" value="1" required
+									   class="rounded border-gray-300 text-blue-600 @error('terms') border-red-500 @enderror">
 								<label for="terms" class="ml-2 text-sm text-gray-600">
 									Acepto los
 									<a href="{{ route('terms') }}" class="text-blue-600 hover:text-blue-500">términos y condiciones</a>
 								</label>
-        </div>
-        </div>
+								@error('terms')
+								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+								@enderror
+							</div>
+						</div>
+
+						@if($errors->any())
+							<div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+								<div class="text-sm text-red-600">
+									@if($errors->has('error'))
+										<p>{{ $errors->first('error') }}</p>
+									@else
+										<p>Por favor corrige los errores marcados en el formulario.</p>
+									@endif
+								</div>
+							</div>
+						@endif
 
 						<button type="submit" class="btn-primary w-full mt-6">
 							Crear Cuenta
@@ -81,10 +99,10 @@
 							¿Ya tienes una cuenta?
 							<a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-500 font-medium">
 								Iniciar Sesión
-            </a>
+							</a>
 						</p>
 					</div>
-        </div>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -10,7 +10,7 @@
 					Iniciar Sesión
 				</h2>
 				<p class="mt-2 text-gray-600">
-					Accede a tu cuenta de FitnessApp
+					Accede a tu cuenta de FitCoacher
 				</p>
 			</div>
 
@@ -25,7 +25,7 @@
 									Email
 								</label>
 								<input type="email" id="email" name="email" value="{{ old('email') }}"
-									   class="form-input" required autofocus>
+									   class="form-input @error('email') border-red-500 @enderror" required autofocus>
 								@error('email')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
@@ -36,7 +36,7 @@
 									Contraseña
 								</label>
 								<input type="password" id="password" name="password"
-									   class="form-input" required>
+									   class="form-input @error('password') border-red-500 @enderror" required>
 								@error('password')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
@@ -44,8 +44,8 @@
 
 							<div class="flex items-center justify-between">
 								<div class="flex items-center">
-									<input type="checkbox" id="remember" name="remember"
-										   class="rounded border-gray-300 text-blue-600">
+									<input type="checkbox" id="remember" name="remember" value="1"
+										   class="rounded border-gray-300 text-blue-600" {{ old('remember') ? 'checked' : '' }}>
 									<label for="remember" class="ml-2 text-sm text-gray-600">
 										Recordarme
 									</label>
@@ -56,6 +56,16 @@
 								</a>
 							</div>
 						</div>
+
+						@if($errors->any())
+							<div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+								<div class="text-sm text-red-600">
+									@foreach($errors->all() as $error)
+										<p>{{ $error }}</p>
+									@endforeach
+								</div>
+							</div>
+						@endif
 
 						<button type="submit" class="btn-primary w-full mt-6">
 							Iniciar Sesión
