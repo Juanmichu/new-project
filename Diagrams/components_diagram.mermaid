@@ -1,0 +1,51 @@
+graph TB
+    subgraph "Capa de Presentación"
+        UI[UI Components]
+        Routes[Vue/React Router]
+        Store[State Management]
+    end
+
+    subgraph "Capa de API"
+        ApiRoutes[Rutas API]
+        Middleware[Middleware Stack]
+        Controllers[Controladores]
+    end
+
+    subgraph "Capa de Negocio"
+        Services[Servicios]
+        Validators[Validadores]
+        Events[Eventos]
+        Jobs[Jobs/Queues]
+    end
+
+    subgraph "Capa de Datos"
+        Models[Modelos Eloquent]
+        Repositories[Repositorios]
+        Cache[Cache Layer]
+    end
+
+    subgraph "Infraestructura"
+        MongoDB[(MongoDB)]
+        Redis[(Redis Cache)]
+        FileStorage[Storage]
+    end
+
+    UI --> Routes
+    Routes --> Store
+    Store --> ApiRoutes
+
+    ApiRoutes --> Middleware
+    Middleware --> Controllers
+
+    Controllers --> Services
+    Controllers --> Validators
+    Services --> Events
+    Services --> Jobs
+
+    Services --> Models
+    Models --> Repositories
+    Repositories --> Cache
+
+    Repositories --> MongoDB
+    Cache --> Redis
+    Controllers --> FileStorage

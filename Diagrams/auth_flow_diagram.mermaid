@@ -1,0 +1,23 @@
+flowchart TD
+    A[Cliente] -->|1. POST /login| B[AuthController]
+    B -->|2. Validar Credenciales| C{¿Válidas?}
+
+C -->|No| D[Error 401]
+C -->|Sí| E[Generar Token Sanctum]
+
+E -->|3. Guardar en DB| F[(personal_access_tokens)]
+F -->|4. Retornar| G[Token + User Data]
+
+G -->|5. Almacenar| H[LocalStorage/Cookie]
+
+H -->|6. Requests Futuras| I[Header: Bearer Token]
+I -->|7. Verificar| J[Middleware Auth]
+
+J -->|8. Validar Token| K{¿Token Válido?}
+K -->|No| L[Error 401]
+K -->|Sí| M[Continuar Request]
+
+style A fill:#f9f,stroke:#333,stroke-width:2px
+style M fill:#9f9,stroke:#333,stroke-width:2px
+style D fill:#f99,stroke:#333,stroke-width:2px
+style L fill:#f99,stroke:#333,stroke-width:2px

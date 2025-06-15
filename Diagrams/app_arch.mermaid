@@ -1,0 +1,35 @@
+graph TB
+    subgraph "Frontend (Cliente)"
+        A[Navegador Web]
+        B[Aplicación React]
+    end
+
+    subgraph "Backend (Laravel)"
+        C[Rutas API]
+        D[Controladores]
+        E[Middleware Auth]
+        F[Modelos Eloquent]
+    end
+
+    subgraph "Base de Datos"
+        G[(MongoDB)]
+    end
+
+    subgraph "Servicios"
+        H[Laravel Sanctum]
+        I[Cache]
+        J[Queue/Jobs]
+    end
+
+    A --> B
+    B -->|HTTP/REST| C
+    C --> E
+    E --> D
+    D --> F
+    F -->|ODM| G
+    D --> H
+    D --> I
+    D --> J
+
+    style G fill:#4db33d,stroke:#333,stroke-width:2px
+    style H fill:#fb503b,stroke:#333,stroke-width:2px

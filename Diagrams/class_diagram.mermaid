@@ -1,0 +1,134 @@
+classDiagram
+    class User {
+        +String _id
+        +String name
+        +String email
+        +String password
+        +Integer age
+        +Float weight
+        +Float height
+        +String fitness_level
+        +Array goals
+        +String avatar
+        +Object preferences
+        +String role
+        +Boolean is_active
+        +DateTime created_at
+        +DateTime updated_at
+        +isAdmin() Boolean
+        +isActive() Boolean
+        +getTodayWorkout() Workout
+        +getCompletedWorkoutsCount() Integer
+        +getActiveStreakDays() Integer
+        +getBMI() Float
+    }
+
+    class Exercise {
+        +String _id
+        +String name
+        +String description
+        +String category
+        +Array muscle_groups
+        +Array equipment_needed
+        +String difficulty_level
+        +Array instructions
+        +String video_url
+        +String image_url
+        +Integer calories_per_minute
+        +Boolean is_active
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Workout {
+        +String _id
+        +String user_id
+        +String name
+        +String description
+        +Date workout_date
+        +Integer total_duration
+        +String difficulty_level
+        +String status
+        +String notes
+        +Integer calories_burned
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class WorkoutExercise {
+        +String _id
+        +String workout_id
+        +String exercise_id
+        +Integer sets
+        +Integer reps
+        +Float weight
+        +Integer duration
+        +Integer rest_time
+        +Integer order
+        +String notes
+        +Boolean completed
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class WorkoutSession {
+        +String _id
+        +String user_id
+        +String workout_id
+        +DateTime started_at
+        +DateTime completed_at
+        +Integer duration
+        +Integer calories_burned
+        +Integer exercises_completed
+        +Integer total_exercises
+        +String notes
+        +Integer rating
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class Article {
+        +String _id
+        +String user_id
+        +String title
+        +String slug
+        +String excerpt
+        +String content
+        +String category
+        +Array tags
+        +String featured_image
+        +DateTime published_at
+        +String status
+        +Integer views
+        +Integer likes
+        +Boolean is_featured
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    class NewsArticle {
+        +String _id
+        +String title
+        +String slug
+        +String excerpt
+        +String content
+        +String category
+        +Array tags
+        +String featured_image
+        +String author_name
+        +String source_url
+        +DateTime published_at
+        +String status
+        +Integer views
+        +Boolean is_breaking
+        +DateTime created_at
+        +DateTime updated_at
+    }
+
+    User "1" --> "*" Workout : creates
+    User "1" --> "*" WorkoutSession : tracks
+    User "1" --> "*" Article : writes
+    Workout "1" --> "*" WorkoutExercise : contains
+    Exercise "1" --> "*" WorkoutExercise : used in
+    Workout "1" --> "*" WorkoutSession : has sessions
+    User "1" --> "*" WorkoutSession : performs

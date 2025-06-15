@@ -1,0 +1,18 @@
+flowchart LR
+    A[Usuario] -->|Registro/Login| B[Autenticación]
+    B -->|Token| C[API Endpoints]
+
+    C -->|CRUD| D[Workouts]
+    C -->|Lectura| E[Exercises]
+    C -->|Tracking| F[Sessions]
+
+    D -->|Contiene| G[WorkoutExercises]
+    E -->|Referencia| G
+
+    F -->|Registra| H[Progreso]
+    H -->|Estadísticas| I[Dashboard]
+
+    C -->|Lectura| J[Articles/News]
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style I fill:#9f9,stroke:#333,stroke-width:2px

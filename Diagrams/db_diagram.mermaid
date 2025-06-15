@@ -1,0 +1,141 @@
+erDiagram
+    USERS {
+        ObjectId _id PK
+        string name
+        string email UK
+        string password
+        int age
+        decimal weight
+        decimal height
+        string fitness_level
+        array goals
+        string avatar
+        object preferences
+        string role
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    EXERCISES {
+        ObjectId _id PK
+        string name
+        string description
+        string category
+        array muscle_groups
+        array equipment_needed
+        string difficulty_level
+        array instructions
+        string video_url
+        string image_url
+        int calories_per_minute
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    WORKOUTS {
+        ObjectId _id PK
+        ObjectId user_id FK
+        string name
+        string description
+        date workout_date
+        int total_duration
+        string difficulty_level
+        string status
+        string notes
+        int calories_burned
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    WORKOUT_EXERCISES {
+        ObjectId _id PK
+        ObjectId workout_id FK
+        ObjectId exercise_id FK
+        int sets
+        int reps
+        decimal weight
+        int duration
+        int rest_time
+        int order
+        string notes
+        boolean completed
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    WORKOUT_SESSIONS {
+        ObjectId _id PK
+        ObjectId user_id FK
+        ObjectId workout_id FK
+        timestamp started_at
+        timestamp completed_at
+        int duration
+        int calories_burned
+        int exercises_completed
+        int total_exercises
+        string notes
+        int rating
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ARTICLES {
+        ObjectId _id PK
+        ObjectId user_id FK
+        string title
+        string slug UK
+        string excerpt
+        text content
+        string category
+        array tags
+        string featured_image
+        timestamp published_at
+        string status
+        int views
+        int likes
+        boolean is_featured
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    NEWS_ARTICLES {
+        ObjectId _id PK
+        string title
+        string slug UK
+        string excerpt
+        text content
+        string category
+        array tags
+        string featured_image
+        string author_name
+        string source_url
+        timestamp published_at
+        string status
+        int views
+        boolean is_breaking
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PERSONAL_ACCESS_TOKENS {
+        ObjectId _id PK
+        string tokenable_type
+        ObjectId tokenable_id
+        string name
+        string token UK
+        text abilities
+        timestamp last_used_at
+        timestamp expires_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    USERS ||--o{ WORKOUTS : "creates"
+    USERS ||--o{ WORKOUT_SESSIONS : "performs"
+    USERS ||--o{ ARTICLES : "writes"
+    USERS ||--o{ PERSONAL_ACCESS_TOKENS : "has"
+    WORKOUTS ||--o{ WORKOUT_EXERCISES : "contains"
+    EXERCISES ||--o{ WORKOUT_EXERCISES : "used_in"
+    WORKOUTS ||--o{ WORKOUT_SESSIONS : "tracked_by"

@@ -1,0 +1,32 @@
+graph LR
+    subgraph "Aplicación"
+        A[Laravel App]
+        B[API Endpoints]
+    end
+
+    subgraph "Recolección"
+        C[Laravel Telescope]
+        D[Custom Metrics]
+        E[Error Tracking]
+    end
+
+    subgraph "Almacenamiento"
+        F[Prometheus]
+        G[ElasticSearch]
+    end
+
+    subgraph "Visualización"
+        H[Grafana]
+        I[Kibana]
+    end
+
+    A --> C
+    B --> D
+    A --> E
+
+    C --> G
+    D --> F
+    E --> G
+
+    F --> H
+    G --> I

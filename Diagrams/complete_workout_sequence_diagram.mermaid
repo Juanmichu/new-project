@@ -1,0 +1,28 @@
+sequenceDiagram
+    participant U as Usuario
+    participant F as Frontend
+    participant API as API Laravel
+    participant C as WorkoutController
+    participant S as WorkoutSession
+    participant E as WorkoutExercise
+    participant DB as MongoDB
+
+    U->>F: Marcar Ejercicio Completado
+    F->>API: POST /api/workouts/{id}/exercises/{id}/complete
+    API->>C: markExerciseComplete()
+    C->>E: find(exerciseId)
+    E->>DB: Buscar Ejercicio
+    DB-->>E: Datos Ejercicio
+    E->>E: update(completed: true)
+    E->>DB: Actualizar Estado
+    DB-->>E: Confirmación
+
+    C->>S: updateProgress()
+    S->>DB: Actualizar Sesión
+    DB-->>S: Confirmación
+
+    S->>S: calcularEstadísticas()
+    S-->>C: Progreso Actualizado
+    C-->>API: Response 200
+    API-->>F: JSON {progress}
+    F-->>U: Actualizar UI

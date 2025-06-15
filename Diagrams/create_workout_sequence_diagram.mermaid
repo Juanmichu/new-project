@@ -1,0 +1,25 @@
+sequenceDiagram
+    participant U as Usuario
+    participant F as Frontend
+    participant API as API Laravel
+    participant Auth as Middleware Auth
+    participant C as WorkoutController
+    participant M as Modelo Workout
+    participant DB as MongoDB
+
+    U->>F: Clic "Crear Entrenamiento"
+    F->>API: POST /api/workouts
+    API->>Auth: Verificar Token
+    Auth-->>API: Usuario Autenticado
+    API->>C: store(request)
+    C->>C: Validar Datos
+    C->>M: create(data)
+    M->>DB: Insertar Documento
+    DB-->>M: ID Generado
+    M->>M: Asociar Ejercicios
+    M->>DB: Insertar WorkoutExercises
+    DB-->>M: Confirmación
+    M-->>C: Workout Creado
+    C-->>API: Response 201
+    API-->>F: JSON {workout}
+    F-->>U: Mostrar Confirmación

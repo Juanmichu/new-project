@@ -1,0 +1,57 @@
+graph TB
+    subgraph "API Gateway"
+        GW[Nginx/Kong]
+    end
+
+    subgraph "Servicios"
+        subgraph "Auth Service"
+            AS[Laravel Auth API]
+            ADB[(Auth DB)]
+        end
+
+        subgraph "Workout Service"
+            WS[Workout API]
+            WDB[(Workout DB)]
+        end
+
+        subgraph "Content Service"
+            CS[Content API]
+            CDB[(Content DB)]
+        end
+
+        subgraph "Analytics Service"
+            ANS[Analytics API]
+            ANDB[(Analytics DB)]
+        end
+    end
+
+    subgraph "Servicios Compartidos"
+        Q[RabbitMQ/Redis Queue]
+        C[Redis Cache]
+        S[S3/Storage]
+    end
+
+    Client[Cliente Web/Mobile]
+
+    Client --> GW
+    GW --> AS
+    GW --> WS
+    GW --> CS
+    GW --> ANS
+
+    AS --> ADB
+    WS --> WDB
+    CS --> CDB
+    ANS --> ANDB
+
+    AS --> Q
+    WS --> Q
+    CS --> Q
+    ANS --> Q
+
+    AS --> C
+    WS --> C
+    CS --> C
+
+    WS --> S
+    CS --> S

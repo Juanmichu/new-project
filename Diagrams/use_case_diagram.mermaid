@@ -1,0 +1,68 @@
+graph TB
+    subgraph "Actores"
+        U[Usuario]
+        A[Administrador]
+        G[Invitado]
+    end
+
+    subgraph "Sistema FitCoacher"
+        subgraph "Autenticación"
+            UC1[Registrarse]
+            UC2[Iniciar Sesión]
+            UC3[Cerrar Sesión]
+            UC4[Recuperar Contraseña]
+        end
+
+        subgraph "Gestión de Perfil"
+            UC5[Ver Perfil]
+            UC6[Editar Perfil]
+            UC7[Configurar Objetivos]
+            UC8[Ver Estadísticas]
+        end
+
+        subgraph "Ejercicios"
+            UC9[Buscar Ejercicios]
+            UC10[Ver Detalle Ejercicio]
+            UC11[Marcar Favorito]
+            UC12[Crear Ejercicio]
+        end
+
+        subgraph "Entrenamientos"
+            UC13[Crear Entrenamiento]
+            UC14[Ver Entrenamientos]
+            UC15[Iniciar Sesión Entrenamiento]
+            UC16[Registrar Progreso]
+            UC17[Ver Historial]
+        end
+
+        subgraph "Contenido"
+            UC18[Leer Artículos]
+            UC19[Ver Noticias]
+            UC20[Dar Like]
+            UC21[Publicar Artículo]
+        end
+    end
+
+    G --> UC1
+    G --> UC2
+    G --> UC9
+    G --> UC10
+    G --> UC18
+    G --> UC19
+
+    U --> UC3
+    U --> UC5
+    U --> UC6
+    U --> UC7
+    U --> UC8
+    U --> UC11
+    U --> UC13
+    U --> UC14
+    U --> UC15
+    U --> UC16
+    U --> UC17
+    U --> UC20
+
+    A --> UC12
+    A --> UC21
+    A -.-> U

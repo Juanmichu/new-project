@@ -1,0 +1,32 @@
+graph TB
+    subgraph "Capa Externa"
+        CF[Cloudflare/WAF]
+        SSL[SSL/TLS]
+    end
+
+    subgraph "Capa de Aplicación"
+        CORS[CORS Policy]
+        RateLimit[Rate Limiting]
+        Sanctum[Laravel Sanctum]
+    end
+
+    subgraph "Capa de Datos"
+        Encrypt[Encriptación]
+        Backup[Backups]
+        Audit[Audit Logs]
+    end
+
+    Internet -->|HTTPS| CF
+    CF --> SSL
+    SSL --> CORS
+    CORS --> RateLimit
+    RateLimit --> Sanctum
+
+    Sanctum --> Encrypt
+    Encrypt --> MongoDB[(MongoDB)]
+    MongoDB --> Backup
+    MongoDB --> Audit
+
+    style CF fill:#ff9,stroke:#333,stroke-width:2px
+    style Sanctum fill:#9ff,stroke:#333,stroke-width:2px
+    style Encrypt fill:#f9f,stroke:#333,stroke-width:2px

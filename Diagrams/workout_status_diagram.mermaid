@@ -1,0 +1,22 @@
+stateDiagram-v2
+    [*] --> Planificado: Crear Entrenamiento
+
+    Planificado --> EnProgreso: Iniciar Sesión
+    Planificado --> Saltado: Marcar como Saltado
+
+    EnProgreso --> Pausado: Pausar
+    EnProgreso --> Completado: Finalizar
+    EnProgreso --> Cancelado: Cancelar
+
+    Pausado --> EnProgreso: Reanudar
+    Pausado --> Cancelado: Cancelar
+
+    Completado --> [*]: Guardar Estadísticas
+    Saltado --> [*]: Registrar
+    Cancelado --> [*]: Registrar
+
+    state Completado {
+        [*] --> Calificando
+        Calificando --> Calificado: Dar Rating
+        Calificado --> [*]
+    }
