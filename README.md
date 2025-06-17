@@ -62,7 +62,7 @@ MongoDB: mongodb://user:pass@localhost:27017
 #### Clona el repositorio:
 
 bash git clone <url-del-repositorio>
-cd fitcoacher/backend
+cd new-project/backend
 
 #### Instala las dependencias PHP:
 
@@ -183,7 +183,7 @@ Configura MongoDB para uso en producción
 ## 📝 Variables de Entorno
 
 Variables de entorno clave para configurar:
-envAPP_NAME=FitCoacher
+envAPP_NAME=new-project
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://tu-dominio.com
