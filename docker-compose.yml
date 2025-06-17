@@ -6,6 +6,7 @@ services:
     volumes:
       - ./backend:/var/www/html
       - /var/www/html/vendor
+      - /var/www/html/node_modules
     ports:
       - "8000:8000"
     depends_on:
@@ -14,7 +15,7 @@ services:
       - APP_ENV=local
       - APP_DEBUG=true
       - APP_KEY=base64:zhbPBk81SFLfSLwnd7owA9bb/SfA0gxX6k5G79gk4kk=
-      - MONGODB_URI=mongodb://mongodb:27017
+      - MONGODB_URI=mongodb://app_root:1234@mongodb:27017
       - DB_CONNECTION=mongodb
       - DB_HOST=mongodb
       - DB_PORT=27017
