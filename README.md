@@ -45,12 +45,12 @@ Docker y Docker Compose (opcional)
 
 #### Clona el repositorio:
 
-bashgit clone <url-del-repositorio>
+bash git clone <url-del-repositorio>
 cd fitcoacher
 
 ### Inicia los contenedores Docker:
 
-bashcd backend
+bash cd backend
 docker-compose up -d
 La aplicación estará disponible en:
 
@@ -61,20 +61,20 @@ MongoDB: mongodb://localhost:27017
 
 #### Clona el repositorio:
 
-bashgit clone <url-del-repositorio>
+bash git clone <url-del-repositorio>
 cd fitcoacher/backend
 
 #### Instala las dependencias PHP:
 
-bashcomposer install
+bash composer install
 
 #### Instala las dependencias Node:
 
-bashnpm install
+bash npm install
 
 #### Copia el archivo de entorno:
 
-bashcp .env.example .env
+bash cp .env.example .env
 
 #### Configura tu conexión MongoDB en .env:
 
@@ -87,19 +87,19 @@ DB_PASSWORD=1234
 
 #### Genera la clave de aplicación:
 
-bashphp artisan key:generate
+bash php artisan key:generate
 
 #### Ejecuta los seeders de la base de datos:
 
-bashphp artisan db:seed
+bash php artisan db:seed
 
 #### Construye los assets del frontend:
 
-bashnpm run build
+bash npm run build
 
 #### Inicia el servidor de desarrollo:
 
-bashphp artisan serve
+bash php artisan serve
 
 ## 📱 Endpoints de API
 
@@ -169,7 +169,7 @@ Contraseña: password123
 ## 🧪 Pruebas
 
 Ejecuta el conjunto de pruebas:
-bashphp artisan test
+bash php artisan test
 
 ## 🚀 Despliegue
 
