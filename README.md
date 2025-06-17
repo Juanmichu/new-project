@@ -55,7 +55,7 @@ docker-compose up -d
 La aplicación estará disponible en:
 
 Backend: http://localhost:8000
-MongoDB: mongodb://localhost:27017
+MongoDB: mongodb://user:pass@localhost:27017
 
 ### Instalación Manual
 
@@ -79,7 +79,7 @@ bash cp .env.example .env
 #### Configura tu conexión MongoDB en .env:
 
 envDB_CONNECTION=mongodb
-DB_HOST=127.0.0.1
+DB_HOST=mongodb
 DB_PORT=27017
 DB_DATABASE=laraveldb
 DB_USERNAME=app_root
