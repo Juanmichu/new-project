@@ -72,13 +72,9 @@ bash composer install
 
 bash npm install
 
-#### Copia el archivo de entorno:
-
-bash cp .env.example .env
-
 #### Configura tu conexión MongoDB en .env:
 
-envDB_CONNECTION=mongodb
+DB_CONNECTION=mongodb
 DB_HOST=mongodb
 DB_PORT=27017
 DB_DATABASE=laraveldb
@@ -97,9 +93,10 @@ bash php artisan db:seed
 
 bash npm run build
 
-#### Inicia el servidor de desarrollo:
+#### Construye el entorno y levántalo en modo “detach”
 
-bash php artisan serve
+bash docker compose up —-build -d
+
 
 ## 📱 Endpoints de API
 
