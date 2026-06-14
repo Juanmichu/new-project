@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 			[
 				'name' => 'John Doe',
 				'email' => 'john@example.com',
-				'password' => 1234,
+				'password' => Hash::make('password123'),
 				'age' => 30,
 				'height' => 180,
 				'weight' => 80,

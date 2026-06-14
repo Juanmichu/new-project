@@ -26,9 +26,6 @@ class Exercise extends Model
 	];
 
 	protected $casts = [
-		'muscle_groups' => 'array',
-		'equipment_needed' => 'array',
-		'instructions' => 'array',
 		'is_active' => 'boolean',
 		'created_at' => 'datetime',
 		'updated_at' => 'datetime'

@@ -41,7 +41,7 @@ services:
       - REACT_APP_API_URL=http://localhost:8000/api
       - CHOKIDAR_USEPOLLING=true
     extra_hosts:
-      - frontend-react.com=127.0.0.1
+      - frontend-react.com=127.0.0.2
     depends_on:
       - backend
     ports:
