@@ -29,7 +29,6 @@ class NewsArticle extends Model
 	];
 
 	protected $casts = [
-		'tags' => 'array',
 		'published_at' => 'datetime',
 		'views' => 'integer',
 		'is_breaking' => 'boolean',

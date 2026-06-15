@@ -37,8 +37,6 @@ class User extends MongoAuthenticatable
 	protected $casts = [
 		'email_verified_at' => 'datetime',
 		'password' => 'hashed',
-		'goals' => 'array',
-		'preferences' => 'array',
 		'is_active' => 'boolean',
 		'age' => 'integer',
 		'weight' => 'decimal:2',
