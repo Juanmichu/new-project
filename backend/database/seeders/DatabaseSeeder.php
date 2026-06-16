@@ -233,7 +233,6 @@ class DatabaseSeeder extends Seeder
 		// Create blog articles
 		$articles = Article::factory()->createMany([
 			[
-				'user_id' => '1',
 				'title' => '10 Best Exercises for Building Core Strength',
 				'slug' => '10-best-exercises-building-core-strength',
 				'excerpt' => 'Discover the most effective exercises to strengthen your core and improve your overall fitness performance.',
@@ -244,10 +243,11 @@ class DatabaseSeeder extends Seeder
 				'status' => 'published',
 				'views' => 150,
 				'likes' => 25,
-				'is_featured' => true
+				'is_featured' => true,
+                'author' => 'John Doe',
+                'reading_time' => '5 min'
 			],
 			[
-				'user_id' => '1',
 				'title' => 'The Science Behind Post-Workout Nutrition',
 				'slug' => 'science-behind-post-workout-nutrition',
 				'excerpt' => 'Learn how to fuel your body properly after intense training sessions for optimal recovery and results.',
@@ -258,7 +258,9 @@ class DatabaseSeeder extends Seeder
 				'status' => 'published',
 				'views' => 89,
 				'likes' => 15,
-				'is_featured' => false
+				'is_featured' => false,
+                'author' => 'Jane Smith',
+                'reading_time' => '3 min'
 			]
 		]);
 
