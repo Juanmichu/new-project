@@ -7,7 +7,7 @@ use App\Models\Workout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ExerciseController extends Controller
+class AuthExerciseController extends Controller
 {
 	public function __construct()
 	{
