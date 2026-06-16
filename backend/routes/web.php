@@ -48,10 +48,9 @@ Route::middleware('auth')->group(function () {
 Route::controller(ExerciseController::class)->group(function () {
 	// Rutas públicas
 	Route::get('/exercises', 'index')->name('exercises.index');
-	Route::get('/exercises/{exercise}', 'show')->name('exercises.show');
 
-	// Rutas protegidas (solo usuarios autenticados)
-	Route::middleware('auth')->group(function () {
+    // Rutas protegidas (solo usuarios autenticados)
+    Route::middleware('auth')->group(function () {
 		Route::get('/exercises/create', 'create')->name('exercises.create');
 		Route::post('/exercises', 'store')->name('exercises.store');
 		Route::get('/exercises/{exercise}/edit', 'edit')->name('exercises.edit');
@@ -60,25 +59,28 @@ Route::controller(ExerciseController::class)->group(function () {
 
 		// Funcionalidades adicionales
 		Route::post('/exercises/{exercise}/favorite', 'toggleFavorite')->name('exercises.favorite');
-		Route::get('/exercises/{exercise}/start-workout', 'startWorkout')->name('exercises.start-workout');
 	});
+
+    // Debe ir la última para que no interfiera con las rutas anteriores
+    Route::get('/exercises/{exercise}', 'show')->name('exercises.show');
 });
 
 // Rutas del blog (públicas)
 Route::controller(BlogController::class)->group(function () {
 	Route::get('/blog', 'index')->name('blog.index');
-	Route::get('/blog/{slug}', 'show')->name('blog.show');
-	Route::get('/blog/category/{category}', 'category')->name('blog.category');
-	Route::get('/blog/author/{author}', 'author')->name('blog.author');
+    Route::get('/blog/category/{category}', 'category')->name('blog.category');
+    Route::get('/blog/author/{author}', 'author')->name('blog.author');
 
-	// Rutas administrativas del blog (solo para usuarios autenticados)
-	Route::middleware('auth')->group(function () {
+    // Rutas administrativas del blog (solo para usuarios autenticados)
+    Route::middleware('auth')->group(function () {
 		Route::get('/blog/create', 'create')->name('blog.create');
 		Route::post('/blog', 'store')->name('blog.store');
 		Route::get('/blog/{slug}/edit', 'edit')->name('blog.edit');
 		Route::patch('/blog/{slug}', 'update')->name('blog.update');
 		Route::delete('/blog/{slug}', 'destroy')->name('blog.destroy');
 	});
+
+    Route::get('/blog/{slug}', 'show')->name('blog.show');
 });
 
 // Rutas adicionales de utilidad
