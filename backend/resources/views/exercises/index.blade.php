@@ -14,9 +14,7 @@
                     <p class="text-gray-600">Find the perfect exercise for your training</p>
                 </div>
                 @auth
-                    <a href="{{ route('exercises.create') }}" class="btn-primary mt-4 md:mt-0">
-                        Add Exercise
-                    </a>
+                    <a href="{{ route('exercises.create') }}" class="btn-primary mt-4 p-4 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Add New Exercise</a>
                 @endauth
             </div>
         </div>
@@ -27,38 +25,39 @@
         <div class="card-body">
             <form method="GET" action="{{ route('exercises.index') }}" class="grid md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                     <input type="text" name="search" value="{{ request('search') }}"
-                           placeholder="Nombre del ejercicio..."
+                           placeholder="Exercise name, description..."
                            class="form-input">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Grupo Muscular</label>
-                    <select name="muscle_group" class="form-input">
-                        <option value="">Todos</option>
-                        <option value="pecho" {{ request('muscle_group') == 'pecho' ? 'selected' : '' }}>Pecho</option>
-                        <option value="espalda" {{ request('muscle_group') == 'espalda' ? 'selected' : '' }}>Espalda</option>
-                        <option value="piernas" {{ request('muscle_group') == 'piernas' ? 'selected' : '' }}>Piernas</option>
-                        <option value="brazos" {{ request('muscle_group') == 'brazos' ? 'selected' : '' }}>Brazos</option>
-                        <option value="core" {{ request('muscle_group') == 'core' ? 'selected' : '' }}>Core</option>
-                        <option value="hombros" {{ request('muscle_group') == 'hombros' ? 'selected' : '' }}>Hombros</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Muscle Group</label>
+                    <select name="muscle_groups" class="form-input">
+                        <option value="">All</option>
+                        @foreach($muscleGroups as $group)
+                            <option value="{{ $group }}" {{ request('muscle_groups') == $group ? 'selected' : '' }}>
+                                {{ ucfirst($group) }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Dificultad</label>
-                    <select name="difficulty" class="form-input">
-                        <option value="">Todas</option>
-                        <option value="principiante" {{ request('difficulty') == 'principiante' ? 'selected' : '' }}>Principiante</option>
-                        <option value="intermedio" {{ request('difficulty') == 'intermedio' ? 'selected' : '' }}>Intermedio</option>
-                        <option value="avanzado" {{ request('difficulty') == 'avanzado' ? 'selected' : '' }}>Avanzado</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                    <select name="difficulty_level" class="form-input">
+                        <option value="">All</option>
+                        @foreach ($difficulties as $level)
+                            <option value="{{ $level }}" {{ request('difficulty_level') == $level ? 'selected' : '' }}>
+                                {{ ucfirst($level) }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
                 <div class="flex items-end">
                     <button type="submit" class="btn-primary w-full">
-                        Filtrar
+                        Filter
                     </button>
                 </div>
             </form>
@@ -67,7 +66,7 @@
 
     <!-- Exercises Grid -->
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
+        <!-- @var $exercise \App\Models\Exercise -->
         @foreach($exercises as $exercise)
             <div class="card hover:shadow-lg transition-shadow">
                 <div class="card-body">
@@ -83,21 +82,25 @@
                     <div class="mb-3">
                         @if(isset($exercise['muscle_groups']))
                         <span class="inline-block bg-blue-600 text-white text-sm px-2 py-1 rounded mr-2">
-                            {{ implode(', ', $exercise['muscle_groups']) }}
+                            {{ is_array($exercise['muscle_groups']) ? implode(', ', $exercise['muscle_groups']) : $exercise['muscle_groups'] }}
                         </span>
                         @endif
                         @if(isset($exercise['equipment_needed']))
                         <span class="inline-block bg-green-100 text-green-800 text-sm px-2 py-1 rounded">
-                            {{ $exercise['equipment_needed'] ? implode(', ', $exercise['equipment_needed']) : 'None' }}
+                            {{ is_array($exercise['equipment_needed']) ? implode(', ', $exercise['equipment_needed']) : $exercise['equipment_needed'] }}
                         </span>
                         @endif
                     </div>
 
-                    <p class="text-gray-600 mb-4">{{ $exercise['description'] ?? '' }}</p>
+                    <div class="mb-4">
+                        <p class="text-gray-600 mb-4 h-16 overflow-hidden">
+                            {{ Str::limit($exercise['description'], 100) }}
+                        </p>
+                    </div>
 
                     <div class="flex space-x-2">
-                        <a href="{{ route('exercises.show', $exercise['id']) }}" class="btn-primary flex-1 text-center">
-                            Ver Detalles
+                        <a href="{{ route('exercises.show', $exercise['id']) }}" class="btn-primary flex-1 text-center rounded bg-blue-600 text-white hover:bg-blue-700 transition">
+                            View details
                         </a>
                         @auth
                             <button class="btn-secondary">
@@ -127,7 +130,7 @@
         </div>
     @endif
 
-    <!-- Pagination with page numbers and navigation. Using bootstrap 5. Check app/Providers/AppServiceProvider.php -->
+    <!-- Pagination with page numbers and navigation. Using tailwind -->
     {{ $exercises->links() }}
 
 </div>
