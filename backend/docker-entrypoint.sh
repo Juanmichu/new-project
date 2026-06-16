@@ -13,7 +13,7 @@ $attempt = 0;
 
 while ($attempt < $maxAttempts) {
     try {
-        $manager = new MongoDB\Driver\Manager("mongodb://app_root:1234@mongodb:27017/laraveldb");
+        $manager = new MongoDB\Driver\Manager("mongodb://app_root:1234@mongodb:27017/admin");
         $command = new MongoDB\Driver\Command(['ping' => 1]);
         $result = $manager->executeCommand('laraveldb', $command);
         echo "MongoDB connection successful!\n";
@@ -21,6 +21,7 @@ while ($attempt < $maxAttempts) {
     } catch (Exception $e) {
         $attempt++;
         echo "Attempt $attempt/$maxAttempts - MongoDB not ready yet...\n";
+        echo "Error: " . $e->getMessage() . "\n";
         sleep(2);
     }
 }
@@ -35,9 +36,9 @@ php /tmp/test_mongo.php
 # Check if we should seed the database
 echo "Checking database status..."
 
-# Simple seeding approach - always try to seed but let Laravel handle duplicates
+# Migrate the database avoiding duplicates
 echo "Running database seeder..."
-php artisan db:seed --force 2>/dev/null || echo "Seeding completed or skipped"
+php artisan migrate:refresh --seed 2>/dev/null || echo "Migration and seeding completed or skipped"
 
 echo "Laravel application ready!"
 
