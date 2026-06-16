@@ -66,7 +66,7 @@ class User extends MongoAuthenticatable
 
 	public function articles()
 	{
-		return $this->hasMany(Article::class);
+		return $this->hasMany(Article::class, 'author', 'name');
 	}
 
 	// Helper methods
