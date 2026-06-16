@@ -6,38 +6,38 @@ Una aplicación integral de fitness construida con Laravel y MongoDB que ayuda a
 
 ## 🚀 Características
 
-Autenticación y Perfiles de Usuario: Sistema seguro de registro e inicio de sesión con perfiles de usuario personalizables
-Biblioteca de Ejercicios: Navega y busca ejercicios por grupo muscular, nivel de dificultad y equipo
-Gestión de Entrenamientos: Crea, programa y rastrea rutinas de entrenamiento personalizadas
-Seguimiento de Progreso: Monitorea la finalización de entrenamientos, calorías quemadas y estadísticas de fitness
-Sistema de Blog: Lee artículos, consejos y guías sobre fitness
-Sección de Noticias: Mantente actualizado con las últimas noticias y tendencias de fitness
-Diseño Responsivo: Funciona perfectamente en dispositivos de escritorio y móviles
-Arquitectura API-First: API RESTful para integración con frontend
+* **Autenticación y Perfiles de Usuario:** Sistema seguro de registro e inicio de sesión con perfiles de usuario personalizables
+* **Biblioteca de Ejercicios:** Navega y busca ejercicios por grupo muscular, nivel de dificultad y equipo
+* **Gestión de Entrenamientos:** Crea, programa y rastrea rutinas de entrenamiento personalizadas
+* **Seguimiento de Progreso:** Monitorea la finalización de entrenamientos, calorías quemadas y estadísticas de fitness
+* **Sistema de Blog:** Lee artículos, consejos y guías sobre fitness
+* **Sección de Noticias:** Mantente actualizado con las últimas noticias y tendencias de fitness
+* **Diseño Responsivo:** Funciona perfectamente en dispositivos de escritorio y móviles
+* **Arquitectura API-First:** API RESTful para integración con frontend
 
 ## 🛠️ Stack Tecnológico
 
 ### Backend
 
-Framework: Laravel 12.x
-Base de Datos: MongoDB
-Autenticación: Laravel Sanctum
-Versión PHP: 8.2+
-Gestor de Paquetes: Composer
+* **Framework:** Laravel 12.x
+* **Base de Datos:** MongoDB
+* **Autenticación:** Laravel Sanctum
+* **Versión PHP:** 8.2+
+* **Gestor de Paquetes:** Composer
 
 ### Assets Frontend
 
-Framework CSS: Tailwind CSS 4.0
-Herramienta de Construcción: Vite
-JavaScript: Vanilla JS con Axios para llamadas API
+* **Framework CSS:** Tailwind CSS 4.0
+* **Herramienta de Construcción:** Vite
+* **JavaScript:** Vanilla JS con Axios para llamadas API
 
 ## 📋 Prerequisitos
 
-PHP 8.2 o superior
-Composer
-MongoDB 4.4+
-Node.js 18+ y npm
-Docker y Docker Compose (opcional)
+* **PHP:** 8.2 o superior
+* **Composer:** Gestor de paquetes PHP
+* **MongoDB:** 4.4+
+* **Node.js:** 18+ y npm
+* **Docker y Docker Compose:** (opcional)
 
 ## 🔧 Instalación
 
@@ -48,29 +48,45 @@ Docker y Docker Compose (opcional)
 bash git clone <url-del-repositorio>
 cd fitcoacher
 
+### Construye los assets y dependencias (si es tu primera vez):
+bash cd backend
+bash composer install
+bash npm install
+bash npm run build
+
+bash cd ../frontend
+bash npm install
+bash npm run build
+
 ### Inicia los contenedores Docker:
 
-bash cd backend
-docker-compose up -d
+** Si construyes por primera vez, usa: **
+bash docker-compose up --build -d
+
+** Si ya construiste antes, usa: **
+bash docker-compose up -d
+
 La aplicación estará disponible en:
 
-Backend: http://localhost:8000
-MongoDB: mongodb://user:pass@localhost:27017
+* **Backend:** http://localhost:8000
+* **Frontend:** http://localhost:3000
+* **MongoDB:** mongodb://user:pass@localhost:27017
 
 ### Instalación Manual
 
 #### Clona el repositorio:
 
 bash git clone <url-del-repositorio>
-cd new-project/backend
+cd fitcoacher/backend
 
 #### Instala las dependencias PHP:
 
 bash composer install
 
-#### Instala las dependencias Node:
+#### Instala las dependencias Node y construye los assets:
 
 bash npm install
+bash npm run build
 
 #### Configura tu conexión MongoDB en .env:
 
@@ -138,13 +154,13 @@ GET /api/stats/progress - Obtener datos de progreso
 
 ### Colecciones
 
-users: Perfiles de usuario con objetivos y preferencias de fitness
-exercises: Biblioteca de ejercicios con instrucciones y categorías
-workouts: Planes de entrenamiento creados por usuarios
-workout_exercises: Ejercicios dentro de los entrenamientos
-workout_sessions: Seguimiento del rendimiento real del entrenamiento
-articles: Artículos del blog de fitness
-news_articles: Noticias y actualizaciones de fitness
+* **users:** Perfiles de usuario con objetivos y preferencias de fitness
+* **exercises:** Biblioteca de ejercicios con instrucciones y categorías
+* **workouts:** Planes de entrenamiento creados por usuarios
+* **workout_exercises:** Ejercicios dentro de los entrenamientos
+* **workout_sessions:** Seguimiento del rendimiento real del entrenamiento
+* **articles:** Artículos del blog de fitness
+* **news_articles:** Noticias y actualizaciones de fitness
 
 ## 🔐 Credenciales por Defecto
 
