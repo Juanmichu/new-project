@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Exercise;
 use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
@@ -14,26 +15,26 @@ class ExerciseController extends Controller
         $exercises = $this->getFilteredExercises($request);
         $muscleGroups = $this->getMuscleGroups();
         $difficulties = $this->getDifficulties();
-        
+
         return view('exercises.index', compact('exercises', 'muscleGroups', 'difficulties'));
     }
-    
+
     /**
      * Mostrar un ejercicio específico
      */
     public function show($id)
     {
         $exercise = $this->getExerciseById($id);
-        
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
+
         $relatedExercises = $this->getRelatedExercises($exercise);
-        
+
         return view('exercises.show', compact('exercise', 'relatedExercises'));
     }
-    
+
     /**
      * Mostrar formulario para crear ejercicio
      */
@@ -42,10 +43,10 @@ class ExerciseController extends Controller
         $muscleGroups = $this->getMuscleGroups();
         $difficulties = $this->getDifficulties();
         $equipmentTypes = $this->getEquipmentTypes();
-        
+
         return view('exercises.create', compact('muscleGroups', 'difficulties', 'equipmentTypes'));
     }
-    
+
     /**
      * Guardar nuevo ejercicio
      */
@@ -60,43 +61,43 @@ class ExerciseController extends Controller
             'instructions' => 'required|array',
             'instructions.*' => 'required|string'
         ]);
-        
+
         // Aquí guardarías en la base de datos
-        // Exercise::create($validated);
-        
+        Exercise::create($validated);
+
         return redirect()->route('exercises.index')
             ->with('success', 'Ejercicio creado exitosamente');
     }
-    
+
     /**
      * Mostrar formulario de edición
      */
     public function edit($id)
     {
         $exercise = $this->getExerciseById($id);
-        
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
+
         $muscleGroups = $this->getMuscleGroups();
         $difficulties = $this->getDifficulties();
         $equipmentTypes = $this->getEquipmentTypes();
-        
+
         return view('exercises.edit', compact('exercise', 'muscleGroups', 'difficulties', 'equipmentTypes'));
     }
-    
+
     /**
      * Actualizar ejercicio
      */
     public function update(Request $request, $id)
     {
         $exercise = $this->getExerciseById($id);
-        
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -105,44 +106,46 @@ class ExerciseController extends Controller
             'equipment' => 'required|string',
             'instructions' => 'required|array'
         ]);
-        
+
         // Aquí actualizarías en la base de datos
-        
+        $exercise->update($validated);
+
         return redirect()->route('exercises.show', $id)
             ->with('success', 'Ejercicio actualizado exitosamente');
     }
-    
+
     /**
      * Eliminar ejercicio
      */
     public function destroy($id)
     {
         $exercise = $this->getExerciseById($id);
-        
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
+
         // Aquí eliminarías de la base de datos
-        
+        $exercise->delete();
+
         return redirect()->route('exercises.index')
             ->with('success', 'Ejercicio eliminado exitosamente');
     }
-    
+
     /**
      * Alternar favorito
      */
     public function toggleFavorite($id)
     {
         // Lógica para agregar/quitar de favoritos
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Favorito actualizado',
             'is_favorite' => true // o false
         ]);
     }
-    
+
     /**
      * Buscar ejercicios (API)
      */
@@ -150,17 +153,17 @@ class ExerciseController extends Controller
     {
         $query = $request->get('q', '');
         $exercises = $this->searchExercises($query);
-        
+
         return response()->json($exercises);
     }
-    
+
     /**
      * Métodos helper privados
      */
     private function getFilteredExercises(Request $request)
     {
         // Datos estáticos por ahora, luego conectarás con BD
-        $allExercises = [
+        /*$allExercises = [
             [
                 'id' => 1,
                 'name' => 'Flexiones',
@@ -209,8 +212,11 @@ class ExerciseController extends Controller
                 'description' => 'Ejercicio compuesto para trabajar múltiples grupos musculares.',
                 'equipment' => 'Barra y discos'
             ]
-        ];
-        
+        ];*/
+
+		// Conecta con BBDD de mongo
+		$allExercises = Exercise::all()->toArray();
+
         // Aplicar filtros
         if ($request->filled('search')) {
             $search = strtolower($request->search);
@@ -218,25 +224,39 @@ class ExerciseController extends Controller
                 return strpos(strtolower($exercise['name']), $search) !== false;
             });
         }
-        
+
         if ($request->filled('muscle_group')) {
             $allExercises = array_filter($allExercises, function($exercise) use ($request) {
                 return $exercise['muscle_group'] === $request->muscle_group;
             });
         }
-        
+
         if ($request->filled('difficulty')) {
             $allExercises = array_filter($allExercises, function($exercise) use ($request) {
                 return $exercise['difficulty'] === $request->difficulty;
             });
         }
-        
+
+        if($request->filled('equipment')) {
+            $allExercises = array_filter($allExercises, function($exercise) use ($request) {
+                return $exercise['equipment'] === $request->equipment;
+            });
+        }
+
+        if($request->filled('is_favorite')) {
+            $isFavorite = filter_var($request->is_favorite, FILTER_VALIDATE_BOOLEAN);
+            $allExercises = array_filter($allExercises, function($exercise) use ($isFavorite) {
+                return $exercise['is_favorite'] === $isFavorite;
+            });
+        }
+
         return array_values($allExercises);
     }
-    
+
     private function getExerciseById($id)
     {
-        $exercises = [
+        // Datos estáticos. Sustituir por conexión a base de datos
+        /*$exercises = [
             1 => [
                 'id' => 1,
                 'name' => 'Flexiones',
@@ -264,35 +284,43 @@ class ExerciseController extends Controller
                     'frequency' => '2-3 veces por semana'
                 ]
             ]
-        ];
-        
-        return $exercises[$id] ?? null;
+        ];*/
+
+        // Conecta con BBDD de mongo
+        $exercise = Exercise::find($id);
+
+        return $exercise ?? null;
     }
-    
+
     private function getRelatedExercises($exercise)
     {
-        return [
+        // Datos estáticos. Sustituir por conexión a base de datos
+        /*return [
             ['id' => 2, 'name' => 'Press de banca', 'muscle_group' => 'Pecho'],
             ['id' => 3, 'name' => 'Flexiones diamante', 'muscle_group' => 'Pecho'],
             ['id' => 4, 'name' => 'Flexiones inclinadas', 'muscle_group' => 'Pecho']
-        ];
+        ];*/
+        // Conecta con BBDD de mongo
+        return Exercise::where('muscle_group', $exercise->muscle_group)
+            ->where('id', '!=', $exercise->id)
+            ->get();
     }
-    
+
     private function getMuscleGroups()
     {
         return ['pecho', 'espalda', 'piernas', 'brazos', 'core', 'hombros'];
     }
-    
+
     private function getDifficulties()
     {
         return ['principiante', 'intermedio', 'avanzado'];
     }
-    
+
     private function getEquipmentTypes()
     {
         return ['Sin equipo', 'Mancuernas', 'Barra', 'Máquinas', 'Bandas elásticas', 'Peso corporal'];
     }
-    
+
     private function searchExercises($query)
     {
         // Implementar búsqueda

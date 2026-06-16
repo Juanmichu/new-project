@@ -28,11 +28,11 @@
             <form method="GET" action="{{ route('exercises.index') }}" class="grid md:grid-cols-4 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
-                    <input type="text" name="search" value="{{ request('search') }}" 
-                           placeholder="Nombre del ejercicio..." 
+                    <input type="text" name="search" value="{{ request('search') }}"
+                           placeholder="Nombre del ejercicio..."
                            class="form-input">
                 </div>
-                
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Grupo Muscular</label>
                     <select name="muscle_group" class="form-input">
@@ -45,7 +45,7 @@
                         <option value="hombros" {{ request('muscle_group') == 'hombros' ? 'selected' : '' }}>Hombros</option>
                     </select>
                 </div>
-                
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Dificultad</label>
                     <select name="difficulty" class="form-input">
@@ -55,7 +55,7 @@
                         <option value="avanzado" {{ request('difficulty') == 'avanzado' ? 'selected' : '' }}>Avanzado</option>
                     </select>
                 </div>
-                
+
                 <div class="flex items-end">
                     <button type="submit" class="btn-primary w-full">
                         Filtrar
@@ -68,7 +68,9 @@
     <!-- Exercises Grid -->
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         @php
-            $exercises = [
+			// Listado ejercicios estático. Comentar en cuanto el controlador esté terminado.
+			// $exercises se obtendrá directamente desde el enrutamiento de laravel con el mismo nombre. Función index
+/*            $exercises = [
                 [
                     'id' => 1,
                     'name' => 'Flexiones',
@@ -117,7 +119,7 @@
                     'description' => 'Ejercicio compuesto para trabajar múltiples grupos musculares.',
                     'equipment' => 'Barra y discos'
                 ]
-            ];
+            ];*/
         @endphp
 
         @foreach($exercises as $exercise)
@@ -126,27 +128,30 @@
                     <div class="flex justify-between items-start mb-3">
                         <h3 class="text-xl font-semibold text-gray-900">{{ $exercise['name'] }}</h3>
                         <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                            {{ $exercise['difficulty'] }}
+                            {{ $exercise['difficulty'] ?? '' }}
                         </span>
                     </div>
-                    
+
                     <div class="mb-3">
                         <span class="inline-block bg-gray-100 text-gray-800 text-sm px-2 py-1 rounded mr-2">
-                            {{ $exercise['muscle_group'] }}
+                            {{ $exercise['muscle_group'] ?? '' }}
                         </span>
                         <span class="inline-block bg-green-100 text-green-800 text-sm px-2 py-1 rounded">
-                            {{ $exercise['equipment'] }}
+                            {{ $exercise['equipment'] ?? '' }}
                         </span>
                     </div>
-                    
-                    <p class="text-gray-600 mb-4">{{ $exercise['description'] }}</p>
-                    
+
+                    <p class="text-gray-600 mb-4">{{ $exercise['description'] ?? '' }}</p>
+
                     <div class="flex space-x-2">
                         <a href="{{ route('exercises.show', $exercise['id']) }}" class="btn-primary flex-1 text-center">
                             Ver Detalles
                         </a>
                         @auth
                             <button class="btn-secondary">
+                                @php
+                                    // Añadir funcionalidad al botón favoritos
+                                @endphp
                                 ❤️
                             </button>
                         @endauth

@@ -63,6 +63,12 @@ class DatabaseSeeder extends Seeder
 					'Push back up to the starting position',
 					'Repeat for desired reps'
 				],
+                'recommendations' => [
+                    'repetitions' => '8-15 reps',
+                    'sets' => '3-4 series',
+                    'rest' => '60-90 seconds between sets',
+                    'frequency' => '2-3 times per week'
+                ],
 				'calories_per_minute' => 8,
 				'is_active' => true
 			],
@@ -79,6 +85,12 @@ class DatabaseSeeder extends Seeder
 					'Lower yourself back down with control',
 					'Repeat for desired reps'
 				],
+                'recommendations' => [
+                    'repetitions' => '6-12 reps',
+                    'sets' => '3-4 series',
+                    'rest' => '90-120 seconds between sets',
+                    'frequency' => '2-3 times per week'
+                ],
 				'calories_per_minute' => 10,
 				'is_active' => true
 			],
@@ -95,6 +107,12 @@ class DatabaseSeeder extends Seeder
 					'Keep your chest up and knees over your toes',
 					'Return to standing position'
 				],
+                'recommendations' => [
+                    'repetitions' => '10-20 reps',
+                    'sets' => '3-4 series',
+                    'rest' => '60-90 seconds between sets',
+                    'frequency' => '2-3 times per week'
+                ],
 				'calories_per_minute' => 6,
 				'is_active' => true
 			],
@@ -111,6 +129,12 @@ class DatabaseSeeder extends Seeder
 					'Keep your body in a straight line',
 					'Hold for desired time'
 				],
+                'recommendations' => [
+                    'duration' => '30-60 seconds',
+                    'sets' => '3-4 series',
+                    'rest' => '30-60 seconds between sets',
+                    'frequency' => '3-4 times per week'
+                ],
 				'calories_per_minute' => 4,
 				'is_active' => true
 			],
@@ -128,6 +152,12 @@ class DatabaseSeeder extends Seeder
 					'Jump feet back to squat position',
 					'Jump up with arms overhead'
 				],
+                'recommendations' => [
+                    'repetitions' => '10-15 reps',
+                    'sets' => '3-4 series',
+                    'rest' => '60-90 seconds between sets',
+                    'frequency' => '2-3 times per week'
+                ],
 				'calories_per_minute' => 12,
 				'is_active' => true
 			]
