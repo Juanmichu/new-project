@@ -138,10 +138,10 @@
 
                 <!-- Botones -->
                 <div class="flex justify-between mt-8">
-                    <a href="{{ route('exercises.index') }}" class="btn-secondary">
+                    <a href="{{ route('exercises.index') }}" class="btn-secondary cursor-pointer">
                         Cancel
                     </a>
-                    <button type="submit" class="btn-primary px-6 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition">
+                    <button type="submit" class="btn-primary px-6 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition cursor-pointer">
                         Create Exercise
                     </button>
                 </div>

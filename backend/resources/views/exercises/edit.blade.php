@@ -52,43 +52,49 @@
 								<label for="muscle_group" class="block text-sm font-medium text-gray-700 mb-1">
 									Grupo Muscular *
 								</label>
-								<select id="muscle_group" name="muscle_group" class="form-input" required>
-									<option value="">Seleccionar...</option>
-									<option value="pecho" {{ old('muscle_group', strtolower($exercise['muscle_group'])) == 'pecho' ? 'selected' : '' }}>Pecho</option>
-									<option value="espalda" {{ old('muscle_group', strtolower($exercise['muscle_group'])) == 'espalda' ? 'selected' : '' }}>Espalda</option>
-									<option value="piernas" {{ old('muscle_group', strtolower($exercise['muscle_group'])) == 'piernas' ? 'selected' : '' }}>Piernas</option>
-									<option value="brazos" {{ old('muscle_group', strtolower($exercise['muscle_group'])) == 'brazos' ? 'selected' : '' }}>Brazos</option>
-									<option value="core" {{ old('muscle_group', strtolower($exercise['muscle_group'])) == 'core' ? 'selected' : '' }}>Core</option>
-									<option value="hombros" {{ old('muscle_group', strtolower($exercise['muscle_group'])) == 'hombros' ? 'selected' : '' }}>Hombros</option>
+								@php
+									$currentMuscleGroup = is_array($exercise['muscle_groups'] ?? null)
+										? strtolower($exercise['muscle_groups'][0] ?? '')
+										: strtolower($exercise['muscle_groups'] ?? '');
+								@endphp
+								<select id="muscle_group" name="muscle_groups" class="form-input" required>
+									<option value="">Select...</option>
+                                    @foreach($muscleGroups as $group)
+                                        <option value="{{ $group }}" {{ $currentMuscleGroup === strtolower($group) ? 'selected' : '' }}>
+                                            {{ ucfirst($group) }}
+                                        </option>
+                                    @endforeach
 								</select>
-								@error('muscle_group')
+								@error('muscle_groups')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
 							</div>
 
 							<div>
 								<label for="difficulty" class="block text-sm font-medium text-gray-700 mb-1">
-									Dificultad *
+									Difficulty *
 								</label>
-								<select id="difficulty" name="difficulty" class="form-input" required>
-									<option value="">Seleccionar...</option>
-									<option value="principiante" {{ old('difficulty', strtolower($exercise['difficulty'])) == 'principiante' ? 'selected' : '' }}>Principiante</option>
-									<option value="intermedio" {{ old('difficulty', strtolower($exercise['difficulty'])) == 'intermedio' ? 'selected' : '' }}>Intermedio</option>
-									<option value="avanzado" {{ old('difficulty', strtolower($exercise['difficulty'])) == 'avanzado' ? 'selected' : '' }}>Avanzado</option>
+								<select id="difficulty" name="difficulty_level" class="form-input" required>
+									<option value="">Select...</option>
+                                    @foreach($difficulties as $level)
+                                        <option value="{{ $level }}" {{ $exercise['difficulty_level'] === $level ? 'selected' : '' }}>
+                                            {{ ucfirst($level) }}
+                                        </option>
+                                    @endforeach
 								</select>
-								@error('difficulty')
+								@error('difficulty_level')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
 							</div>
 
 							<div>
 								<label for="equipment" class="block text-sm font-medium text-gray-700 mb-1">
-									Equipo Necesario *
+									Required Equipment *
 								</label>
-								<input type="text" id="equipment" name="equipment"
-									   value="{{ old('equipment', $exercise['equipment']) }}"
+								<input type="text" id="equipment" name="equipment_needed[]"
+									   value="{{ old('equipment_needed', implode(', ', $exercise['equipment_needed'] ?? [])) }}"
 									   class="form-input" required>
-								@error('equipment')
+								@error('equipment_needed')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
 								@enderror
 							</div>
@@ -98,7 +104,7 @@
 						<div class="space-y-4">
 							<div>
 								<label for="description" class="block text-sm font-medium text-gray-700 mb-1">
-									Descripción *
+									Description *
 								</label>
 								<textarea id="description" name="description" rows="4"
 										  class="form-input" required>{{ old('description', $exercise['description']) }}</textarea>
@@ -109,7 +115,7 @@
 
 							<div>
 								<label class="block text-sm font-medium text-gray-700 mb-1">
-									Instrucciones *
+									Instructions *
 								</label>
 								<div id="instructions-container">
 									@php
@@ -125,7 +131,7 @@
 									@endforeach
 								</div>
 								<button type="button" onclick="addInstruction()" class="btn-secondary mt-2">
-									+ Agregar Paso
+									+ Add Step
 								</button>
 								@error('instructions')
 								<p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -137,13 +143,13 @@
 					<!-- Botones -->
 					<div class="flex justify-between mt-8">
 						<a href="{{ route('exercises.show', $exercise['id']) }}" class="btn-secondary">
-							Cancelar
+							Cancel
 						</a>
 						<div class="space-x-2">
-							<button type="submit" class="btn-primary">
-								Actualizar Ejercicio
+							<button type="submit" class="btn-primary bg-blue-600 px-6 py-2 font-semibold text-white rounded-md hover:bg-blue-700 transition cursor-pointer">
+								Update Exercise
 							</button>
-							<button type="button" onclick="confirmDelete()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+							<button type="button" onclick="confirmDelete()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded cursor-pointer">
 								Eliminar
 							</button>
 						</div>
