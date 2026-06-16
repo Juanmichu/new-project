@@ -22,7 +22,7 @@ class ExerciseController extends Controller
     /**
      * Show a specific exercise.
      */
-    public function show($id)
+    public function show(string $id)
     {
         $exercise = $this->getExerciseById($id);
 
@@ -55,14 +55,16 @@ class ExerciseController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'muscle_group' => 'required|string',
-            'difficulty' => 'required|in:principiante,intermedio,avanzado',
-            'equipment' => 'required|string',
+            'muscle_groups' => 'required|string',
+            'difficulty_level' => 'required|in:principiante,intermedio,avanzado',
+            'equipment_needed' => 'required|string',
             'instructions' => 'required|array',
             'instructions.*' => 'required|string'
         ]);
 
-        // Aquí guardarías en la base de datos
+        // El formulario envía un único grupo muscular; lo almacenamos como array.
+        $validated['muscle_groups'] = [$validated['muscle_groups']];
+
         Exercise::create($validated);
 
         return redirect()->route('exercises.index')
@@ -72,7 +74,7 @@ class ExerciseController extends Controller
     /**
      * Show the form for editing an existing exercise.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $exercise = $this->getExerciseById($id);
 
@@ -90,7 +92,7 @@ class ExerciseController extends Controller
     /**
      * Update exercise
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $exercise = $this->getExerciseById($id);
 
@@ -101,13 +103,15 @@ class ExerciseController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'muscle_group' => 'required|string',
-            'difficulty' => 'required|in:principiante,intermedio,avanzado',
-            'equipment' => 'required|string',
+            'muscle_groups' => 'required|string',
+            'difficulty_level' => 'required|string',
+            'equipment_needed' => 'nullable|array',
             'instructions' => 'required|array'
         ]);
 
-        // Aquí actualizarías en la base de datos
+        // El formulario envía un único grupo muscular; lo almacenamos como array.
+        $validated['muscle_groups'] = [$validated['muscle_groups']];
+
         $exercise->update($validated);
 
         return redirect()->route('exercises.show', $id)
@@ -117,7 +121,7 @@ class ExerciseController extends Controller
     /**
      * Delete exercise
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $exercise = $this->getExerciseById($id);
 
@@ -135,12 +139,17 @@ class ExerciseController extends Controller
     /**
      * Toggle favorite condition to certain exercise
      */
-    public function toggleFavorite($id)
+    public function toggleFavorite(string $id)
     {
         // Lógica para agregar/quitar de favoritos
         $exercise = $this->getExerciseById($id);
+
+        if (!$exercise) {
+            abort(404, 'Ejercicio no encontrado');
+        }
+
         $exercise->is_favorite = !$exercise->is_favorite;
-        $exercise->update();
+        $exercise->save();
 
         return response()->json([
             'success' => true,
@@ -154,7 +163,7 @@ class ExerciseController extends Controller
      */
     public function search(Request $request)
     {
-        $query = $request->get('q', '');
+        $query = $request->input('q', '');
         $exercises = $this->searchExercises($query);
 
         return response()->json($exercises);
@@ -167,26 +176,27 @@ class ExerciseController extends Controller
     {
         // Lógica de páginación y filtrado según los parámetros de la solicitud. Mantenemos la lógica de abajo.
         $query = Exercise::query();
-        if($request->has('search')) {
+        if($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->get('search') . '%');
         }
-        if($request->has('muscle_group')) {
-            $query->where('muscle_group', $request->get('muscle_group'));
+        if($request->filled('muscle_groups')) {
+            // En MongoDB la igualdad sobre un campo array coincide si el array contiene el valor.
+            $query->where('muscle_groups', $request->get('muscle_groups'));
         }
-        if($request->has('difficulty')) {
-            $query->where('difficulty', $request->get('difficulty'));
+        if($request->filled('difficulty_level')) {
+            $query->where('difficulty_level', $request->get('difficulty_level'));
         }
-        if($request->has('equipment')) {
-            $query->where('equipment', $request->get('equipment'));
+        if($request->filled('equipment_needed')) {
+            $query->where('equipment_needed', $request->get('equipment_needed'));
         }
-        if($request->has('is_favorite')) {
-            $query->where('is_favorite', $request->get('is_favorite'));
+        if($request->filled('is_favorite')) {
+            $query->where('is_favorite', $request->boolean('is_favorite'));
         }
 
         return $query->paginate(10);
     }
 
-    private function getExerciseById($id)
+    private function getExerciseById(string $id)
     {
         // Conecta con BBDD de mongo
         $exercise = Exercise::find($id);
@@ -194,38 +204,38 @@ class ExerciseController extends Controller
         return $exercise ?? null;
     }
 
-    private function getRelatedExercises($exercise)
+    private function getRelatedExercises(Exercise $exercise)
     {
-        // Datos estáticos. Sustituir por conexión a base de datos
-        /*return [
-            ['id' => 2, 'name' => 'Press de banca', 'muscle_group' => 'Pecho'],
-            ['id' => 3, 'name' => 'Flexiones diamante', 'muscle_group' => 'Pecho'],
-            ['id' => 4, 'name' => 'Flexiones inclinadas', 'muscle_group' => 'Pecho']
-        ];*/
         // Conecta con BBDD de mongo
-        return Exercise::where('muscle_group', $exercise->muscle_group)
+        $muscleGroup = is_array($exercise->muscle_groups)
+            ? ($exercise->muscle_groups[0] ?? null)
+            : $exercise->muscle_groups;
+
+        return Exercise::where('muscle_groups', $muscleGroup)
             ->where('id', '!=', $exercise->id)
             ->get();
     }
 
-    private function getMuscleGroups()
+    private function getMuscleGroups(): array
     {
-        return ['pecho', 'espalda', 'piernas', 'brazos', 'core', 'hombros'];
+        return ['Chest', 'Back', 'Legs', 'Arms', 'Biceps', 'Triceps', 'Core', 'Shoulders', 'Full Body', 'Cardio', 'Glutes', 'Calves', 'Forearms', 'Neck'];
     }
 
-    private function getDifficulties()
+    private function getDifficulties(): array
     {
-        return ['principiante', 'intermedio', 'avanzado'];
+        return ['Beginner', 'Intermediate', 'Advanced'];
     }
 
-    private function getEquipmentTypes()
+    private function getEquipmentTypes(): array
     {
-        return ['Sin equipo', 'Mancuernas', 'Barra', 'Máquinas', 'Bandas elásticas', 'Peso corporal'];
+        return ['None', 'Dumbbell', 'Pull Up Bar', 'Machine', 'Elastic Band', 'Bodyweight'];
     }
 
-    private function searchExercises($query)
+    private function searchExercises(string $query)
     {
         // Implementar búsqueda
-        return [];
+        return Exercise::where('name', 'like', '%' . $query . '%')
+            ->orWhere('description', 'like', '%' . $query . '%')
+            ->get();
     }
 }
