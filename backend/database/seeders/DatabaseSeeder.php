@@ -53,10 +53,10 @@ class DatabaseSeeder extends Seeder
 			[
 				'name' => 'Push-ups',
 				'description' => 'A basic upper body exercise targeting chest, shoulders, and triceps.',
-				'category' => 'strength',
-				'muscle_groups' => ['chest', 'shoulders', 'triceps'],
+				'category' => 'Strength',
+				'muscle_groups' => ['Chest', 'Shoulders', 'Triceps'],
 				'equipment_needed' => [],
-				'difficulty_level' => 'beginner',
+				'difficulty_level' => 'Beginner',
 				'instructions' => [
 					'Start in a plank position with hands shoulder-width apart',
 					'Lower your body until your chest nearly touches the floor',
@@ -70,15 +70,16 @@ class DatabaseSeeder extends Seeder
                     'frequency' => '2-3 times per week'
                 ],
 				'calories_per_minute' => 8,
-				'is_active' => true
+				'is_active' => true,
+                'is_favorite' => false
 			],
 			[
 				'name' => 'Pull-ups',
 				'description' => 'Upper body exercise targeting back and biceps.',
-				'category' => 'strength',
-				'muscle_groups' => ['back', 'biceps'],
-				'equipment_needed' => ['pull_up_bar'],
-				'difficulty_level' => 'intermediate',
+				'category' => 'Strength',
+				'muscle_groups' => ['Back', 'Biceps'],
+				'equipment_needed' => ['Pull Up Bar'],
+				'difficulty_level' => 'Intermediate',
 				'instructions' => [
 					'Hang from a pull-up bar with palms facing away',
 					'Pull your body up until your chin is above the bar',
@@ -92,15 +93,16 @@ class DatabaseSeeder extends Seeder
                     'frequency' => '2-3 times per week'
                 ],
 				'calories_per_minute' => 10,
-				'is_active' => true
+				'is_active' => true,
+                'is_favorite' => false
 			],
 			[
 				'name' => 'Squats',
 				'description' => 'Lower body exercise targeting quadriceps, glutes, and hamstrings.',
-				'category' => 'strength',
-				'muscle_groups' => ['quadriceps', 'glutes', 'hamstrings'],
+				'category' => 'Strength',
+				'muscle_groups' => ['Quadriceps', 'Glutes', 'Hamstrings'],
 				'equipment_needed' => [],
-				'difficulty_level' => 'beginner',
+				'difficulty_level' => 'Beginner',
 				'instructions' => [
 					'Stand with feet shoulder-width apart',
 					'Lower your body as if sitting back into a chair',
@@ -114,15 +116,16 @@ class DatabaseSeeder extends Seeder
                     'frequency' => '2-3 times per week'
                 ],
 				'calories_per_minute' => 6,
-				'is_active' => true
+				'is_active' => true,
+                'is_favorite' => false
 			],
 			[
 				'name' => 'Planks',
 				'description' => 'Core strengthening exercise.',
-				'category' => 'core',
-				'muscle_groups' => ['core', 'shoulders'],
+				'category' => 'Core',
+				'muscle_groups' => ['Core', 'Shoulders'],
 				'equipment_needed' => [],
-				'difficulty_level' => 'beginner',
+				'difficulty_level' => 'Beginner',
 				'instructions' => [
 					'Start in a push-up position',
 					'Lower onto your forearms',
@@ -136,15 +139,16 @@ class DatabaseSeeder extends Seeder
                     'frequency' => '3-4 times per week'
                 ],
 				'calories_per_minute' => 4,
-				'is_active' => true
+				'is_active' => true,
+                'is_favorite' => false
 			],
 			[
 				'name' => 'Burpees',
 				'description' => 'Full-body exercise combining strength and cardio.',
-				'category' => 'cardio',
-				'muscle_groups' => ['full_body'],
+				'category' => 'Cardio',
+				'muscle_groups' => ['Full Body'],
 				'equipment_needed' => [],
-				'difficulty_level' => 'advanced',
+				'difficulty_level' => 'Advanced',
 				'instructions' => [
 					'Start standing, then squat down and place hands on floor',
 					'Jump feet back into plank position',
@@ -159,7 +163,8 @@ class DatabaseSeeder extends Seeder
                     'frequency' => '2-3 times per week'
                 ],
 				'calories_per_minute' => 12,
-				'is_active' => true
+				'is_active' => true,
+                'is_favorite' => false
 			]
 		]);
 
@@ -233,8 +238,8 @@ class DatabaseSeeder extends Seeder
 				'slug' => '10-best-exercises-building-core-strength',
 				'excerpt' => 'Discover the most effective exercises to strengthen your core and improve your overall fitness performance.',
 				'content' => 'Core strength is fundamental to overall fitness and daily activities. Here are the 10 most effective exercises to build a strong, stable core...',
-				'category' => 'fitness',
-				'tags' => ['core', 'strength', 'exercises'],
+				'category' => 'Fitness',
+				'tags' => ['Core', 'Strength', 'Exercises'],
 				'published_at' => now()->subDays(1),
 				'status' => 'published',
 				'views' => 150,
@@ -247,8 +252,8 @@ class DatabaseSeeder extends Seeder
 				'slug' => 'science-behind-post-workout-nutrition',
 				'excerpt' => 'Learn how to fuel your body properly after intense training sessions for optimal recovery and results.',
 				'content' => 'Proper post-workout nutrition is crucial for recovery, muscle growth, and replenishing energy stores...',
-				'category' => 'nutrition',
-				'tags' => ['nutrition', 'recovery', 'post-workout'],
+				'category' => 'Nutrition',
+				'tags' => ['Nutrition', 'Recovery', 'Post-Workout'],
 				'published_at' => now()->subDays(2),
 				'status' => 'published',
 				'views' => 89,
@@ -264,8 +269,8 @@ class DatabaseSeeder extends Seeder
 				'slug' => 'new-study-morning-workouts-benefits',
 				'excerpt' => 'Recent research shows that exercising in the morning can boost metabolism and improve mood throughout the day.',
 				'content' => 'A comprehensive study published in the Journal of Health Psychology reveals significant benefits...',
-				'category' => 'fitness',
-				'tags' => ['study', 'morning', 'metabolism'],
+				'category' => 'Fitness',
+				'tags' => ['Study', 'Morning', 'Metabolism'],
 				'author_name' => 'Dr. Sarah Johnson',
 				'published_at' => now()->subHours(6),
 				'status' => 'published',
@@ -277,8 +282,8 @@ class DatabaseSeeder extends Seeder
 				'slug' => 'ai-powered-workout-apps-growth',
 				'excerpt' => 'The fitness technology sector experiences unprecedented growth as users embrace AI-driven personal training.',
 				'content' => 'The integration of artificial intelligence in fitness applications has revolutionized how people approach their workout routines...',
-				'category' => 'technology',
-				'tags' => ['AI', 'technology', 'fitness apps'],
+				'category' => 'Technology',
+				'tags' => ['AI', 'Technology', 'Fitness Apps'],
 				'author_name' => 'Tech Reporter',
 				'published_at' => now()->subHours(12),
 				'status' => 'published',
