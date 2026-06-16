@@ -10,12 +10,12 @@
         <div class="card-body">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Biblioteca de Ejercicios</h1>
-                    <p class="text-gray-600">Encuentra el ejercicio perfecto para tu entrenamiento</p>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Exercises Library</h1>
+                    <p class="text-gray-600">Find the perfect exercise for your training</p>
                 </div>
                 @auth
                     <a href="{{ route('exercises.create') }}" class="btn-primary mt-4 md:mt-0">
-                        Agregar Ejercicio
+                        Add Exercise
                     </a>
                 @endauth
             </div>
@@ -67,78 +67,30 @@
 
     <!-- Exercises Grid -->
     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        @php
-			// Listado ejercicios estático. Comentar en cuanto el controlador esté terminado.
-			// $exercises se obtendrá directamente desde el enrutamiento de laravel con el mismo nombre. Función index
-/*            $exercises = [
-                [
-                    'id' => 1,
-                    'name' => 'Flexiones',
-                    'muscle_group' => 'Pecho',
-                    'difficulty' => 'Intermedio',
-                    'description' => 'Ejercicio básico para desarrollar la fuerza del tren superior.',
-                    'equipment' => 'Sin equipo'
-                ],
-                [
-                    'id' => 2,
-                    'name' => 'Sentadillas',
-                    'muscle_group' => 'Piernas',
-                    'difficulty' => 'Principiante',
-                    'description' => 'Ejercicio fundamental para fortalecer las piernas y glúteos.',
-                    'equipment' => 'Sin equipo'
-                ],
-                [
-                    'id' => 3,
-                    'name' => 'Dominadas',
-                    'muscle_group' => 'Espalda',
-                    'difficulty' => 'Avanzado',
-                    'description' => 'Ejercicio completo para el desarrollo de la espalda y brazos.',
-                    'equipment' => 'Barra de dominadas'
-                ],
-                [
-                    'id' => 4,
-                    'name' => 'Plancha',
-                    'muscle_group' => 'Core',
-                    'difficulty' => 'Intermedio',
-                    'description' => 'Ejercicio isométrico para fortalecer el core.',
-                    'equipment' => 'Sin equipo'
-                ],
-                [
-                    'id' => 5,
-                    'name' => 'Press de Banca',
-                    'muscle_group' => 'Pecho',
-                    'difficulty' => 'Intermedio',
-                    'description' => 'Ejercicio clásico para el desarrollo del pecho.',
-                    'equipment' => 'Banca y barra'
-                ],
-                [
-                    'id' => 6,
-                    'name' => 'Peso Muerto',
-                    'muscle_group' => 'Espalda',
-                    'difficulty' => 'Avanzado',
-                    'description' => 'Ejercicio compuesto para trabajar múltiples grupos musculares.',
-                    'equipment' => 'Barra y discos'
-                ]
-            ];*/
-        @endphp
 
         @foreach($exercises as $exercise)
             <div class="card hover:shadow-lg transition-shadow">
                 <div class="card-body">
                     <div class="flex justify-between items-start mb-3">
                         <h3 class="text-xl font-semibold text-gray-900">{{ $exercise['name'] }}</h3>
+                        @if(isset($exercise['difficulty_level']))
                         <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                            {{ $exercise['difficulty'] ?? '' }}
+                            {{ $exercise['difficulty_level']}}
                         </span>
+                        @endif
                     </div>
 
                     <div class="mb-3">
-                        <span class="inline-block bg-gray-100 text-gray-800 text-sm px-2 py-1 rounded mr-2">
-                            {{ $exercise['muscle_group'] ?? '' }}
+                        @if(isset($exercise['muscle_groups']))
+                        <span class="inline-block bg-blue-600 text-white text-sm px-2 py-1 rounded mr-2">
+                            {{ implode(', ', $exercise['muscle_groups']) }}
                         </span>
+                        @endif
+                        @if(isset($exercise['equipment_needed']))
                         <span class="inline-block bg-green-100 text-green-800 text-sm px-2 py-1 rounded">
-                            {{ $exercise['equipment'] ?? '' }}
+                            {{ $exercise['equipment_needed'] ? implode(', ', $exercise['equipment_needed']) : 'None' }}
                         </span>
+                        @endif
                     </div>
 
                     <p class="text-gray-600 mb-4">{{ $exercise['description'] ?? '' }}</p>
@@ -166,24 +118,17 @@
         <div class="card">
             <div class="card-body text-center py-12">
                 <div class="text-6xl mb-4">🔍</div>
-                <h3 class="text-xl font-semibold mb-2">No se encontraron ejercicios</h3>
-                <p class="text-gray-600 mb-4">Intenta ajustar los filtros de búsqueda</p>
+                <h3 class="text-xl font-semibold mb-2">No exercises found</h3>
+                <p class="text-gray-600 mb-4">Try adjusting the search filters</p>
                 <a href="{{ route('exercises.index') }}" class="btn-primary">
-                    Ver Todos los Ejercicios
+                    View All Exercises
                 </a>
             </div>
         </div>
     @endif
 
-    <!-- Pagination placeholder -->
-    <div class="mt-8 flex justify-center">
-        <nav class="flex space-x-2">
-            <button class="px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-500">Anterior</button>
-            <button class="px-3 py-2 bg-blue-600 text-white rounded-md">1</button>
-            <button class="px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-500">2</button>
-            <button class="px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-500">3</button>
-            <button class="px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-500">Siguiente</button>
-        </nav>
-    </div>
+    <!-- Pagination with page numbers and navigation. Using bootstrap 5. Check app/Providers/AppServiceProvider.php -->
+    {{ $exercises->links() }}
+
 </div>
 @endsection
