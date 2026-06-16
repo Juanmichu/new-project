@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ExerciseController extends Controller
 {
     /**
-     * Mostrar lista de ejercicios con filtros
+     * Show the exercises list.
      */
     public function index(Request $request)
     {
@@ -20,7 +20,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Mostrar un ejercicio específico
+     * Show a specific exercise.
      */
     public function show($id)
     {
@@ -36,7 +36,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Mostrar formulario para crear ejercicio
+     * Show the form for creating a new exercise.
      */
     public function create()
     {
@@ -48,7 +48,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Guardar nuevo ejercicio
+     * Save new exercise
      */
     public function store(Request $request)
     {
@@ -70,7 +70,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Mostrar formulario de edición
+     * Show the form for editing an existing exercise.
      */
     public function edit($id)
     {
@@ -88,7 +88,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Actualizar ejercicio
+     * Update exercise
      */
     public function update(Request $request, $id)
     {
@@ -115,7 +115,7 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Eliminar ejercicio
+     * Delete exercise
      */
     public function destroy($id)
     {
@@ -133,21 +133,24 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Alternar favorito
+     * Toggle favorite condition to certain exercise
      */
     public function toggleFavorite($id)
     {
         // Lógica para agregar/quitar de favoritos
+        $exercise = $this->getExerciseById($id);
+        $exercise->is_favorite = !$exercise->is_favorite;
+        $exercise->update();
 
         return response()->json([
             'success' => true,
             'message' => 'Favorito actualizado',
-            'is_favorite' => true // o false
+            'is_favorite' => $exercise->is_favorite
         ]);
     }
 
     /**
-     * Buscar ejercicios (API)
+     * Search exercises (API)
      */
     public function search(Request $request)
     {
@@ -162,130 +165,29 @@ class ExerciseController extends Controller
      */
     private function getFilteredExercises(Request $request)
     {
-        // Datos estáticos por ahora, luego conectarás con BD
-        /*$allExercises = [
-            [
-                'id' => 1,
-                'name' => 'Flexiones',
-                'muscle_group' => 'pecho',
-                'difficulty' => 'intermedio',
-                'description' => 'Ejercicio básico para desarrollar la fuerza del tren superior.',
-                'equipment' => 'Sin equipo'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Sentadillas',
-                'muscle_group' => 'piernas',
-                'difficulty' => 'principiante',
-                'description' => 'Ejercicio fundamental para fortalecer las piernas y glúteos.',
-                'equipment' => 'Sin equipo'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Dominadas',
-                'muscle_group' => 'espalda',
-                'difficulty' => 'avanzado',
-                'description' => 'Ejercicio completo para el desarrollo de la espalda y brazos.',
-                'equipment' => 'Barra de dominadas'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Plancha',
-                'muscle_group' => 'core',
-                'difficulty' => 'intermedio',
-                'description' => 'Ejercicio isométrico para fortalecer el core.',
-                'equipment' => 'Sin equipo'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Press de Banca',
-                'muscle_group' => 'pecho',
-                'difficulty' => 'intermedio',
-                'description' => 'Ejercicio clásico para el desarrollo del pecho.',
-                'equipment' => 'Banca y barra'
-            ],
-            [
-                'id' => 6,
-                'name' => 'Peso Muerto',
-                'muscle_group' => 'espalda',
-                'difficulty' => 'avanzado',
-                'description' => 'Ejercicio compuesto para trabajar múltiples grupos musculares.',
-                'equipment' => 'Barra y discos'
-            ]
-        ];*/
-
-		// Conecta con BBDD de mongo
-		$allExercises = Exercise::all()->toArray();
-
-        // Aplicar filtros
-        if ($request->filled('search')) {
-            $search = strtolower($request->search);
-            $allExercises = array_filter($allExercises, function($exercise) use ($search) {
-                return strpos(strtolower($exercise['name']), $search) !== false;
-            });
+        // Lógica de páginación y filtrado según los parámetros de la solicitud. Mantenemos la lógica de abajo.
+        $query = Exercise::query();
+        if($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->get('search') . '%');
+        }
+        if($request->has('muscle_group')) {
+            $query->where('muscle_group', $request->get('muscle_group'));
+        }
+        if($request->has('difficulty')) {
+            $query->where('difficulty', $request->get('difficulty'));
+        }
+        if($request->has('equipment')) {
+            $query->where('equipment', $request->get('equipment'));
+        }
+        if($request->has('is_favorite')) {
+            $query->where('is_favorite', $request->get('is_favorite'));
         }
 
-        if ($request->filled('muscle_group')) {
-            $allExercises = array_filter($allExercises, function($exercise) use ($request) {
-                return $exercise['muscle_group'] === $request->muscle_group;
-            });
-        }
-
-        if ($request->filled('difficulty')) {
-            $allExercises = array_filter($allExercises, function($exercise) use ($request) {
-                return $exercise['difficulty'] === $request->difficulty;
-            });
-        }
-
-        if($request->filled('equipment')) {
-            $allExercises = array_filter($allExercises, function($exercise) use ($request) {
-                return $exercise['equipment'] === $request->equipment;
-            });
-        }
-
-        if($request->filled('is_favorite')) {
-            $isFavorite = filter_var($request->is_favorite, FILTER_VALIDATE_BOOLEAN);
-            $allExercises = array_filter($allExercises, function($exercise) use ($isFavorite) {
-                return $exercise['is_favorite'] === $isFavorite;
-            });
-        }
-
-        return array_values($allExercises);
+        return $query->paginate(10);
     }
 
     private function getExerciseById($id)
     {
-        // Datos estáticos. Sustituir por conexión a base de datos
-        /*$exercises = [
-            1 => [
-                'id' => 1,
-                'name' => 'Flexiones',
-                'muscle_group' => 'Pecho',
-                'difficulty' => 'Intermedio',
-                'description' => 'Las flexiones son un ejercicio básico y fundamental para desarrollar la fuerza del tren superior, especialmente el pecho, hombros y tríceps.',
-                'equipment' => 'Sin equipo',
-                'instructions' => [
-                    'Colócate en posición de plancha con las manos apoyadas en el suelo, separadas al ancho de los hombros.',
-                    'Mantén el cuerpo recto desde la cabeza hasta los talones, contrayendo el core.',
-                    'Desciende lentamente hasta que el pecho casi toque el suelo.',
-                    'Empuja el cuerpo hacia arriba hasta la posición inicial.',
-                    'Repite el movimiento manteniendo la forma correcta.'
-                ],
-                'muscles_worked' => [
-                    ['name' => 'Pectorales', 'type' => 'Principal'],
-                    ['name' => 'Tríceps', 'type' => 'Secundario'],
-                    ['name' => 'Deltoides anterior', 'type' => 'Secundario'],
-                    ['name' => 'Core', 'type' => 'Estabilizador']
-                ],
-                'recommendations' => [
-                    'repetitions' => '8-15 repeticiones',
-                    'sets' => '3-4 series',
-                    'rest' => '60-90 segundos',
-                    'frequency' => '2-3 veces por semana'
-                ]
-            ]
-        ];*/
-
         // Conecta con BBDD de mongo
         $exercise = Exercise::find($id);
 
