@@ -38,7 +38,7 @@ echo "Checking database status..."
 
 # Migrate the database avoiding duplicates
 echo "Running database seeder..."
-php artisan migrate:refresh --seed 2>/dev/null || echo "Migration and seeding completed or skipped"
+php artisan migrate:fresh --seed 2>/dev/null || echo "Migration and seeding completed or skipped"
 
 echo "Laravel application ready!"
 
