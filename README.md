@@ -45,26 +45,36 @@ Una aplicación integral de fitness construida con Laravel y MongoDB que ayuda a
 
 #### Clona el repositorio:
 
+```
 bash git clone <url-del-repositorio>
 cd fitcoacher
-
+```
 ### Construye los assets y dependencias (si es tu primera vez):
-bash cd backend
+```bash cd backend
 bash composer install
 bash npm install
 bash npm run build
+```
 
+<!-- WIP: Publica los assets de traducciones 
+bash php artisan lang:publish
+-->
+**Construye los assets necesarios para la paginación en laravel usando tailwindcss o bootstrap:**
+
+```bash php artisan vendor:publish --tag=laravel-pagination```
+
+```
 bash cd ../frontend
 bash npm install
 bash npm run build
-
+```
 ### Inicia los contenedores Docker:
 
 ** Si construyes por primera vez, usa: **
-bash docker-compose up --build -d
+```bash docker-compose up --build -d```
 
 ** Si ya construiste antes, usa: **
-bash docker-compose up -d
+```bash docker-compose up -d```
 
 La aplicación estará disponible en:
 
@@ -75,81 +85,82 @@ La aplicación estará disponible en:
 ### Instalación Manual
 
 #### Clona el repositorio:
-
+```
 bash git clone <url-del-repositorio>
 cd fitcoacher/backend
-
+```
 #### Instala las dependencias PHP:
 
-bash composer install
+```bash composer install```
 
 #### Instala las dependencias Node y construye los assets:
-
+```
 bash npm install
 bash npm run build
-
+```
 #### Configura tu conexión MongoDB en .env:
-
+```
 DB_CONNECTION=mongodb
 DB_HOST=mongodb
 DB_PORT=27017
 DB_DATABASE=laraveldb
 DB_USERNAME=app_root
 DB_PASSWORD=1234
-
+```
 #### Genera la clave de aplicación:
-
+```
 bash php artisan key:generate
-
+```
 #### Ejecuta los seeders de la base de datos:
-
+```
 bash php artisan db:seed
-
+```
 #### Construye los assets del frontend:
-
+```
 bash npm run build
-
+```
 #### Construye el entorno y levántalo en modo “detach”
-
+```
 bash docker compose up —-build -d
-
+```
 
 ## 📱 Endpoints de API
 
 ### Autenticación
-
+```
 POST /api/auth/register - Registro de usuario
 POST /api/auth/login - Inicio de sesión
 POST /api/auth/logout - Cerrar sesión (requiere auth)
 GET /api/auth/user - Obtener usuario autenticado
-
+```
 ### Ejercicios
-
+```
 GET /api/exercises - Listar todos los ejercicios
 GET /api/exercises/{id} - Obtener detalles del ejercicio
 GET /api/exercises/categories - Obtener categorías de ejercicios
-
+```
 ### Entrenamientos (Requiere Autenticación)
-
-GET /api/workouts - Listar entrenamientos del usuario
+```
+GET /api/workouts - Listar entrenamientos del usuario 
 POST /api/workouts - Crear nuevo entrenamiento
 GET /api/workouts/today - Obtener entrenamiento de hoy
 GET /api/workouts/{id} - Obtener detalles del entrenamiento
 PUT /api/workouts/{id} - Actualizar entrenamiento
 DELETE /api/workouts/{id} - Eliminar entrenamiento
+```
 
 ### Artículos y Noticias
-
+```
 GET /api/articles - Listar artículos
 GET /api/articles/{slug} - Obtener detalles del artículo
 GET /api/news - Listar noticias
 GET /api/news/breaking - Obtener noticias de última hora
-
+```
 ### Estadísticas del Usuario (Requiere Autenticación)
-
+```
 GET /api/stats/dashboard - Obtener estadísticas del dashboard
 GET /api/stats/progress - Obtener datos de progreso
-
+```
 ## 🗄️ Esquema de Base de Datos
 
 ### Colecciones
@@ -167,22 +178,22 @@ GET /api/stats/progress - Obtener datos de progreso
 Después de ejecutar los seeders de la base de datos, puedes usar estas credenciales:
 
 ### Usuario Administrador
-
+```
 Email: admin@fittracker.com
 Contraseña: password
-
+```
 
 ### Usuarios Regulares
-
+```
 Email: john@example.com
 Contraseña: 1234
 Email: jane@example.com
 Contraseña: password123
-
+```
 ## 🧪 Pruebas
 
 Ejecuta el conjunto de pruebas:
-bash php artisan test
+```bash php artisan test```
 
 ## 🚀 Despliegue
 
@@ -260,52 +271,53 @@ new-project/
 # ===============================
 
 # Construir y levantar todos los servicios
-docker-compose up --build -d
+```docker-compose up --build -d```
 
 # Ver logs de todos los servicios
-docker-compose logs -f
+```docker-compose logs -f```
 
 # Ver logs específicos
+```
 docker-compose logs -f mongodb
 docker-compose logs -f backend
 docker-compose logs -f frontend
-
+```
 # Parar todos los servicios
-docker-compose down
+```docker-compose down```
 
 # Parar y eliminar volúmenes (¡CUIDADO! Elimina datos de MongoDB)
-docker-compose down -v
+```docker-compose down -v```
 
 # Reconstruir un servicio específico
-docker-compose up --build backend
+```docker-compose up --build backend```
 
 # Ver estado de los servicios
-docker-compose ps
+```docker-compose ps```
 
 # ===============================
 # 3. COMANDOS MONGODB EN DOCKER
 # ===============================
 
 # Conectarse al contenedor de MongoDB
-docker exec -it mongodb bash
+```docker exec -it mongodb bash```
 
 # Conectarse directamente a MongoDB shell
-docker exec -it mongodb mongosh
+```docker exec -it mongodb mongosh```
 
 # Conectarse con autenticación
-docker exec -it mongodb mongosh -u admin -p admin123 --authenticationDatabase admin
+```docker exec -it mongodb mongosh -u admin -p admin123 --authenticationDatabase admin```
 
 # Conectarse a la base de datos específica
-docker exec -it mongodb mongosh laraveldb -u user -p pass
+```docker exec -it mongodb mongosh laraveldb -u user -p pass```
 
 # Ejecutar comandos MongoDB desde host
-docker exec mongodb mongosh --eval "db.adminCommand('listCollections')" laraveldb
+```docker exec mongodb mongosh --eval "db.adminCommand('listCollections')" laraveldb```
 
 # Crear backup de la base de datos
-docker exec mongodb mongodump --db laraveldb --out /data/backup
+```docker exec mongodb mongodump --db laraveldb --out /data/backup```
 
 # Restaurar backup
-docker exec mongodb mongorestore --db laraveldb /data/backup/laraveldb
+```docker exec mongodb mongorestore --db laraveldb /data/backup/laraveldb```
 
 # ===============================
 # 4. COMANDOS ÚTILES MONGODB
@@ -314,107 +326,109 @@ docker exec mongodb mongorestore --db laraveldb /data/backup/laraveldb
 # Una vez dentro del MongoDB shell (mongosh):
 
 # Mostrar bases de datos
-show dbs
+```show dbs```
 
 # Usar base de datos
-use laraveldb
+```use laraveldb```
 
 # Mostrar colecciones
-show collections
+```show collections```
 
 # Ver usuarios
-db.getUsers()
+```db.getUsers()```
 
 # Contar documentos
+```
 db.users.countDocuments()
 db.exercises.countDocuments()
-
+```
 # Buscar todos los usuarios
-db.users.find().pretty()
+```db.users.find().pretty()```
 
 # Buscar usuario específico
-db.users.findOne({email: "admin@fittracker.com"})
+```db.users.findOne({email: "admin@fittracker.com"})```
 
 # Actualizar documento
+```
 db.users.updateOne(
   {email: "admin@fittracker.com"}, 
   {$set: {fitness_level: "expert"}}
 )
-
+```
 # Eliminar documento
-db.users.deleteOne({email: "test@example.com"})
+```db.users.deleteOne({email: "test@example.com"})```
 
 # Ver estadísticas de la colección
-db.users.stats()
+```db.users.stats()```
 
 # ===============================
 # 5. COMANDOS LARAVEL EN DOCKER
 # ===============================
 
 # Acceder al contenedor del backend
-docker exec -it backend bash
+```docker exec -it backend bash```
 
 # Ejecutar comandos Artisan
-docker exec backend php artisan migrate
-docker exec backend php artisan db:seed
-docker exec backend php artisan config:clear
-docker exec backend php artisan cache:clear
+```docker exec backend php artisan migrate```
+```docker exec backend php artisan db:seed```
+```docker exec backend php artisan config:clear```
+```docker exec backend php artisan cache:clear```
 
 # Instalar dependencias Composer
-docker exec backend composer install
+```docker exec backend composer install```
 
 # Generar clave de aplicación
-docker exec backend php artisan key:generate
+```docker exec backend php artisan key:generate```
 
 # Ver rutas
-docker exec backend php artisan route:list
+```docker exec backend php artisan route:list```
 
 # ===============================
 # 6. COMANDOS REACT EN DOCKER
 # ===============================
 
 # Acceder al contenedor del frontend
-docker exec -it frontend sh
+```docker exec -it frontend sh```
 
 # Instalar nuevas dependencias
-docker exec frontend npm install nueva-dependencia
+```docker exec frontend npm install nueva-dependencia```
 
 # Ver logs del frontend
-docker exec frontend npm run start
+```docker exec frontend npm run start```
 
 # Construir para producción
-docker exec frontend npm run build
+```docker exec frontend npm run build```
 
 # ===============================
 # 7. DEBUGGING Y TROUBLESHOOTING
 # ===============================
 
 # Ver todos los contenedores
-docker ps -a
+```docker ps -a```
 
 # Ver uso de recursos
-docker stats
+```docker stats```
 
 # Inspeccionar un contenedor
-docker inspect mongodb
+```docker inspect mongodb```
 
 # Ver logs de un contenedor específico
-docker logs backend --tail 50
+```docker logs backend --tail 50```
 
 # Limpiar sistema Docker (¡CUIDADO!)
-docker system prune -a
+```docker system prune -a```
 
 # Ver volúmenes
-docker volume ls
+```docker volume ls```
 
 # Inspeccionar volumen de MongoDB
-docker volume inspect mongodb_data
+```docker volume inspect mongodb_data```
 
 # Ver redes
-docker network ls
+```docker network ls```
 
 # Inspeccionar red
-docker network inspect new-project-network
+```docker network inspect new-project-network```
 
 # ===============================
 # 8. SCRIPTS DE DESARROLLO
