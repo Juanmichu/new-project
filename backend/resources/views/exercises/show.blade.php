@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Flexiones - Detalle')
+@section('title', 'Exercise - Details')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4">
     <!-- Breadcrumb -->
     <nav class="mb-6">
         <ol class="flex space-x-2 text-sm text-gray-600">
-            <li><a href="{{ route('home') }}" class="hover:text-blue-600">Inicio</a></li>
+            <li><a href="{{ route('home') }}" class="hover:text-blue-600">Home</a></li>
             <li>/</li>
-            <li><a href="{{ route('exercises.index') }}" class="hover:text-blue-600">Ejercicios</a></li>
+            <li><a href="{{ route('exercises.index') }}" class="hover:text-blue-600">Exercises</a></li>
             <li>/</li>
             <li>{{ $exercise->name }}</li>
         </ol>
@@ -27,10 +27,10 @@
                             {{ $exercise->difficulty_level }}
                         </span>
                         <span class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
-                            {{ implode(', ', $exercise->muscle_groups) }}
+                            {{ is_array($exercise->muscle_groups) ? implode(', ', $exercise->muscle_groups) : $exercise->muscle_groups }}
                         </span>
                         <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                            {{ $exercise->equipment ?? 'No equipment' }}
+                            {{ is_array($exercise->equipment_needed) ? implode(', ', $exercise->equipment_needed) : $exercise->equipment_needed }}
                         </span>
                     </div>
 
@@ -38,12 +38,14 @@
                 </div>
 
                 @auth
-                    <div class="mt-4 md:mt-0 flex space-x-2">
-                        <button class="btn-secondary">
-                            ❤️ Favorite
+                    <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
+                        <button type="button"
+                                onclick="toggleFavorite('{{ route('exercises.favorite', $exercise->_id) }}', this)"
+                                class="btn-secondary">
+                            ❤️ Favorito
                         </button>
-                        <a href="{{ route('exercises.edit', 1) }}" class="btn-primary">
-                            Edit
+                        <a href="{{ route('exercises.edit', $exercise->_id) }}" class="btn-secondary">
+                            Editar
                         </a>
                     </div>
                 @endauth
@@ -77,12 +79,17 @@
                     <h2 class="text-xl font-semibold">Muscles Worked</h2>
                 </div>
                 <div class="card-body">
+                    @php
+                        $muscleGroups = is_array($exercise->muscle_groups)
+                            ? $exercise->muscle_groups
+                            : array_filter([$exercise->muscle_groups]);
+                    @endphp
                     <div class="space-y-2">
                         <div class="flex justify-between">
-                            <span> {{ $exercise->muscle_groups[0] }}</span>
+                            <span> {{ $muscleGroups[0] ?? '—' }}</span>
                             <span class="text-blue-600 font-medium">Main</span>
                         </div>
-                        @foreach (array_slice($exercise->muscle_groups, 1) as $muscle)
+                        @foreach (array_slice($muscleGroups, 1) as $muscle)
                             <div class="flex justify-between">
                                 <span>{{ $muscle }}</span>
                                 <span class="text-green-400">Secondary</span>
@@ -100,24 +107,22 @@
                 </div>
                 <div class="card-body">
                     <div class="space-y-3">
-                        @foreach($exercise->recommendations as $recommendation)
                             <div>
                                 <strong class="text-gray-900">Repetitions:</strong>
-                                <span class="text-gray-600">{{ $recommendation['repetitions'] }}</span>
+                                <span class="text-gray-600">{{ $exercise->recommendations['repetitions'] }}</span>
                             </div>
                             <div>
                                 <strong class="text-gray-900">Sets:</strong>
-                                <span class="text-gray-600">{{ $recommendation['sets'] }}</span>
+                                <span class="text-gray-600">{{ $exercise->recommendations['sets'] }}</span>
                             </div>
                             <div>
                                 <strong class="text-gray-900">Rest Time:</strong>
-                                <span class="text-gray-600">{{ $recommendation['rest'] }}</span>
+                                <span class="text-gray-600">{{ $exercise->recommendations['rest'] }}</span>
                             </div>
                             <div>
                                 <strong class="text-gray-900">Frequency:</strong>
-                                <span class="text-gray-600">{{ $recommendation['frequency'] }}</span>
+                                <span class="text-gray-600">{{ $exercise->recommendations['frequency'] }}</span>
                             </div>
-                        @endforeach
                     </div>
                 </div>
             </div>
@@ -155,12 +160,15 @@
 </div>
 
 <!-- Navigation -->
+@php($nextExercise = ($relatedExercises ?? collect())->first())
 <div class="mt-8 flex justify-between">
     <a href="{{ route('exercises.index') }}" class="btn-secondary">
         ← Back to Exercises
     </a>
-    <a href="{{ route('exercises.show', 2) }}" class="btn-primary">
-        Next Exercise →
-    </a>
+    @if($nextExercise)
+        <a href="{{ route('exercises.show', $nextExercise->_id) }}" class="btn-primary">
+            Next Exercise →
+        </a>
+   @endif
 </div>
 @endsection
