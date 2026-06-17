@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Workout;
 use App\Models\WorkoutExercise;
 use App\Models\Exercise;
@@ -42,6 +43,7 @@ class WorkoutController extends Controller
 				->with(['exercises.exercise'])
 				->first();
 
+            // If no workout exists for today for specific user, generate a default one and attach five random exercises to it.
 			if (!$workout) {
 				// Generate a default workout if none exists
 				$workout = $this->generateDefaultWorkout($request->user());
@@ -216,6 +218,11 @@ class WorkoutController extends Controller
 		}
 	}
 
+    /**
+     * Generates a default workout for the user if none exists for today. Then, attaches five random exercises to it.
+     * @param User $user
+     * @return Workout|\Illuminate\Database\Eloquent\Model|null
+     */
 	private function generateDefaultWorkout($user)
 	{
 		try {
@@ -233,7 +240,11 @@ class WorkoutController extends Controller
 				'name' => 'Today\'s Workout',
 				'description' => 'Your daily workout routine',
 				'workout_date' => Carbon::today(),
-				'status' => 'planned'
+                'total_duration' => 45, // default duration in minutes
+                'difficulty_level' => 'medium',
+                'status' => 'planned',
+                'notes' => null,
+                'calories_burned' => 300
 			]);
 
 			foreach ($exercises as $index => $exercise) {

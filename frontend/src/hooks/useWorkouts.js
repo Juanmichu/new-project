@@ -11,7 +11,8 @@ export const useWorkouts = () => {
         try {
             setLoading(true);
             const response = await workoutAPI.getWorkouts();
-            setWorkouts(response.data.data);
+            /* @var response.data.data is structured as { current_page, data:[...] } */
+            setWorkouts(response.data.data.data);
         } catch (error) {
             setError(error.response?.data?.message || 'Failed to fetch workouts');
         } finally {
@@ -22,7 +23,7 @@ export const useWorkouts = () => {
     const fetchTodayWorkout = async () => {
         try {
             const response = await workoutAPI.getTodayWorkout();
-            setTodayWorkout(response.data);
+            setTodayWorkout(response.data.data);
         } catch (error) {
             console.error('Failed to fetch today\'s workout:', error);
         }
@@ -32,9 +33,9 @@ export const useWorkouts = () => {
         try {
             await workoutAPI.markExerciseComplete(workoutId, exerciseId);
             // Update local state
-            if (todayWorkout && todayWorkout.id === workoutId) {
+            if (todayWorkout && todayWorkout._id === workoutId) {
                 const updatedExercises = todayWorkout.exercises.map(ex =>
-                    ex.id === exerciseId ? { ...ex, completed: true } : ex
+                    ex._id === exerciseId ? { ...ex, completed: true } : ex
                 );
                 setTodayWorkout({ ...todayWorkout, exercises: updatedExercises });
             }

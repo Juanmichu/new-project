@@ -33,7 +33,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Muscle Group</label>
-                    <select name="muscle_groups" class="form-input">
+                    <select name="muscle_groups" class="form-select">
                         <option value="">All</option>
                         @foreach($muscleGroups as $group)
                             <option value="{{ $group }}" {{ request('muscle_groups') == $group ? 'selected' : '' }}>
@@ -45,7 +45,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
-                    <select name="difficulty_level" class="form-input">
+                    <select name="difficulty_level" class="form-select">
                         <option value="">All</option>
                         @foreach ($difficulties as $level)
                             <option value="{{ $level }}" {{ request('difficulty_level') == $level ? 'selected' : '' }}>

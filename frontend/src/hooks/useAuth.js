@@ -26,8 +26,8 @@ export const AuthProvider = ({ children }) => {
             // Verify token is still valid
             authAPI.getUser()
                 .then(response => {
-                    setUser(response.data);
-                    localStorage.setItem('user', JSON.stringify(response.data));
+                    setUser(response.data.user);
+                    localStorage.setItem('user', JSON.stringify(response.data.user));
                 })
                 .catch(() => {
                     logout();
