@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
 					'Hold for desired time'
 				],
                 'recommendations' => [
-                    'duration' => '30-60 seconds',
+                    'repetitions' => '30-60 seconds',
                     'sets' => '3-4 series',
                     'rest' => '30-60 seconds between sets',
                     'frequency' => '3-4 times per week'
