@@ -15,31 +15,11 @@
 	@if (app()->environment('local'))
 		@vite(['resources/css/app.css', 'resources/css/custom_tailwind.css', 'resources/js/app.js'])
 	@else
-		<link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
-		<script src="{{ asset('build/assets/app.js') }}" defer></script>
+        @vite(['resources/css/app.css', 'resources/css/custom_tailwind.css', 'resources/js/app.js'], 'build')
 	@endif
 
 	<style>
 		/* Asegurar que las clases personalizadas estén disponibles */
-		.card {
-			@apply bg-white rounded-lg shadow-md;
-		}
-		.card-header {
-			@apply px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg;
-		}
-		.card-body {
-			@apply p-6;
-		}
-		.btn-primary {
-			@apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline;
-		}
-		.btn-secondary {
-			@apply bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline;
-		}
-		.form-input {
-			@apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
-		}
-
 		/* Menu dropdown styles */
 		.dropdown-menu {
 			transform: translateY(-10px);
