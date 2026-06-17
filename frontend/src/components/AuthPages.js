@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ArrowLeft, Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 
-export const LoginPage = ({ onNavigate }) => {
+export const LoginPage = () => {
+    const navigate = useNavigate();
+    const onNavigate = (page) => navigate(page === 'home' ? '/' : `/${page}`);
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -117,7 +120,9 @@ export const LoginPage = ({ onNavigate }) => {
     );
 };
 
-export const RegisterPage = ({ onNavigate }) => {
+export const RegisterPage = () => {
+    const navigate = useNavigate();
+    const onNavigate = (page) => navigate(page === 'home' ? '/' : `/${page}`);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -196,7 +201,7 @@ export const RegisterPage = ({ onNavigate }) => {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <label className="block text-white text-sm font-medium mb-2">Full Name</label>
                                 <div className="relative">
@@ -276,6 +281,34 @@ export const RegisterPage = ({ onNavigate }) => {
                                     placeholder="Your age"
                                     min="13"
                                     max="120"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-white text-sm font-medium mb-2">Weight (kg)</label>
+                                <input
+                                    type="number"
+                                    name="weight"
+                                    value={formData.weight}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
+                                    placeholder="Your weight"
+                                    min="13"
+                                    max="180"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-white text-sm font-medium mb-2">Height (cm)</label>
+                                <input
+                                    type="number"
+                                    name="height"
+                                    value={formData.height}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
+                                    placeholder="Your height"
+                                    min="13"
+                                    max="250"
                                 />
                             </div>
 

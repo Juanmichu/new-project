@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, Dumbbell, User, LogOut, Menu, X, Clock, Target, TrendingUp, CheckCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useWorkouts } from '../hooks/useWorkouts';
 import { useStats } from '../hooks/useStats';
 
-export const UpdatedUserDashboard = ({ onNavigate }) => {
+export const UpdatedUserDashboard = () => {
+    const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { user, logout } = useAuth();
     const { todayWorkout, markExerciseComplete, fetchTodayWorkout } = useWorkouts();
@@ -12,12 +14,12 @@ export const UpdatedUserDashboard = ({ onNavigate }) => {
 
     const handleLogout = async () => {
         await logout();
-        onNavigate('home');
+        navigate('/');
     };
 
     const handleExerciseComplete = async (exerciseId) => {
         if (todayWorkout) {
-            await markExerciseComplete(todayWorkout.id, exerciseId);
+            await markExerciseComplete(todayWorkout._id, exerciseId);
             fetchTodayWorkout(); // Refresh the workout data
         }
     };
@@ -176,13 +178,13 @@ export const UpdatedUserDashboard = ({ onNavigate }) => {
                                 <div className="space-y-4">
                                     {todayWorkout.exercises?.map((workoutExercise) => (
                                         <div
-                                            key={workoutExercise.id}
+                                            key={workoutExercise._id}
                                             className={`p-4 rounded-lg border transition-all cursor-pointer ${
                                                 workoutExercise.completed
                                                     ? 'bg-green-500/10 border-green-500/30'
                                                     : 'bg-white/5 border-white/10 hover:bg-white/10'
                                             }`}
-                                            onClick={() => handleExerciseComplete(workoutExercise.id)}
+                                            onClick={() => handleExerciseComplete(workoutExercise._id)}
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center space-x-4">

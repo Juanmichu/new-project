@@ -1,5 +1,6 @@
 // src/App.js - Complete Integration
 import React, { useState } from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './workout-app.css';
 import './App.css';
 import { AuthProvider } from './hooks/useAuth';
@@ -11,7 +12,9 @@ import { UpdatedUserDashboard } from './components/UpdatedUserDashboard';
 import { ArrowRight, Dumbbell, Users, Calendar, Trophy, ArrowLeft, Clock, User, LogOut, Menu, X, Target, TrendingUp, CheckCircle, Search, Filter, ChevronRight, Heart, MessageCircle, Share2, BookOpen, Tag } from 'lucide-react';
 
 // Updated HomePage with auth integration
-const HomePage = ({ onNavigate }) => {
+const HomePage = () => {
+    const navigate = useNavigate();
+    const onNavigate = (page) => navigate(page === 'home' ? '/' : `/${page}`);
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
             {/* Navigation */}
@@ -113,7 +116,9 @@ const HomePage = ({ onNavigate }) => {
 };
 
 // Enhanced News Page with API integration
-const NewsPage = ({ onNavigate }) => {
+const NewsPage = () => {
+    const navigate = useNavigate();
+    const onNavigate = (page) => navigate(page === 'home' ? '/' : `/${page}`);
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState('all');
@@ -209,7 +214,9 @@ const NewsPage = ({ onNavigate }) => {
 };
 
 // Enhanced Blog Page with API integration
-const BlogPage = ({ onNavigate }) => {
+const BlogPage = () => {
+    const navigate = useNavigate();
+    const onNavigate = (page) => navigate(page === 'home' ? '/' : `/${page}`);
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -333,32 +340,24 @@ const BlogPage = ({ onNavigate }) => {
 
 // Main App Component
 function App() {
-    const [currentPage, setCurrentPage] = useState('home');
-
-    const renderPage = () => {
-        switch(currentPage) {
-            case 'login':
-                return <LoginPage onNavigate={setCurrentPage} />;
-            case 'register':
-                return <RegisterPage onNavigate={setCurrentPage} />;
-            case 'dashboard':
-                return (
-                    <ProtectedRoute onNavigate={setCurrentPage}>
-                        <UpdatedUserDashboard onNavigate={setCurrentPage} />
-                    </ProtectedRoute>
-                );
-            case 'news':
-                return <NewsPage onNavigate={setCurrentPage} />;
-            case 'blog':
-                return <BlogPage onNavigate={setCurrentPage} />;
-            default:
-                return <HomePage onNavigate={setCurrentPage} />;
-        }
-    };
-
     return (
         <AuthProvider>
-            {renderPage()}
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/news" element={<NewsPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <ProtectedRoute>
+                            <UpdatedUserDashboard />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
         </AuthProvider>
     );
 }
