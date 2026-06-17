@@ -29,18 +29,18 @@ export const useWorkouts = () => {
         }
     };
 
-    const markExerciseComplete = async (workoutId, exerciseId) => {
+    const markExerciseComplete = async (workoutId, exerciseId, completed) => {
         try {
-            await workoutAPI.markExerciseComplete(workoutId, exerciseId);
-            // Update local state
+            await workoutAPI.markExerciseComplete(workoutId, exerciseId, completed);
+            // Update local state with the new completion value
             if (todayWorkout && todayWorkout._id === workoutId) {
                 const updatedExercises = todayWorkout.exercises.map(ex =>
-                    ex._id === exerciseId ? { ...ex, completed: true } : ex
+                    ex._id === exerciseId ? { ...ex, completed } : ex
                 );
                 setTodayWorkout({ ...todayWorkout, exercises: updatedExercises });
             }
         } catch (error) {
-            console.error('Failed to mark exercise complete:', error);
+            console.error('Failed to update exercise:', error);
         }
     };
 

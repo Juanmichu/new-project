@@ -55,8 +55,8 @@ export const workoutAPI = {
     getWorkout: (id) => api.get(`/workouts/${id}`),
     updateWorkout: (id, data) => api.put(`/workouts/${id}`, data),
     deleteWorkout: (id) => api.delete(`/workouts/${id}`),
-    markExerciseComplete: (workoutId, exerciseId) =>
-        api.post(`/workouts/${workoutId}/exercises/${exerciseId}/complete`),
+    markExerciseComplete: (workoutId, exerciseId, completed) =>
+        api.post(`/workouts/${workoutId}/exercises/${exerciseId}/complete`, { completed }),
 };
 
 // Exercise API

@@ -180,17 +180,22 @@ class WorkoutController extends Controller
 				->where('_id', $exerciseId)
 				->firstOrFail();
 
-			$workoutExercise->update(['completed' => true]);
+			// Accept an explicit `completed` value; if omitted, toggle the current state.
+			$completed = $request->has('completed')
+				? $request->boolean('completed')
+				: !$workoutExercise->completed;
+
+			$workoutExercise->update(['completed' => $completed]);
 
 			return response()->json([
 				'success' => true,
-				'message' => 'Exercise marked as completed',
+				'message' => $completed ? 'Exercise marked as completed' : 'Exercise marked as incomplete',
 				'data' => $workoutExercise
 			]);
 		} catch (\Exception $e) {
 			return response()->json([
 				'success' => false,
-				'message' => 'Failed to mark exercise as complete: ' . $e->getMessage()
+				'message' => 'Failed to update exercise: ' . $e->getMessage()
 			], 500);
 		}
 	}
