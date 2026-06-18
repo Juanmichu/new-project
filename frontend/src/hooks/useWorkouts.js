@@ -33,9 +33,9 @@ export const useWorkouts = () => {
         try {
             await workoutAPI.markExerciseComplete(workoutId, exerciseId, completed);
             // Update local state with the new completion value
-            if (todayWorkout && todayWorkout._id === workoutId) {
+            if (todayWorkout && todayWorkout.id === workoutId) {
                 const updatedExercises = todayWorkout.exercises.map(ex =>
-                    ex._id === exerciseId ? { ...ex, completed } : ex
+                    ex.id === exerciseId ? { ...ex, completed } : ex
                 );
                 setTodayWorkout({ ...todayWorkout, exercises: updatedExercises });
             }

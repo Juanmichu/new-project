@@ -60,7 +60,7 @@ export const ProgressSection = ({ dashboardStats, progressStats }) => {
                     ) : (
                         <div className="space-y-4">
                             {sessions.map((session) => (
-                                <div key={session._id} className="flex items-center space-x-4">
+                                <div key={session.id} className="flex items-center space-x-4">
                                     <div className="w-28 shrink-0 text-sm text-gray-300">
                                         {session.completed_at
                                             ? new Date(session.completed_at).toLocaleDateString()

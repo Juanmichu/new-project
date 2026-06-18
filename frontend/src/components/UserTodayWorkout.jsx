@@ -36,7 +36,7 @@ export const TodaySection = ({ todayWorkout, completionPercentage, onToggleExerc
                         <div className="space-y-4">
                             {todayWorkout.exercises?.map((workoutExercise) => (
                                 <div
-                                    key={workoutExercise._id}
+                                    key={workoutExercise.id}
                                     className={`p-4 rounded-lg border transition-all cursor-pointer ${
                                         workoutExercise.completed
                                             ? 'bg-green-500/10 border-green-500/30'

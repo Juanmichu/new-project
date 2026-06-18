@@ -33,8 +33,8 @@ export const UserDashboard = () => {
     const handleExerciseToggle = async (workoutExercise) => {
         if (todayWorkout) {
             await markExerciseComplete(
-                todayWorkout._id,
-                workoutExercise._id,
+                todayWorkout.id,
+                workoutExercise.id,
                 !workoutExercise.completed
             );
         }
