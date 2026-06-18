@@ -14,7 +14,7 @@ const NAV_ITEMS = [
     { key: 'profile', label: 'Profile', icon: User },
 ];
 
-export const UpdatedUserDashboard = () => {
+export const UserDashboard = () => {
     const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('today');

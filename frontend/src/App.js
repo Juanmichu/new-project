@@ -6,7 +6,7 @@ import './App.css';
 import { AuthProvider } from './hooks/useAuth';
 import { LoginPage, RegisterPage } from './components/AuthPages';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { UpdatedUserDashboard } from './components/UpdatedUserDashboard';
+import { UserDashboard } from './components/UserDashboard';
 
 // Import Lucide React icons
 import { ArrowRight, Dumbbell, Users, Calendar, Trophy, ArrowLeft, Clock, User, LogOut, Menu, X, Target, TrendingUp, CheckCircle, Search, Filter, ChevronRight, Heart, MessageCircle, Share2, BookOpen, Tag } from 'lucide-react';
@@ -23,7 +23,7 @@ const HomePage = () => {
                     <div className="flex justify-between items-center py-4">
                         <div className="flex items-center space-x-2">
                             <Dumbbell className="h-8 w-8 text-purple-400" />
-                            <span className="text-2xl font-bold text-white">FitTracker</span>
+                            <button onClick={() => onNavigate('home')} className="text-2xl font-bold text-white">FitTracker</button>
                         </div>
                         <div className="hidden md:flex space-x-8">
                             <button onClick={() => onNavigate('home')} className="text-white hover:text-purple-400 transition-colors">Home</button>
@@ -352,7 +352,7 @@ function App() {
                     path="/dashboard"
                     element={
                         <ProtectedRoute>
-                            <UpdatedUserDashboard />
+                            <UserDashboard />
                         </ProtectedRoute>
                     }
                 />
