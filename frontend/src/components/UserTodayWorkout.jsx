@@ -4,9 +4,9 @@
 /* ---------------------------------------------------------------- */
 import {ProgressRing} from "./ProgressRing";
 import {StatCard} from "./StatsCard";
-import { Dumbbell, Clock, Target, CheckCircle } from 'lucide-react';
+import { Dumbbell, Clock, Target, CheckCircle, Trophy } from 'lucide-react';
 
-export const TodaySection = ({ todayWorkout, completionPercentage, onToggleExercise }) => {
+export const TodaySection = ({ todayWorkout, completionPercentage, onToggleExercise, isCompleted = false }) => {
     const completedCount = todayWorkout?.exercises?.filter(ex => ex.completed).length || 0;
     const totalCount = todayWorkout?.exercises?.length || 0;
 
@@ -18,6 +18,17 @@ export const TodaySection = ({ todayWorkout, completionPercentage, onToggleExerc
                 <StatCard label="Duration" value={`${todayWorkout?.total_duration || 45} min`} icon={Clock} color="text-green-400" />
                 <StatCard label="Exercises" value={`${completedCount}/${totalCount}`} icon={Dumbbell} color="text-purple-400" />
             </div>
+
+            {/* Completed banner */}
+            {isCompleted && (
+                <div className="mb-6 flex items-center space-x-3 bg-green-500/10 border border-green-500/30 rounded-2xl p-4">
+                    <Trophy className="h-6 w-6 text-green-400 shrink-0" />
+                    <div>
+                        <p className="text-green-400 font-semibold">Workout completed for today!</p>
+                        <p className="text-gray-300 text-sm">Come back tomorrow for a new session. You did very well today!</p>
+                    </div>
+                </div>
+            )}
 
             {/* Today's Workout */}
             {todayWorkout ? (
@@ -37,12 +48,14 @@ export const TodaySection = ({ todayWorkout, completionPercentage, onToggleExerc
                             {todayWorkout.exercises?.map((workoutExercise) => (
                                 <div
                                     key={workoutExercise.id}
-                                    className={`p-4 rounded-lg border transition-all cursor-pointer ${
+                                    className={`p-4 rounded-lg border transition-all ${
+                                        isCompleted ? 'cursor-not-allowed opacity-90' : 'cursor-pointer'
+                                    } ${
                                         workoutExercise.completed
                                             ? 'bg-green-500/10 border-green-500/30'
                                             : 'bg-white/5 border-white/10 hover:bg-white/10'
                                     }`}
-                                    onClick={() => onToggleExercise(workoutExercise)}
+                                    onClick={() => !isCompleted && onToggleExercise(workoutExercise)}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">

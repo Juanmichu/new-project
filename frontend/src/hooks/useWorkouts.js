@@ -44,6 +44,25 @@ export const useWorkouts = () => {
         }
     };
 
+    /**
+     * Marks the whole workout as completed (logs a session and locks it).
+     * Returns the API response so callers can react (e.g. show a popup),
+     * or null if the request failed.
+     */
+    const completeWorkout = async (workoutId) => {
+        try {
+            const response = await workoutAPI.completeWorkout(workoutId);
+            // Reflect the locked/completed status locally.
+            if (todayWorkout && todayWorkout.id === workoutId) {
+                setTodayWorkout({ ...todayWorkout, status: 'completed' });
+            }
+            return response.data;
+        } catch (error) {
+            console.error('Failed to complete workout:', error);
+            return null;
+        }
+    };
+
     useEffect(() => {
         fetchWorkouts();
         fetchTodayWorkout();
@@ -57,5 +76,6 @@ export const useWorkouts = () => {
         fetchWorkouts,
         fetchTodayWorkout,
         markExerciseComplete,
+        completeWorkout,
     };
 };

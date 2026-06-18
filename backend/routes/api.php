@@ -82,6 +82,9 @@ Route::middleware('auth:sanctum')->group(function () {
 		// Exercise completion
 		Route::post('/{workoutId}/exercises/{exerciseId}/complete',
 			[WorkoutController::class, 'markExerciseComplete']);
+
+		// Complete the whole workout (locks it and logs a session)
+		Route::post('/{id}/complete', [WorkoutController::class, 'completeWorkout']);
 	});
 
 	// Workout sessions (for tracking actual workout performance)
@@ -174,24 +177,28 @@ Route::middleware('auth:sanctum')->group(function () {
 		Route::get('/progress', function (Request $request) {
 			$user = $request->user();
 
-			// Get last 30 days of workout sessions
-			$sessions = $user->workoutSessions()
+			// Lifetime totals across every completed session.
+			$allSessions = $user->workoutSessions()
+				->whereNotNull('completed_at')
+				->get();
+
+			$totalCalories = $allSessions->sum('calories_burned');
+			$totalWorkouts = $allSessions->count();
+			$avgDuration = $allSessions->avg('duration');
+			$avgRating = $allSessions->avg('rating');
+
+			// Last 30 days of sessions, used to draw the progress chart.
+			$recentSessions = $user->workoutSessions()
 				->where('completed_at', '>=', now()->subDays(30))
 				->orderBy('completed_at')
 				->get();
-
-			// Calculate trends
-			$totalCalories = $sessions->sum('calories_burned');
-			$totalWorkouts = $sessions->count();
-			$avgDuration = $sessions->avg('duration');
-			$avgRating = $sessions->avg('rating');
 
 			return response()->json([
 				'total_calories' => $totalCalories,
 				'total_workouts' => $totalWorkouts,
 				'avg_duration' => round($avgDuration ?? 0),
 				'avg_rating' => round($avgRating ?? 0, 1),
-				'sessions' => $sessions
+				'sessions' => $recentSessions
 			]);
 		});
 	});

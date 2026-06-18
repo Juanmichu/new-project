@@ -10,6 +10,7 @@ import { useStats } from '../hooks/useStats';
 import { TodaySection } from "./UserTodayWorkout";
 import { ProgressSection } from "./UserProgressSection";
 import { ProfileSection } from "./UserProfileSection";
+import { WorkoutCompleteModal } from "./WorkoutCompleteModal";
 
 const NAV_ITEMS = [
     { key: 'today', label: "Today's Workout", icon: Calendar },
@@ -21,9 +22,18 @@ export const UserDashboard = () => {
     const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('today');
+    const [showCompletionModal, setShowCompletionModal] = useState(false);
     const { user, logout, updateProfile } = useAuth();
-    const { todayWorkout, markExerciseComplete } = useWorkouts();
-    const { dashboardStats, progressStats, loading: statsLoading } = useStats();
+    const { todayWorkout, markExerciseComplete, completeWorkout } = useWorkouts();
+    const {
+        dashboardStats,
+        progressStats,
+        loading: statsLoading,
+        fetchDashboardStats,
+        fetchProgressStats,
+    } = useStats();
+
+    const isWorkoutCompleted = todayWorkout?.status === 'completed';
 
     const handleLogout = async () => {
         await logout();
@@ -31,12 +41,28 @@ export const UserDashboard = () => {
     };
 
     const handleExerciseToggle = async (workoutExercise) => {
-        if (todayWorkout) {
-            await markExerciseComplete(
-                todayWorkout.id,
-                workoutExercise.id,
-                !workoutExercise.completed
-            );
+        // Locked once the workout is completed for the day.
+        if (!todayWorkout || isWorkoutCompleted) {
+            return;
+        }
+
+        const newCompleted = !workoutExercise.completed;
+        await markExerciseComplete(todayWorkout.id, workoutExercise.id, newCompleted);
+
+        // Work out what the completion looks like after this toggle.
+        const exercises = todayWorkout.exercises || [];
+        const completedCount = exercises.filter(ex =>
+            ex.id === workoutExercise.id ? newCompleted : ex.completed
+        ).length;
+
+        // When every exercise is done, finish the workout and celebrate.
+        if (exercises.length > 0 && completedCount === exercises.length) {
+            const result = await completeWorkout(todayWorkout.id);
+            if (result?.success) {
+                setShowCompletionModal(true);
+                // Refresh stats so the Progress page reflects the new session.
+                await Promise.all([fetchDashboardStats(), fetchProgressStats()]);
+            }
         }
     };
 
@@ -153,6 +179,7 @@ export const UserDashboard = () => {
                             todayWorkout={todayWorkout}
                             completionPercentage={completionPercentage}
                             onToggleExercise={handleExerciseToggle}
+                            isCompleted={isWorkoutCompleted}
                         />
                     )}
                     {activeSection === 'progress' && (
@@ -166,6 +193,18 @@ export const UserDashboard = () => {
                     )}
                 </main>
             </div>
+
+            {/* Greetings pop-up shown when today's workout reaches 100% */}
+            {showCompletionModal && (
+                <WorkoutCompleteModal
+                    workout={todayWorkout}
+                    onClose={() => setShowCompletionModal(false)}
+                    onViewProgress={() => {
+                        setShowCompletionModal(false);
+                        goToSection('progress');
+                    }}
+                />
+            )}
         </div>
     );
 };

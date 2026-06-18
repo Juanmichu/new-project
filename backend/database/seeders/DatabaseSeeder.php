@@ -7,6 +7,7 @@ use App\Models\Exercise;
 use App\Models\Article;
 use App\Models\NewsArticle;
 use App\Models\Workout;
+use App\Models\WorkoutExercise;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -45,7 +46,34 @@ class DatabaseSeeder extends Seeder
 				'height' => 165,
 				'weight' => 60,
 				'fitness_level' => 'beginner'
-			]
+			],
+            [
+                'name' => 'Mike Johnson',
+                'email' => 'mike@example.com',
+                'password' => Hash::make('password123'),
+                'age' => 35,
+                'height' => 175,
+                'weight' => 75,
+                'fitness_level' => 'intermediate'
+            ],
+            [
+                'name' => 'Emily Davis',
+                'email' => 'emily@example.com',
+                'password' => Hash::make('password123'),
+                'age' => 29,
+                'height' => 168,
+                'weight' => 65,
+                'fitness_level' => 'intermediate'
+            ],
+            [
+                'name' => 'David Wilson',
+                'email' => 'david@example.com',
+                'password' => Hash::make('password123'),
+                'age' => 32,
+                'height' => 180,
+                'weight' => 85,
+                'fitness_level' => 'advanced'
+            ]
 		]);
 
 		// Create sample exercises
@@ -165,69 +193,663 @@ class DatabaseSeeder extends Seeder
 				'calories_per_minute' => 12,
 				'is_active' => true,
                 'is_favorite' => false
-			]
+			],
+            [
+                'name' => 'Lunges',
+                'description' => 'Lower body exercise targeting quadriceps, glutes, and hamstrings.',
+                'category' => 'Strength',
+                'muscle_groups' => ['Quadriceps', 'Glutes', 'Hamstrings'],
+                'equipment_needed' => [],
+                'difficulty_level' => 'Beginner',
+                'instructions' => [
+                    'Stand with feet together',
+                    'Step forward with one leg and lower your hips until both knees are bent at about 90 degrees',
+                    'Return to starting position and switch legs',
+                    'Repeat for desired reps'
+                ],
+                'recommendations' => [
+                    'repetitions' => '10-15 reps per leg',
+                    'sets' => '3-4 series',
+                    'rest' => '60-90 seconds between sets',
+                    'frequency' => '2-3 times per week'
+                ],
+                'calories_per_minute' => 6,
+                'is_active' => true,
+                'is_favorite' => false
+            ],
+            [
+                'name' => 'Jumping Jacks',
+                'description' => 'Cardio exercise that increases heart rate and burns calories.',
+                'category' => 'Cardio',
+                'muscle_groups' => ['Full Body'],
+                'equipment_needed' => [],
+                'difficulty_level' => 'Beginner',
+                'instructions' => [
+                    'Stand upright with feet together and arms at your sides',
+                    'Jump up, spreading your legs shoulder-width apart while raising your arms overhead',
+                    'Jump back to starting position',
+                    'Repeat for desired reps'
+                ],
+                'recommendations' => [
+                    'repetitions' => '30-60 seconds',
+                    'sets' => '3-4 series',
+                    'rest' => '30-60 seconds between sets',
+                    'frequency' => '3-4 times per week'
+                ],
+                'calories_per_minute' => 8,
+                'is_active' => true,
+                'is_favorite' => false
+            ],
+            [
+                'name' => 'Mountain Climbers',
+                'description' => 'Cardio and core exercise that increases heart rate and strengthens the core.',
+                'category' => 'Cardio',
+                'muscle_groups' => ['Core', 'Legs', 'Shoulders'],
+                'equipment_needed' => [],
+                'difficulty_level' => 'Intermediate',
+                'instructions' => [
+                    'Start in a plank position with arms straight',
+                    'Bring one knee towards your chest, then switch legs quickly as if running in place',
+                    'Keep your core tight and back straight',
+                    'Repeat for desired time'
+                ],
+                'recommendations' => [
+                    'repetitions' => '30-60 seconds',
+                    'sets' => '3-4 series',
+                    'rest' => '30-60 seconds between sets',
+                    'frequency' => '3-4 times per week'
+                ],
+                'calories_per_minute' => 10,
+                'is_active' => true,
+                'is_favorite' => false
+            ],
+            [
+                'name' => 'Bicycle Crunches',
+                'description' => 'Core exercise that targets the abdominal muscles.',
+                'category' => 'Core',
+                'muscle_groups' => ['Abdominals', 'Obliques'],
+                'equipment_needed' => [],
+                'difficulty_level' => 'Intermediate',
+                'instructions' => [
+                    'Lie flat on your back with hands behind your head and legs lifted off the ground',
+                    'Bring one knee towards your chest while simultaneously twisting your torso to bring the opposite elbow towards that knee',
+                    'Switch sides in a pedaling motion',
+                    'Repeat for desired reps'
+                ],
+                'recommendations' => [
+                    'repetitions' => '15-20 reps per side',
+                    'sets' => '3-4 series',
+                    'rest' => '30-60 seconds between sets',
+                    'frequency' => '3-4 times per week'
+                ],
+                'calories_per_minute' => 8,
+                'is_active' => true,
+                'is_favorite' => false
+            ],
+            [
+                'name' => 'Russian Twists',
+                'description' => 'Core exercise that targets the oblique muscles.',
+                'category' => 'Core',
+                'muscle_groups' => ['Obliques', 'Abdominals'],
+                'equipment_needed' => ['Optional: Medicine Ball or Dumbbell'],
+                'difficulty_level' => 'Intermediate',
+                'instructions' => [
+                    'Sit on the floor with knees bent and feet flat',
+                    'Lean back slightly while keeping your back straight',
+                    'Hold your hands together or a weight in front of you',
+                    'Twist your torso to the right, then to the left, while keeping your core engaged',
+                    'Repeat for desired reps'
+                ],
+                'recommendations' => [
+                    'repetitions' => '15-20 reps per side',
+                    'sets' => '3-4 series',
+                    'rest' => '30-60 seconds between sets',
+                    'frequency' => '3-4 times per week'
+                ],
+                'calories_per_minute' => 7,
+                'is_active' => true,
+                'is_favorite' => false
+            ],
+            [
+                'name' => 'RDL (Romanian Deadlift)',
+                'description' => 'Strength exercise that targets the hamstrings, glutes, and lower back.',
+                'category' => 'Strength',
+                'muscle_groups' => ['Hamstrings', 'Glutes', 'Lower Back'],
+                'equipment_needed' => ['Dumbbells or Barbell'],
+                'difficulty_level' => 'Intermediate',
+                'instructions' => [
+                    'Stand with feet hip-width apart, holding dumbbells or a barbell in front of your thighs',
+                    'Keep a slight bend in your knees and hinge at the hips to lower the weights down the front of your legs',
+                    'Lower until you feel a stretch in your hamstrings, then return to the starting position by driving your hips forward',
+                    'Keep your back straight and core engaged throughout the movement',
+                    'Repeat for desired reps'
+                ],
+                'recommendations' => [
+                    'repetitions' => '8-12 reps',
+                    'sets' => '3-4 series',
+                    'rest' => '60-90 seconds between sets',
+                    'frequency' => '2-3 times per week'
+                ],
+                'calories_per_minute' => 5,
+                'is_active' => true,
+                'is_favorite' => false
+            ]
 		]);
 
 		// Create sample workouts
 		$workouts = Workout::factory()->createMany([
+            [
+                'user_id' => $users[0]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now(),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
 			[
 				'user_id' => $users[0]->_id,
 				'name' => 'Upper Body Workout',
 				'description' => 'Focus on chest and back',
-				'date' => now()->subDays(2),
-				'duration_minutes' => 60,
-				'exercises' => [
-					[
-						'exercise_id' => $exercises[0]->_id,
-						'sets' => 4,
-						'reps' => 8,
-						'weight_kg' => 60
-					],
-					[
-						'exercise_id' => $exercises[3]->_id,
-						'sets' => 3,
-						'reps' => 10,
-						'weight_kg' => null // bodyweight
-					]
-				]
+				'workout_date' => now()->addDays(2),
+				'total_duration' => 60,
+				'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
 			],
 			[
 				'user_id' => $users[0]->_id,
 				'name' => 'Lower Body Workout',
 				'description' => 'Leg day',
-				'date' => now()->subDays(4),
+				'date' => now()->addDays(4),
 				'duration_minutes' => 45,
-				'exercises' => [
-					[
-						'exercise_id' => $exercises[1]->_id,
-						'sets' => 5,
-						'reps' => 5,
-						'weight_kg' => 100
-					]
-				]
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Focus on form and depth during squats.',
+                'calories_burned' => 350
 			],
-			[
-				'user_id' => $users[1]->_id,
-				'name' => 'Beginner Full Body',
-				'description' => 'First workout',
-				'date' => now()->subDays(1),
-				'duration_minutes' => 30,
-				'exercises' => [
-					[
-						'exercise_id' => $exercises[4]->_id,
-						'sets' => 3,
-						'reps' => 12,
-						'weight_kg' => null
-					],
-					[
-						'exercise_id' => $exercises[3]->_id,
-						'sets' => 2,
-						'reps' => 8,
-						'weight_kg' => null
-					]
-				]
-			]
+            [
+                'user_id' => $users[0]->_id,
+                'name' => 'Full Body Workout',
+                'description' => 'Full body strength and conditioning',
+                'date' => now()->addDays(6),
+                'duration_minutes' => 55,
+                'difficulty_level' => 'Advanced',
+                'status' => 'planned',
+                'notes' => 'Include a mix of strength and cardio exercises.',
+                'calories_burned' => 500
+            ],
+            [
+                'user_id' => $users[1]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now(),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[1]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now()->addDays(2),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[1]->_id,
+                'name' => 'Lower Body Workout',
+                'description' => 'Leg day',
+                'date' => now()->addDays(4),
+                'duration_minutes' => 45,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Focus on form and depth during squats.',
+                'calories_burned' => 350
+            ],
+            [
+                'user_id' => $users[1]->_id,
+                'name' => 'Full Body Workout',
+                'description' => 'Full body strength and conditioning',
+                'date' => now()->addDays(6),
+                'duration_minutes' => 55,
+                'difficulty_level' => 'Advanced',
+                'status' => 'planned',
+                'notes' => 'Include a mix of strength and cardio exercises.',
+                'calories_burned' => 500
+            ],
+            [
+                'user_id' => $users[2]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now(),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[2]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now()->addDays(2),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[2]->_id,
+                'name' => 'Lower Body Workout',
+                'description' => 'Leg day',
+                'date' => now()->addDays(4),
+                'duration_minutes' => 45,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Focus on form and depth during squats.',
+                'calories_burned' => 350
+            ],
+            [
+                'user_id' => $users[2]->_id,
+                'name' => 'Full Body Workout',
+                'description' => 'Full body strength and conditioning',
+                'date' => now()->addDays(6),
+                'duration_minutes' => 55,
+                'difficulty_level' => 'Advanced',
+                'status' => 'planned',
+                'notes' => 'Include a mix of strength and cardio exercises.',
+                'calories_burned' => 500
+            ],
+            [
+                'user_id' => $users[3]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now(),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[3]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now()->addDays(2),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[3]->_id,
+                'name' => 'Lower Body Workout',
+                'description' => 'Leg day',
+                'date' => now()->addDays(4),
+                'duration_minutes' => 45,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Focus on form and depth during squats.',
+                'calories_burned' => 350
+            ],
+            [
+                'user_id' => $users[3]->_id,
+                'name' => 'Full Body Workout',
+                'description' => 'Full body strength and conditioning',
+                'date' => now()->addDays(6),
+                'duration_minutes' => 55,
+                'difficulty_level' => 'Advanced',
+                'status' => 'planned',
+                'notes' => 'Include a mix of strength and cardio exercises.',
+                'calories_burned' => 500
+            ],
+            [
+                'user_id' => $users[4]->_id,
+                'name' => 'Full Body Workout',
+                'description' => 'Full body strength and conditioning',
+                'date' => now()->subDays(2),
+                'duration_minutes' => 55,
+                'difficulty_level' => 'Advanced',
+                'status' => 'completed',
+                'notes' => 'Include a mix of strength and cardio exercises.',
+                'calories_burned' => 500
+            ],
+            [
+                'user_id' => $users[4]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now()->subDays(4),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'completed',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[4]->_id,
+                'name' => 'Upper Body Workout',
+                'description' => 'Focus on chest and back',
+                'workout_date' => now()->subDays(6),
+                'total_duration' => 60,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'completed',
+                'notes' => 'Remember to warm up before starting the workout.',
+                'calories_burned' => 400
+            ],
+            [
+                'user_id' => $users[4]->_id,
+                'name' => 'Lower Body Workout',
+                'description' => 'Leg day',
+                'date' => now(),
+                'duration_minutes' => 45,
+                'difficulty_level' => 'Intermediate',
+                'status' => 'planned',
+                'notes' => 'Focus on form and depth during squats.',
+                'calories_burned' => 350
+            ],
 		]);
+
+        $workout_exercises = WorkoutExercise::factory()->createMany([
+            [
+                'workout_id' => $workouts[0]->_id,
+                'exercise_id' => $exercises[0]->_id,
+                'sets' => 3,
+                'reps' => 12,
+                'rest_time' => 30,
+                'order' => 1,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[0]->_id,
+                'exercise_id' => $exercises[1]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 2,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[0]->_id,
+                'exercise_id' => $exercises[2]->_id,
+                'sets' => 4,
+                'reps' => 8,
+                'rest_time' => 30,
+                'order' => 3,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[0]->_id,
+                'exercise_id' => $exercises[3]->_id,
+                'sets' => 3,
+                'reps' => 15,
+                'rest_time' => 30,
+                'order' => 4,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[0]->_id,
+                'exercise_id' => $exercises[4]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 5,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[0]->_id,
+                'exercise_id' => $exercises[5]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 6,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[1]->_id,
+                'exercise_id' => $exercises[6]->_id,
+                'sets' => 3,
+                'reps' => 12,
+                'rest_time' => 30,
+                'order' => 1,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[1]->_id,
+                'exercise_id' => $exercises[7]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 2,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[1]->_id,
+                'exercise_id' => $exercises[8]->_id,
+                'sets' => 4,
+                'reps' => 8,
+                'rest_time' => 30,
+                'order' => 3,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[1]->_id,
+                'exercise_id' => $exercises[9]->_id,
+                'sets' => 3,
+                'reps' => 15,
+                'rest_time' => 30,
+                'order' => 4,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[1]->_id,
+                'exercise_id' => $exercises[10]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 5,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[2]->_id,
+                'exercise_id' => $exercises[0]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 1,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[2]->_id,
+                'exercise_id' => $exercises[1]->_id,
+                'sets' => 3,
+                'reps' => 12,
+                'rest_time' => 30,
+                'order' => 2,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[2]->_id,
+                'exercise_id' => $exercises[2]->_id,
+                'sets' => 4,
+                'reps' => 8,
+                'rest_time' => 30,
+                'order' => 3,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[2]->_id,
+                'exercise_id' => $exercises[3]->_id,
+                'sets' => 3,
+                'reps' => 15,
+                'rest_time' => 30,
+                'order' => 4,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[2]->_id,
+                'exercise_id' => $exercises[4]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 5,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[3]->_id,
+                'exercise_id' => $exercises[5]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 1,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[3]->_id,
+                'exercise_id' => $exercises[6]->_id,
+                'sets' => 3,
+                'reps' => 12,
+                'rest_time' => 30,
+                'order' => 2,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[3]->_id,
+                'exercise_id' => $exercises[7]->_id,
+                'sets' => 4,
+                'reps' => 8,
+                'rest_time' => 30,
+                'order' => 3,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[3]->_id,
+                'exercise_id' => $exercises[8]->_id,
+                'sets' => 3,
+                'reps' => 15,
+                'rest_time' => 30,
+                'order' => 4,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[3]->_id,
+                'exercise_id' => $exercises[9]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 5,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[4]->_id,
+                'exercise_id' => $exercises[10]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 1,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[4]->_id,
+                'exercise_id' => $exercises[0]->_id,
+                'sets' => 3,
+                'reps' => 12,
+                'rest_time' => 30,
+                'order' => 2,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[4]->_id,
+                'exercise_id' => $exercises[1]->_id,
+                'sets' => 4,
+                'reps' => 8,
+                'rest_time' => 30,
+                'order' => 3,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[4]->_id,
+                'exercise_id' => $exercises[2]->_id,
+                'sets' => 3,
+                'reps' => 15,
+                'rest_time' => 30,
+                'order' => 4,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[4]->_id,
+                'exercise_id' => $exercises[3]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 5,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[5]->_id,
+                'exercise_id' => $exercises[4]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 1,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[5]->_id,
+                'exercise_id' => $exercises[5]->_id,
+                'sets' => 3,
+                'reps' => 12,
+                'rest_time' => 30,
+                'order' => 2,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[5]->_id,
+                'exercise_id' => $exercises[6]->_id,
+                'sets' => 4,
+                'reps' => 8,
+                'rest_time' => 30,
+                'order' => 3,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[5]->_id,
+                'exercise_id' => $exercises[7]->_id,
+                'sets' => 3,
+                'reps' => 15,
+                'rest_time' => 30,
+                'order' => 4,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[5]->_id,
+                'exercise_id' => $exercises[8]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 5,
+                'completed' => false
+            ],
+            [
+                'workout_id' => $workouts[6]->_id,
+                'exercise_id' => $exercises[9]->_id,
+                'sets' => 3,
+                'reps' => 10,
+                'rest_time' => 30,
+                'order' => 1,
+                'completed' => false
+            ]
+        ]);
 
 
 		// Create blog articles

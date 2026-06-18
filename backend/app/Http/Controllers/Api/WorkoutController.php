@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Workout;
 use App\Models\WorkoutExercise;
+use App\Models\WorkoutSession;
 use App\Models\Exercise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -176,6 +177,19 @@ class WorkoutController extends Controller
 	public function markExerciseComplete(Request $request, $workoutId, $exerciseId)
 	{
 		try {
+			// Ensure the workout belongs to the user and is not already locked.
+			$workout = Workout::where('user_id', $request->user()->_id)
+				->where('_id', $workoutId)
+				->firstOrFail();
+
+			// Once a workout is completed it is locked: exercises can no longer be toggled.
+			if ($workout->status === 'completed') {
+				return response()->json([
+					'success' => false,
+					'message' => 'This workout is already completed and can no longer be modified.'
+				], 423);
+			}
+
 			$workoutExercise = WorkoutExercise::where('workout_id', $workoutId)
 				->where('_id', $exerciseId)
 				->firstOrFail();
@@ -196,6 +210,76 @@ class WorkoutController extends Controller
 			return response()->json([
 				'success' => false,
 				'message' => 'Failed to update exercise: ' . $e->getMessage()
+			], 500);
+		}
+	}
+
+	/**
+	 * Marks a workout as completed once all of its exercises are done.
+	 *
+	 * Creates a WorkoutSession record (so it shows up in the user's progress
+	 * stats) and locks the workout for the rest of the day. The operation is
+	 * idempotent: calling it again on an already-completed workout returns the
+	 * existing state without creating a duplicate session.
+	 */
+	public function completeWorkout(Request $request, $id)
+	{
+		try {
+			$workout = Workout::where('user_id', $request->user()->_id)
+				->where('_id', $id)
+				->with(['exercises.exercise'])
+				->firstOrFail();
+
+			// Idempotent: don't create a second session for an already-completed workout.
+			if ($workout->status === 'completed') {
+				return response()->json([
+					'success' => true,
+					'message' => 'Workout already completed',
+					'already_completed' => true,
+					'data' => [
+						'workout' => $workout,
+						'session' => $workout->sessions()->latest('completed_at')->first()
+					]
+				]);
+			}
+
+			$totalExercises = $workout->exercises->count();
+			$completedExercises = $workout->exercises->where('completed', true)->count();
+
+			// Guard: only allow completion when every exercise is done.
+			if ($totalExercises === 0 || $completedExercises < $totalExercises) {
+				return response()->json([
+					'success' => false,
+					'message' => 'All exercises must be completed before finishing the workout.'
+				], 422);
+			}
+
+			$session = WorkoutSession::create([
+				'user_id' => $request->user()->_id,
+				'workout_id' => $workout->_id,
+				'started_at' => $workout->created_at ?? now(),
+				'completed_at' => now(),
+				'duration' => $workout->total_duration ?? 0,
+				'calories_burned' => $workout->calories_burned ?? 0,
+				'exercises_completed' => $completedExercises,
+				'total_exercises' => $totalExercises,
+			]);
+
+			$workout->update(['status' => 'completed']);
+
+			return response()->json([
+				'success' => true,
+				'message' => 'Workout completed. Great job!',
+				'already_completed' => false,
+				'data' => [
+					'workout' => $workout->load(['exercises.exercise']),
+					'session' => $session
+				]
+			], 201);
+		} catch (\Exception $e) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Failed to complete workout: ' . $e->getMessage()
 			], 500);
 		}
 	}

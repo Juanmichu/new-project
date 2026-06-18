@@ -13,7 +13,7 @@ class ExerciseFactory extends Factory
     /**
      * @inheritDoc
      */
-    public function definition()
+    public function definition(): array
     {
         return [
 			'name' => $this->faker->word,
