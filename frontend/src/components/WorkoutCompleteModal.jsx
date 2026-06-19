@@ -14,21 +14,13 @@ import { Trophy, X, TrendingUp, Flame, Clock } from 'lucide-react';
 export const WorkoutCompleteModal = ({ workout, onClose, onViewProgress }) => {
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
             onClick={onClose}
         >
             <div
-                className="relative w-full max-w-md bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/10 shadow-2xl p-8 text-center"
+                className="relative max-w-7xl bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/10 shadow-2xl p-8 text-center"
                 onClick={(e) => e.stopPropagation()}
             >
-                <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
-                    aria-label="Close"
-                >
-                    <X className="h-5 w-5" />
-                </button>
-
                 <div className="mx-auto mb-6 w-20 h-20 rounded-full bg-gradient-to-r from-yellow-400 to-orange-400 flex items-center justify-center shadow-lg">
                     <Trophy className="h-10 w-10 text-white" />
                 </div>
