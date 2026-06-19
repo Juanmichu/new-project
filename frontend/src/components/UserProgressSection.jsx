@@ -74,6 +74,7 @@ const WorkoutProgressChart = ({ sessions }) => {
 
 export const ProgressSection = ({ dashboardStats, progressStats }) => {
     const sessions = progressStats?.sessions || [];
+    // Get the exercise with the highest duration to compare with the other exercises and draw graphic based on that maximum.
     const maxDuration = Math.max(1, ...sessions.map(s => s.duration || 0));
 
     return (
