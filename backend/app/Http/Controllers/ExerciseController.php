@@ -56,7 +56,7 @@ class ExerciseController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'muscle_groups' => 'required|string',
-            'difficulty_level' => 'required|in:principiante,intermedio,avanzado',
+            'difficulty_level' => 'required|in:Beginner,Intermediate,Advanced',
             'equipment_needed' => 'required|string',
             'instructions' => 'required|array',
             'instructions.*' => 'required|string'
