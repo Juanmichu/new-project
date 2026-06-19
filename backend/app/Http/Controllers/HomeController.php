@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Constants\Exercises;
+use App\Models\Exercise;
 
 class HomeController extends Controller
 {
@@ -13,51 +14,23 @@ class HomeController extends Controller
     {
         // Aquí puedes agregar lógica para mostrar ejercicios destacados,
         // estadísticas generales, etc.
-        
+
         $featuredExercises = $this->getFeaturedExercises();
+        $colorDifficultyLevels  = Exercises::COLOR_DIFFICULTY_LEVELS;
         $stats = $this->getGeneralStats();
-        
-        return view('home', compact('featuredExercises', 'stats'));
+
+        return view('home', compact('featuredExercises', 'colorDifficultyLevels'));
     }
-    
+
     /**
      * Obtener ejercicios destacados para la página principal
      */
     private function getFeaturedExercises()
     {
-        // Por ahora datos estáticos, luego conectarás con la base de datos
-        return [
-            [
-                'id' => 1,
-                'name' => 'Flexiones',
-                'muscle_group' => 'Pecho',
-                'difficulty' => 'Intermedio',
-                'image' => null
-            ],
-            [
-                'id' => 2,
-                'name' => 'Sentadillas',
-                'muscle_group' => 'Piernas', 
-                'difficulty' => 'Principiante',
-                'image' => null
-            ],
-            [
-                'id' => 3,
-                'name' => 'Dominadas',
-                'muscle_group' => 'Espalda',
-                'difficulty' => 'Avanzado',
-                'image' => null
-            ],
-            [
-                'id' => 4,
-                'name' => 'Plancha',
-                'muscle_group' => 'Core',
-                'difficulty' => 'Intermedio', 
-                'image' => null
-            ]
-        ];
+        // Get 5 exercises marked as favorites
+        return Exercise::where('is_favorite', true)->limit(5)->get()->toArray();
     }
-    
+
     /**
      * Obtener estadísticas generales
      */

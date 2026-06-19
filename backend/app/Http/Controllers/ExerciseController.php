@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Constants\Exercises;
 use App\Models\Exercise;
 use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
     /**
-     * Show the exercises list.
+     * Show the exercise list.
      */
     public function index(Request $request)
     {
-        $exercises = $this->getFilteredExercises($request);
-        $muscleGroups = $this->getMuscleGroups();
-        $difficulties = $this->getDifficulties();
+        $exercises              = $this->getFilteredExercises($request);
+        $muscleGroups           = $this->getMuscleGroups();
+        $equipmentTypes         = $this->getEquipmentTypes();
+        $difficulties           = $this->getDifficulties();
+        $colorDifficultyLevels  = $this->getColorDifficultyLevels();
 
-        return view('exercises.index', compact('exercises', 'muscleGroups', 'difficulties'));
+        return view('exercises.index', compact('exercises', 'muscleGroups', 'equipmentTypes' ,'difficulties', 'colorDifficultyLevels'));
     }
 
     /**
@@ -24,7 +27,8 @@ class ExerciseController extends Controller
      */
     public function show(string $id)
     {
-        $exercise = $this->getExerciseById($id);
+        $exercise               = $this->getExerciseById($id);
+        $colorDifficultyLevels  = $this->getColorDifficultyLevels();
 
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
@@ -32,7 +36,7 @@ class ExerciseController extends Controller
 
         $relatedExercises = $this->getRelatedExercises($exercise);
 
-        return view('exercises.show', compact('exercise', 'relatedExercises'));
+        return view('exercises.show', compact('exercise', 'relatedExercises', 'colorDifficultyLevels'));
     }
 
     /**
@@ -40,8 +44,8 @@ class ExerciseController extends Controller
      */
     public function create()
     {
-        $muscleGroups = $this->getMuscleGroups();
-        $difficulties = $this->getDifficulties();
+        $muscleGroups   = $this->getMuscleGroups();
+        $difficulties   = $this->getDifficulties();
         $equipmentTypes = $this->getEquipmentTypes();
 
         return view('exercises.create', compact('muscleGroups', 'difficulties', 'equipmentTypes'));
@@ -52,18 +56,7 @@ class ExerciseController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'muscle_groups' => 'required|string',
-            'difficulty_level' => 'required|in:Beginner,Intermediate,Advanced',
-            'equipment_needed' => 'required|string',
-            'instructions' => 'required|array',
-            'instructions.*' => 'required|string'
-        ]);
-
-        // El formulario envía un único grupo muscular; lo almacenamos como array.
-        $validated['muscle_groups'] = [$validated['muscle_groups']];
+        $validated = $this->getValidatedExerciseData($request);
 
         Exercise::create($validated);
 
@@ -82,8 +75,8 @@ class ExerciseController extends Controller
             abort(404, 'Ejercicio no encontrado');
         }
 
-        $muscleGroups = $this->getMuscleGroups();
-        $difficulties = $this->getDifficulties();
+        $muscleGroups   = $this->getMuscleGroups();
+        $difficulties   = $this->getDifficulties();
         $equipmentTypes = $this->getEquipmentTypes();
 
         return view('exercises.edit', compact('exercise', 'muscleGroups', 'difficulties', 'equipmentTypes'));
@@ -100,17 +93,7 @@ class ExerciseController extends Controller
             abort(404, 'Ejercicio no encontrado');
         }
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'muscle_groups' => 'required|string',
-            'difficulty_level' => 'required|string',
-            'equipment_needed' => 'nullable|array',
-            'instructions' => 'required|array'
-        ]);
-
-        // El formulario envía un único grupo muscular; lo almacenamos como array.
-        $validated['muscle_groups'] = [$validated['muscle_groups']];
+        $validated = $this->getValidatedExerciseData($request);
 
         $exercise->update($validated);
 
@@ -176,18 +159,19 @@ class ExerciseController extends Controller
     {
         // Lógica de páginación y filtrado según los parámetros de la solicitud. Mantenemos la lógica de abajo.
         $query = Exercise::query();
+
         if($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->get('search') . '%');
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
         }
         if($request->filled('muscle_groups')) {
             // En MongoDB la igualdad sobre un campo array coincide si el array contiene el valor.
-            $query->where('muscle_groups', $request->get('muscle_groups'));
+            $query->where('muscle_groups', 'like', '%' . $request->input('muscle_groups') . '%');
         }
         if($request->filled('difficulty_level')) {
-            $query->where('difficulty_level', $request->get('difficulty_level'));
+            $query->where('difficulty_level', $request->input('difficulty_level'));
         }
         if($request->filled('equipment_needed')) {
-            $query->where('equipment_needed', $request->get('equipment_needed'));
+            $query->where('equipment_needed', 'like', '%' . $request->input('equipment_needed') . '%');
         }
         if($request->filled('is_favorite')) {
             $query->where('is_favorite', $request->boolean('is_favorite'));
@@ -218,17 +202,17 @@ class ExerciseController extends Controller
 
     private function getMuscleGroups(): array
     {
-        return ['Chest', 'Back', 'Legs', 'Arms', 'Biceps', 'Triceps', 'Core', 'Shoulders', 'Full Body', 'Cardio', 'Glutes', 'Calves', 'Forearms', 'Neck'];
+        return Exercises::MUSCLE_GROUPS;
     }
 
     private function getDifficulties(): array
     {
-        return ['Beginner', 'Intermediate', 'Advanced'];
+        return Exercises::DIFFICULTY_LEVELS;
     }
 
     private function getEquipmentTypes(): array
     {
-        return ['None', 'Dumbbell', 'Pull Up Bar', 'Machine', 'Elastic Band', 'Bodyweight'];
+        return Exercises::EQUIPMENT_TYPES;
     }
 
     private function searchExercises(string $query)
@@ -237,5 +221,37 @@ class ExerciseController extends Controller
         return Exercise::where('name', 'like', '%' . $query . '%')
             ->orWhere('description', 'like', '%' . $query . '%')
             ->get();
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function getValidatedExerciseData(Request $request): array
+    {
+        $validated = $request->validate([
+            'name'              => 'required|string|max:255',
+            'description'       => 'required|string',
+            'muscle_groups'     => 'required|array',
+            'difficulty_level'  => 'required|in:' . implode(',', Exercises::DIFFICULTY_LEVELS),
+            'equipment_needed'  => 'nullable|array',
+            'instructions'      => 'required|array',
+            'instructions.*'    => 'required|string'
+        ]);
+
+        // Equipment needed is retrieved as string with words possibly separated by commas.
+        // First, we check if there are spaces and replace them with commas. Then, we save the array by exploding
+        // string with commas as separator
+        $validated['equipment_needed'] = !empty($validated['equipment_needed']) ? $validated['equipment_needed'] : [Exercises::DEFAULT_EQUIPMENT_TYPE];
+
+        return $validated;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getColorDifficultyLevels(): array
+    {
+        return Exercises::COLOR_DIFFICULTY_LEVELS;
     }
 }

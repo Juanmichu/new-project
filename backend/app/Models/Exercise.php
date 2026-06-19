@@ -24,37 +24,40 @@ use MongoDB\Laravel\Eloquent\Model;
  */
 class Exercise extends Model
 {
-	use HasFactory;
+    use HasFactory;
 
-	protected $connection = 'mongodb';
-	protected $collection = 'exercises';
+    protected $connection = 'mongodb';
+    protected $collection = 'exercises';
 
-	protected $fillable = [
-		'name',
-		'description',
-		'category',
-		'muscle_groups',
-		'equipment_needed',
-		'difficulty_level',
-		'instructions',
+    protected $fillable = [
+        'name',
+        'description',
+        'category',
+        'muscle_groups',
+        'equipment_needed',
+        'difficulty_level',
+        'instructions',
         'recommendations',
-		'video_url',
-		'image_url',
-		'calories_per_minute',
-		'is_active',
+        'video_url',
+        'image_url',
+        'calories_per_minute',
+        'is_active',
         'is_favorite'
-	];
+    ];
 
-	protected $casts = [
-		'is_active' => 'boolean',
-		'is_favorite' => 'boolean',
-		'created_at' => 'datetime',
-		'updated_at' => 'datetime'
-	];
+    protected $casts = [
+        'muscle_groups'     => 'array',
+        'equipment_needed'  => 'array',
+        'instructions'      => 'array',
+        'is_active'         => 'boolean',
+        'is_favorite'       => 'boolean',
+        'created_at'        => 'datetime',
+        'updated_at'        => 'datetime'
+    ];
 
-	// Relationships
-	public function workoutExercises()
-	{
-		return $this->hasMany(WorkoutExercise::class, 'exercise_id', '_id');
-	}
+    // Relationships
+    public function workoutExercises()
+    {
+        return $this->hasMany(WorkoutExercise::class, 'exercise_id', '_id');
+    }
 }

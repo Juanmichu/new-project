@@ -25,15 +25,15 @@
         <div class="card-body">
             <form method="GET" action="{{ route('exercises.index') }}" class="grid md:grid-cols-4 gap-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                    <input type="text" name="search" value="{{ request('search') }}"
+                    <label for="search_filter" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <input id="search_filter" type="text" name="search" value="{{ request('search') }}"
                            placeholder="Exercise name, description..."
                            class="form-input">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Muscle Group</label>
-                    <select name="muscle_groups" class="form-select">
+                    <label for="mg_filter" class="block text-sm font-medium text-gray-700 mb-1">Muscle Group</label>
+                    <select id="mg_filter" name="muscle_groups" class="form-select">
                         <option value="">All</option>
                         @foreach($muscleGroups as $group)
                             <option value="{{ $group }}" {{ request('muscle_groups') == $group ? 'selected' : '' }}>
@@ -44,8 +44,20 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
-                    <select name="difficulty_level" class="form-select">
+                    <label for="eq_filter" class="block text-sm font-medium text-gray-700 mb-1">Equipment Needed</label>
+                    <select id="eq_filter" name="equipment_needed" class="form-select">
+                        <option value="">All</option>
+                        @foreach($equipmentTypes as $gear)
+                            <option value="{{ $gear }}" {{ request('equipment_needed') == $gear ? 'selected' : '' }}>
+                                {{ ucfirst($gear) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="diff_filter" class="block text-sm font-medium text-gray-700 mb-1">Difficulty</label>
+                    <select id="diff_filter" name="difficulty_level" class="form-select">
                         <option value="">All</option>
                         @foreach ($difficulties as $level)
                             <option value="{{ $level }}" {{ request('difficulty_level') == $level ? 'selected' : '' }}>
@@ -55,7 +67,7 @@
                     </select>
                 </div>
 
-                <div class="flex items-end">
+                <div class="flex items-end grid-col-end-none">
                     <button type="submit" class="btn-primary w-full">
                         Filter
                     </button>
@@ -73,7 +85,7 @@
                     <div class="flex justify-between items-start mb-3">
                         <h3 class="text-xl font-semibold text-gray-900">{{ $exercise['name'] }}</h3>
                         @if(isset($exercise['difficulty_level']))
-                        <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                        <span class="inline-block bg-{{ $colorDifficultyLevels[$exercise['difficulty_level']] }}-100 text-{{ $colorDifficultyLevels[$exercise['difficulty_level']] }}-800 text-xs px-2 py-1 rounded-full">
                             {{ $exercise['difficulty_level']}}
                         </span>
                         @endif
@@ -85,7 +97,7 @@
                             {{ is_array($exercise['muscle_groups']) ? implode(', ', $exercise['muscle_groups']) : $exercise['muscle_groups'] }}
                         </span>
                         @endif
-                        @if(isset($exercise['equipment_needed']))
+                        @if(isset($exercise['equipment_needed']) && !empty($exercise['equipment_needed']))
                         <span class="inline-block bg-green-100 text-green-800 text-sm px-2 py-1 rounded">
                             {{ is_array($exercise['equipment_needed']) ? implode(', ', $exercise['equipment_needed']) : $exercise['equipment_needed'] }}
                         </span>

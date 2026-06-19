@@ -216,7 +216,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'calories_per_minute' => 6,
                 'is_active' => true,
-                'is_favorite' => false
+                'is_favorite' => true
             ],
             [
                 'name' => 'Jumping Jacks',
@@ -239,7 +239,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'calories_per_minute' => 8,
                 'is_active' => true,
-                'is_favorite' => false
+                'is_favorite' => true
             ],
             [
                 'name' => 'Mountain Climbers',
@@ -262,7 +262,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'calories_per_minute' => 10,
                 'is_active' => true,
-                'is_favorite' => false
+                'is_favorite' => true
             ],
             [
                 'name' => 'Bicycle Crunches',
@@ -285,7 +285,7 @@ class DatabaseSeeder extends Seeder
                 ],
                 'calories_per_minute' => 8,
                 'is_active' => true,
-                'is_favorite' => false
+                'is_favorite' => true
             ],
             [
                 'name' => 'Russian Twists',

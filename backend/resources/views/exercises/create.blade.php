@@ -7,19 +7,19 @@
     <!-- Breadcrumb -->
     <nav class="mb-6">
         <ol class="flex space-x-2 text-sm text-gray-600">
-            <li><a href="{{ route('home') }}" class="hover:text-blue-600">Inicio</a></li>
+            <li><a href="{{ route('home') }}" class="hover:text-blue-600">Home</a></li>
             <li>/</li>
-            <li><a href="{{ route('exercises.index') }}" class="hover:text-blue-600">Ejercicios</a></li>
+            <li><a href="{{ route('exercises.index') }}" class="hover:text-blue-600">Exercises</a></li>
             <li>/</li>
-            <li class="text-gray-900">Crear Ejercicio</li>
+            <li class="text-gray-900">Create exercise</li>
         </ol>
     </nav>
 
     <!-- Header -->
     <div class="card mb-6">
         <div class="card-body">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Crear Nuevo Ejercicio</h1>
-            <p class="text-gray-600">Agrega un nuevo ejercicio a la biblioteca</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Create new exercise</h1>
+            <p class="text-gray-600">Add a new exercise to the library</p>
         </div>
     </div>
 
@@ -47,7 +47,7 @@
                             <label for="muscle_group" class="block text-sm font-medium text-gray-700 mb-1">
                                 Muscle Group *
                             </label>
-                            <select id="muscle_group" name="muscle_groups" class="form-input" required>
+                            <select id="muscle_group" name="muscle_groups[]" class="form-select" required multiple>
                                 <option value="">Select...</option>
                                 @foreach($muscleGroups as $group)
                                     <option value="{{ $group }}" {{ old('muscle_groups') == $group ? 'selected' : '' }}>
@@ -64,7 +64,7 @@
                             <label for="difficulty" class="block text-sm font-medium text-gray-700 mb-1">
                                 Difficulty *
                             </label>
-                            <select id="difficulty" name="difficulty_level" class="form-input" required>
+                            <select id="difficulty" name="difficulty_level" class="form-select" required>
                                 <option value="">Select...</option>
                                 @foreach($difficulties as $level)
                                     <option value="{{ $level }}" {{ old('difficulty_level') == $level ? 'selected' : '' }}>
@@ -79,19 +79,19 @@
 
                         <div>
                             <label for="equipment" class="block text-sm font-medium text-gray-700 mb-1">
-                                <span class="text-gray-700">
-                                    <p>Required Equipment.*</p>
-                                </span>
-                                <span class="text-gray-500">
-                                    <p>
-                                        Separate equipment with commas. If none, write "None". If equipment has several words,
-                                        write them together or with _
-                                    </p>
-                                </span>
+                               Required Equipment.*
                             </label>
-                            <input type="text" id="equipment" name="equipment_needed[]" value="{{ old('equipment_needed') }}"
+                            <select id="equipment"
+                                   name="equipment_needed[]"
+                                   value="{{ old('equipment_needed') }}"
                                    placeholder="I.e: None, Dumbbells, PullUpBar..."
-                                   class="form-input" required>
+                                   class="form-select"
+                                   multiple
+                            >
+                                @foreach($equipmentTypes as $equipment)
+                                    <option value="{{ $equipment }}" {{ in_array($equipment, old('equipment_needed', $exercise['equipment_needed'] ?? [])) ? 'selected' : '' }}>{{ $equipment }}</option>
+                                @endforeach
+                            </select>
                             @error('equipment_needed')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror

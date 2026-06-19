@@ -192,3 +192,8 @@
 		display: none !important;
 	}
 }
+
+/* Custom styles */
+.grid-col-end-none {
+    grid-column-end: none;
+}

@@ -23,15 +23,17 @@
                     <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $exercise->name }}</h1>
 
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                        <span class="inline-block bg-{{ $colorDifficultyLevels[$exercise->difficulty_level] }}-100 text-{{ $colorDifficultyLevels[$exercise->difficulty_level] }}-800 px-3 py-1 rounded-full text-sm">
                             {{ $exercise->difficulty_level }}
                         </span>
                         <span class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
                             {{ is_array($exercise->muscle_groups) ? implode(', ', $exercise->muscle_groups) : $exercise->muscle_groups }}
                         </span>
-                        <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                            {{ is_array($exercise->equipment_needed) ? implode(', ', $exercise->equipment_needed) : $exercise->equipment_needed }}
-                        </span>
+                        @if(!empty($exercise->equipment_needed))
+                            <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                                {{ is_array($exercise->equipment_needed) ? implode(', ', $exercise->equipment_needed) : $exercise->equipment_needed }}
+                            </span>
+                        @endif
                     </div>
 
                     <p class="text-gray-600 text-lg"> {{ $exercise->description }} </p>
