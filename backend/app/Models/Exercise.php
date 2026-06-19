@@ -55,6 +55,6 @@ class Exercise extends Model
 	// Relationships
 	public function workoutExercises()
 	{
-		return $this->hasMany(WorkoutExercise::class);
+		return $this->hasMany(WorkoutExercise::class, 'exercise_id', '_id');
 	}
 }

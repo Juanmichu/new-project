@@ -7,6 +7,22 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use MongoDB\Laravel\Auth\User as MongoAuthenticatable;
 
+/**
+ * @property string $_id
+ * @property string $name
+ * @property string $email
+ * @property string $password
+ * @property int $weight
+ * @property int $height
+ * @property string $fitness_level
+ * @property array $goals
+ * @property string $avatar
+ * @property array $preferences
+ * @property string $role
+ * @property bool $is_active
+ * @property Illuminate\Support\Carbon|null $created_at
+ * @property Illuminate\Support\Carbon|null $updated_at
+ */
 class User extends MongoAuthenticatable
 {
 	use HasApiTokens, HasFactory, Notifiable;
@@ -56,12 +72,12 @@ class User extends MongoAuthenticatable
 	// Relationships
 	public function workouts()
 	{
-		return $this->hasMany(Workout::class);
+		return $this->hasMany(Workout::class, 'user_id', '_id');
 	}
 
 	public function workoutSessions()
 	{
-		return $this->hasMany(WorkoutSession::class);
+		return $this->hasMany(WorkoutSession::class, 'user_id', '_id');
 	}
 
 	public function articles()
