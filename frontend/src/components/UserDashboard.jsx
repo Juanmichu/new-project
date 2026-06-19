@@ -40,6 +40,10 @@ export const UserDashboard = () => {
         navigate('/');
     };
 
+    //TODO: Add a rating system for workouts, allowing users to rate their experience and provide feedback.
+    // This could be implemented as a modal that appears after completing a workout,
+    // where users can select a rating (e.g., 1-5 stars) and optionally leave a comment.
+    // The ratings can then be stored in the backend and used to improve future workouts or provide insights into user preferences.
     const handleExerciseToggle = async (workoutExercise) => {
         // Locked once the workout is completed for the day.
         if (!todayWorkout || isWorkoutCompleted) {
