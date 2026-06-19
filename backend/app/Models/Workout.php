@@ -8,6 +8,7 @@ use MongoDB\Laravel\Eloquent\Model;
 /**
  * @property string $_id
  * @property string $user_id
+ * @property string $coach_id
  * @property string $name
  * @property string $description
  * @property \Illuminate\Support\Carbon|null $workout_date
@@ -26,6 +27,7 @@ class Workout extends Model
 
     protected $fillable = [
         'user_id',
+        'coach_id',
         'name',
         'description',
         'workout_date',
@@ -48,6 +50,11 @@ class Workout extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', '_id');
+    }
+
+    public function getUserCoach()
+    {
+        return $this->belongsTo(User::class, 'coach_id', '_id');
     }
 
     public function exercises()

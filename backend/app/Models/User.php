@@ -70,8 +70,8 @@ class User extends MongoAuthenticatable
         'preferences' => []
     ];
 
-    protected const ADMIN_ROL   = 'admin';
-    protected const USER_ROL    = 'user';
+    public const ADMIN_ROL   = 'admin';
+    public const USER_ROL    = 'user';
 
     // Relationships
     public function workouts()

@@ -354,6 +354,7 @@ class DatabaseSeeder extends Seeder
 		$workouts = Workout::factory()->createMany([
             [
                 'user_id' => $users[0]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now(),
@@ -365,6 +366,7 @@ class DatabaseSeeder extends Seeder
             ],
 			[
 				'user_id' => $users[0]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
 				'name' => 'Upper Body Workout',
 				'description' => 'Focus on chest and back',
 				'workout_date' => now()->addDays(2),
@@ -376,6 +378,7 @@ class DatabaseSeeder extends Seeder
 			],
 			[
 				'user_id' => $users[0]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
 				'name' => 'Lower Body Workout',
 				'description' => 'Leg day',
 				'workout_date' => now()->addDays(4),
@@ -387,6 +390,7 @@ class DatabaseSeeder extends Seeder
 			],
             [
                 'user_id' => $users[0]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
                 'workout_date' => now()->addDays(6),
@@ -398,6 +402,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[1]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now(),
@@ -409,6 +414,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[1]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now()->addDays(2),
@@ -420,6 +426,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[1]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
                 'workout_date' => now()->addDays(4),
@@ -431,6 +438,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[1]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
                 'workout_date' => now()->addDays(6),
@@ -442,6 +450,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[2]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now(),
@@ -453,6 +462,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[2]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now()->addDays(2),
@@ -464,6 +474,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[2]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
                 'workout_date' => now()->addDays(4),
@@ -475,6 +486,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[2]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
                 'workout_date' => now()->addDays(6),
@@ -486,6 +498,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[3]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now(),
@@ -497,6 +510,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[3]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now()->addDays(2),
@@ -508,6 +522,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[3]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
                 'workout_date' => now()->addDays(4),
@@ -519,6 +534,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[3]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
                 'workout_date' => now()->addDays(6),
@@ -530,6 +546,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[4]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
                 'workout_date' => now()->subDays(2),
@@ -541,6 +558,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[4]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now()->subDays(4),
@@ -552,6 +570,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[4]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Upper Body Workout',
                 'description' => 'Focus on chest and back',
                 'workout_date' => now()->subDays(6),
@@ -563,6 +582,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'user_id' => $users[4]->_id,
+                'coach_id' => User::where('email', 'admin@fittracker.com')->where('role', User::ADMIN_ROL)->first()->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
                 'workout_date' => now(),

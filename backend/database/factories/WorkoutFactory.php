@@ -15,6 +15,7 @@ class WorkoutFactory extends Factory
 	{
 		return [
 			'user_id' => User::factory(),
+            'coach_id' => '',
 			'name' => $this->faker->randomElement(['Upper Body', 'Lower Body', 'Full Body', 'Cardio']) . ' Workout',
 			'description' => $this->faker->sentence,
 			'workout_date' => $this->faker->dateTimeBetween('-1 month', '+1 month'),
