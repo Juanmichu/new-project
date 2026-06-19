@@ -26,40 +26,40 @@ use MongoDB\Laravel\Eloquent\Model;
  */
 class Article extends Model
 {
-	use HasFactory;
+    use HasFactory;
 
-	protected $connection = 'mongodb';
-	protected $collection = 'articles';
+    protected $connection = 'mongodb';
+    protected $collection = 'articles';
 
-	protected $fillable = [
-		'title',
-		'slug',
-		'excerpt',
-		'content',
-		'category',
-		'tags',
-		'featured_image',
-		'published_at',
-		'status',
-		'views',
-		'likes',
-		'is_featured',
+    protected $fillable = [
+        'title',
+        'slug',
+        'excerpt',
+        'content',
+        'category',
+        'tags',
+        'featured_image',
+        'published_at',
+        'status',
+        'views',
+        'likes',
+        'is_featured',
         'author',
         'reading_time'
-	];
+    ];
 
-	protected $casts = [
-		'published_at' => 'datetime',
-		'views' => 'integer',
-		'likes' => 'integer',
-		'is_featured' => 'boolean',
-		'created_at' => 'datetime',
-		'updated_at' => 'datetime'
-	];
+    protected $casts = [
+        'published_at'  => 'datetime',
+        'views'         => 'integer',
+        'likes'         => 'integer',
+        'is_featured'   => 'boolean',
+        'created_at'    => 'datetime',
+        'updated_at'    => 'datetime'
+    ];
 
-	// Relationships
-	public function user()
-	{
-		return $this->belongsTo(User::class, 'name', 'author')->first()->name;
-	}
+    // Relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'name', 'author')->first()->name;
+    }
 }
