@@ -25,6 +25,7 @@ class ExerciseFactory extends Factory
 			'instructions' => $this->faker->paragraphs($this->faker->numberBetween(2, 5), true),
 			'calories_per_minute' => $this->faker->numberBetween(5, 15),
 			'is_active' => $this->faker->boolean(80), // 80% chance of being active
+            'is_favorite' => $this->faker->boolean(),
 			'created_at' => now(),
 			'updated_at' => now(),
 		];

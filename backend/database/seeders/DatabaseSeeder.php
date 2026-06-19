@@ -8,6 +8,7 @@ use App\Models\Article;
 use App\Models\NewsArticle;
 use App\Models\Workout;
 use App\Models\WorkoutExercise;
+use App\Models\WorkoutSession;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -364,8 +365,8 @@ class DatabaseSeeder extends Seeder
 				'user_id' => $users[0]->_id,
 				'name' => 'Lower Body Workout',
 				'description' => 'Leg day',
-				'date' => now()->addDays(4),
-				'duration_minutes' => 45,
+				'workout_date' => now()->addDays(4),
+				'total_duration' => 45,
                 'difficulty_level' => 'Intermediate',
                 'status' => 'planned',
                 'notes' => 'Focus on form and depth during squats.',
@@ -375,8 +376,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[0]->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
-                'date' => now()->addDays(6),
-                'duration_minutes' => 55,
+                'workout_date' => now()->addDays(6),
+                'total_duration' => 55,
                 'difficulty_level' => 'Advanced',
                 'status' => 'planned',
                 'notes' => 'Include a mix of strength and cardio exercises.',
@@ -408,8 +409,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[1]->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
-                'date' => now()->addDays(4),
-                'duration_minutes' => 45,
+                'workout_date' => now()->addDays(4),
+                'total_duration' => 45,
                 'difficulty_level' => 'Intermediate',
                 'status' => 'planned',
                 'notes' => 'Focus on form and depth during squats.',
@@ -419,8 +420,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[1]->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
-                'date' => now()->addDays(6),
-                'duration_minutes' => 55,
+                'workout_date' => now()->addDays(6),
+                'total_duration' => 55,
                 'difficulty_level' => 'Advanced',
                 'status' => 'planned',
                 'notes' => 'Include a mix of strength and cardio exercises.',
@@ -452,8 +453,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[2]->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
-                'date' => now()->addDays(4),
-                'duration_minutes' => 45,
+                'workout_date' => now()->addDays(4),
+                'total_duration' => 45,
                 'difficulty_level' => 'Intermediate',
                 'status' => 'planned',
                 'notes' => 'Focus on form and depth during squats.',
@@ -463,8 +464,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[2]->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
-                'date' => now()->addDays(6),
-                'duration_minutes' => 55,
+                'workout_date' => now()->addDays(6),
+                'total_duration' => 55,
                 'difficulty_level' => 'Advanced',
                 'status' => 'planned',
                 'notes' => 'Include a mix of strength and cardio exercises.',
@@ -496,8 +497,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[3]->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
-                'date' => now()->addDays(4),
-                'duration_minutes' => 45,
+                'workout_date' => now()->addDays(4),
+                'total_duration' => 45,
                 'difficulty_level' => 'Intermediate',
                 'status' => 'planned',
                 'notes' => 'Focus on form and depth during squats.',
@@ -507,8 +508,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[3]->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
-                'date' => now()->addDays(6),
-                'duration_minutes' => 55,
+                'workout_date' => now()->addDays(6),
+                'total_duration' => 55,
                 'difficulty_level' => 'Advanced',
                 'status' => 'planned',
                 'notes' => 'Include a mix of strength and cardio exercises.',
@@ -518,8 +519,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[4]->_id,
                 'name' => 'Full Body Workout',
                 'description' => 'Full body strength and conditioning',
-                'date' => now()->subDays(2),
-                'duration_minutes' => 55,
+                'workout_date' => now()->subDays(2),
+                'total_duration' => 55,
                 'difficulty_level' => 'Advanced',
                 'status' => 'completed',
                 'notes' => 'Include a mix of strength and cardio exercises.',
@@ -551,8 +552,8 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $users[4]->_id,
                 'name' => 'Lower Body Workout',
                 'description' => 'Leg day',
-                'date' => now(),
-                'duration_minutes' => 45,
+                'workout_date' => now(),
+                'total_duration' => 45,
                 'difficulty_level' => 'Intermediate',
                 'status' => 'planned',
                 'notes' => 'Focus on form and depth during squats.',
@@ -565,8 +566,15 @@ class DatabaseSeeder extends Seeder
         // The exercises will be randomly selected from the exercises's collection.
         // The exercises will be inserted into the exercises's collection with the workout_id as a reference to the workout they belong to.
         $workoutsExercisesData = [];
+        $completedDavidWorkouts = [];
+        /** @var Workout $workout */
         foreach($workouts as $workout) {
             $exerciseIds = $exercises->random(5)->pluck('_id')->toArray();
+            $completedExercise = $workout->user()->first()->email == 'david@example.com' && $workout->status == 'completed';
+            // Save completed WODs for later to create a session
+            if($completedExercise) {
+                $completedDavidWorkouts[] = $workout;
+            }
             foreach($exerciseIds as $index => $exerciseId) {
                 $workoutsExercisesData[] = [
                     'workout_id' => $workout->_id,
@@ -575,13 +583,31 @@ class DatabaseSeeder extends Seeder
                     'reps' => rand(8, 15),
                     'rest_time' => rand(30, 90),
                     'order' => $index + 1,
-                    'completed' => false
+                    'completed' => $completedExercise
                 ];
             }
         }
 
         $workout_exercises = WorkoutExercise::factory()->createMany($workoutsExercisesData);
 
+        // Create completed sessions for user David Wilson to mock this behavior on frontend and check it
+        $sessions = [];
+        foreach($completedDavidWorkouts as $davidWorkout) {
+            $totalExercises = $davidWorkout->exercises->count();
+            $completedExercises = $davidWorkout->exercises->where('completed', true)->count();
+            $sessions[] = [
+                'user_id' => $davidWorkout->user_id,
+                'workout_id' => $davidWorkout->_id,
+                'started_at' => $davidWorkout->created_at ?? now(),
+                'completed_at' => $davidWorkout->workout_date ?? now(),
+                'duration' => $davidWorkout->total_duration ?? 0,
+                'calories_burned' => $davidWorkout->calories_burned ?? 0,
+                'exercises_completed' => $completedExercises,
+                'total_exercises' => $totalExercises,
+            ];
+        }
+
+        WorkoutSession::factory()->createMany($sessions);
 
 		// Create blog articles
 		$articles = Article::factory()->createMany([
