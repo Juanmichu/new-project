@@ -21,11 +21,13 @@ class DatabaseSeeder extends Seeder
 			'name' => 'Admin User',
 			'email' => 'admin@fittracker.com',
 			'password' => Hash::make('password'),
-			'fitness_level' => 'advanced',
-			'goals' => ['weight_loss', 'muscle_gain'],
+			'fitness_level' => 'Advanced',
+			'goals' => ['Weight_loss', 'Muscle_gain'],
 			'age' => 30,
 			'weight' => 70,
-			'height' => 175
+			'height' => 175,
+            'role'   => 'admin',
+            'is_active'    => true
 		]);
 
 		// Create sample users
@@ -37,7 +39,10 @@ class DatabaseSeeder extends Seeder
 				'age' => 30,
 				'height' => 180,
 				'weight' => 80,
-				'fitness_level' => 'intermediate'
+				'fitness_level' => 'Intermediate',
+                'role'          => 'user',
+                'is_active'     => true
+
 			],
 			[
 				'name' => 'Jane Smith',
@@ -46,7 +51,9 @@ class DatabaseSeeder extends Seeder
 				'age' => 28,
 				'height' => 165,
 				'weight' => 60,
-				'fitness_level' => 'beginner'
+				'fitness_level' => 'Beginner',
+                'role'          => 'user',
+                'is_active'     => true
 			],
             [
                 'name' => 'Mike Johnson',
@@ -55,7 +62,9 @@ class DatabaseSeeder extends Seeder
                 'age' => 35,
                 'height' => 175,
                 'weight' => 75,
-                'fitness_level' => 'intermediate'
+                'fitness_level' => 'Intermediate',
+                'role'          => 'user',
+                'is_active'     => true
             ],
             [
                 'name' => 'Emily Davis',
@@ -64,7 +73,9 @@ class DatabaseSeeder extends Seeder
                 'age' => 29,
                 'height' => 168,
                 'weight' => 65,
-                'fitness_level' => 'intermediate'
+                'fitness_level' => 'Intermediate',
+                'role'          => 'user',
+                'is_active'     => true
             ],
             [
                 'name' => 'David Wilson',
@@ -73,7 +84,9 @@ class DatabaseSeeder extends Seeder
                 'age' => 32,
                 'height' => 180,
                 'weight' => 85,
-                'fitness_level' => 'advanced'
+                'fitness_level' => 'Advanced',
+                'role'          => 'user',
+                'is_active'     => true
             ]
 		]);
 

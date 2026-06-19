@@ -54,6 +54,7 @@ class User extends MongoAuthenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_active' => 'boolean',
+        'role'      => 'string',
         'age' => 'integer',
         'weight' => 'decimal:2',
         'height' => 'decimal:2',
@@ -68,6 +69,9 @@ class User extends MongoAuthenticatable
         'goals' => [],
         'preferences' => []
     ];
+
+    protected const ADMIN_ROL   = 'admin';
+    protected const USER_ROL    = 'user';
 
     // Relationships
     public function workouts()
@@ -88,7 +92,7 @@ class User extends MongoAuthenticatable
     // Helper methods
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        return $this->role === self::ADMIN_ROL;
     }
 
     public function isActive()
