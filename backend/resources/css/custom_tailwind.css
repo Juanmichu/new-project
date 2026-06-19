@@ -1,116 +1,119 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@reference "tailwindcss";
 
 @layer base {
 	body {
-		@reference font-sans antialiased;
+		@apply font-sans antialiased;
 	}
 }
 
 @layer components {
 	/* Card Components */
 	.card {
-		@reference bg-white rounded-lg shadow-md overflow-hidden;
+		@apply bg-white rounded-lg shadow-md overflow-hidden;
 	}
 
 	.card-header {
-		@reference px-6 py-4 border-b border-gray-200 bg-gray-50;
+		@apply px-6 py-4 border-b border-gray-200 bg-gray-50;
 	}
 
 	.card-body {
-		@reference p-6;
+		@apply p-6;
 	}
 
 	/* Button Components */
 	.btn {
-		@reference font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline cursor-pointer border-0;
+		@apply font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline cursor-pointer border-0;
 	}
 
+	/*
+	 * v4 @apply only accepts real utilities, not other component classes, and
+	 * these modifiers are used standalone in Blade (e.g. class="btn-primary"),
+	 * so the .btn base utilities are inlined into each variant.
+	 */
 	.btn-primary {
-		@reference btn bg-blue-600 hover:bg-blue-700 text-white;
+		@apply font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline cursor-pointer border-0 bg-blue-600 hover:bg-blue-700 text-white;
 	}
 
 	.btn-secondary {
-		@reference btn bg-gray-600 hover:bg-gray-700 text-white;
+		@apply font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline cursor-pointer border-0 bg-gray-600 hover:bg-gray-700 text-white;
 	}
 
 	.btn-success {
-		@reference btn bg-green-600 hover:bg-green-700 text-white;
+		@apply font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline cursor-pointer border-0 bg-green-600 hover:bg-green-700 text-white;
 	}
 
 	.btn-danger {
-		@reference btn bg-red-600 hover:bg-red-700 text-white;
+		@apply font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline cursor-pointer border-0 bg-red-600 hover:bg-red-700 text-white;
 	}
 
 	/* Form Components */
 	.form-input {
-		@reference w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200;
+		@apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200;
 	}
 
 	.form-textarea {
-		@reference form-input resize-vertical;
+		@apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 resize-y;
 	}
 
 	.form-select {
-		@reference form-input cursor-pointer;
+		@apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 cursor-pointer;
 	}
 
 	/* Prose styling for blog content */
 	.prose {
-		@reference text-gray-700 max-w-none;
+		@apply text-gray-700 max-w-none;
 	}
 
 	.prose h1 {
-		@reference text-3xl font-bold text-gray-900 mt-0 mb-6;
+		@apply text-3xl font-bold text-gray-900 mt-0 mb-6;
 	}
 
 	.prose h2 {
-		@reference text-2xl font-bold text-gray-900 mt-8 mb-4;
+		@apply text-2xl font-bold text-gray-900 mt-8 mb-4;
 	}
 
 	.prose h3 {
-		@reference text-xl font-semibold text-gray-900 mt-6 mb-3;
+		@apply text-xl font-semibold text-gray-900 mt-6 mb-3;
 	}
 
 	.prose h4 {
-		@reference text-lg font-semibold text-gray-900 mt-4 mb-2;
+		@apply text-lg font-semibold text-gray-900 mt-4 mb-2;
 	}
 
 	.prose p {
-		@reference mb-4 leading-relaxed;
+		@apply mb-4 leading-relaxed;
 	}
 
 	.prose ul {
-		@reference mb-4 pl-6 space-y-1;
+		@apply mb-4 pl-6 space-y-1;
 	}
 
 	.prose ol {
-		@reference mb-4 pl-6 space-y-1;
+		@apply mb-4 pl-6 space-y-1;
 	}
 
 	.prose li {
-		@reference list-disc;
+		@apply list-disc;
 	}
 
 	.prose ol li {
-		@reference list-decimal;
+		@apply list-decimal;
 	}
 
 	.prose blockquote {
-		@reference border-l-4 border-gray-300 pl-4 italic text-gray-600 my-4;
+		@apply border-l-4 border-gray-300 pl-4 italic text-gray-600 my-4;
 	}
 
 	.prose strong {
-		@reference font-semibold text-gray-900;
+		@apply font-semibold text-gray-900;
 	}
 
 	.prose a {
-		@reference text-blue-600 hover:text-blue-700 underline;
+		@apply text-blue-600 hover:text-blue-700 underline;
 	}
 
 	.prose code {
-		@reference bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-sm;
+		@apply bg-gray-100 text-gray-800 px-1 py-0.5 rounded text-sm;
 	}
 }
 
@@ -180,7 +183,7 @@
 
 /* Focus states for accessibility */
 .focus-visible:focus {
-	@reference outline-none ring-2 ring-blue-500 ring-offset-2;
+	@apply outline-none ring-2 ring-blue-500 ring-offset-2;
 }
 
 /* Print styles */
