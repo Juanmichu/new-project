@@ -270,7 +270,7 @@ class WorkoutController extends Controller
 			return response()->json([
 				'success' => true,
 				'message' => 'Workout completed. Great job!',
-				'already_completed' => false,
+				'already_completed' => true,
 				'data' => [
 					'workout' => $workout->load(['exercises.exercise']),
 					'session' => $session

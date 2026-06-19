@@ -114,9 +114,11 @@ Route::middleware('auth:sanctum')->group(function () {
 			return response()->json($session, 201);
 		});
 
+        // Complete a workout session when user has marked last workout's exercise as complete
 		Route::put('/{id}/complete', function (Request $request, $id) {
 			$session = $request->user()->workoutSessions()->findOrFail($id);
 
+            //TODO: Rating is WIP. Must add functionality on frontend
 			$validated = $request->validate([
 				'duration' => 'nullable|integer|min:0',
 				'calories_burned' => 'nullable|integer|min:0',

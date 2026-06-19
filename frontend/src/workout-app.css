@@ -470,6 +470,22 @@ body {
     --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
+.bg-gradient-to-t {
+    background-image: linear-gradient(to top, var(--tw-gradient-stops));
+}
+
+.from-blue-400 {
+    --tw-gradient-from: #60a5fa;
+    --tw-gradient-to: rgb(96 165 250 / 0);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-blue-500 {
+    --tw-gradient-from: #3b82f6;
+    --tw-gradient-to: rgb(59 130 246 / 0);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
 .to-pink-400 {
     --tw-gradient-to: #f472b6;
 }
@@ -876,6 +892,60 @@ body {
     transition-duration: 300ms;
 }
 
+/*
+ * Utilities required by the Progress section / 30-day chart. Without these the
+ * chart container has no height (h-40) and the bars no width (flex-1), so the
+ * percentage-height bars collapse and the graph renders blank.
+ */
+.h-40 {
+    height: 10rem;
+}
+
+.flex-1 {
+    flex: 1 1 0%;
+}
+
+.items-end {
+    align-items: flex-end;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.gap-1 {
+    gap: 0.25rem;
+}
+
+.mt-3 {
+    margin-top: 0.75rem;
+}
+
+.shrink-0 {
+    flex-shrink: 0;
+}
+
+.w-24 {
+    width: 6rem;
+}
+
+.w-28 {
+    width: 7rem;
+}
+
+.rounded-t {
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.text-orange-400 {
+    color: rgb(251 146 60);
+}
+
+.text-yellow-400 {
+    color: rgb(250 204 21);
+}
+
 /* Animations */
 @keyframes pulse {
     50% {
@@ -1022,6 +1092,10 @@ body {
     .sm\:px-6 {
         padding-left: 1.5rem;
         padding-right: 1.5rem;
+    }
+
+    .sm\:grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .sm\:flex-row {
