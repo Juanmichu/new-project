@@ -34,7 +34,7 @@
                     <div class="space-y-4">
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                                Nombre del Ejercicio *
+                                Exercise Name *
                             </label>
                             <input type="text" id="name" name="name" value="{{ old('name') }}"
                                    class="form-input" required>
@@ -79,10 +79,18 @@
 
                         <div>
                             <label for="equipment" class="block text-sm font-medium text-gray-700 mb-1">
-                                Required Equipment *
+                                <span class="text-gray-700">
+                                    <p>Required Equipment.*</p>
+                                </span>
+                                <span class="text-gray-500">
+                                    <p>
+                                        Separate equipment with commas. If none, write "None". If equipment has several words,
+                                        write them together or with _
+                                    </p>
+                                </span>
                             </label>
-                            <input type="text" id="equipment" name="equipment_needed" value="{{ old('equipment_needed') }}"
-                                   placeholder="Ej: Sin equipo, Mancuernas, Barra..."
+                            <input type="text" id="equipment" name="equipment_needed[]" value="{{ old('equipment_needed') }}"
+                                   placeholder="I.e: None, Dumbbells, PullUpBar..."
                                    class="form-input" required>
                             @error('equipment_needed')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
