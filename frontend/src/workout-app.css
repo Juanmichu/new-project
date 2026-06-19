@@ -1,10 +1,30 @@
-/* Workout App - Complete CSS Styles */
+/* Workout App - Complete CSS Styles based on Tailwind CSS */
 
 /* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+/*
+ * Default values for the transform CSS variables, mirroring Tailwind's
+ * preflight. Without these, a utility like `.-translate-x-full` only sets
+ * `--tw-translate-x` and leaves the others undefined, so the composed
+ * `transform: translate(var(--tw-translate-x), var(--tw-translate-y)) ...`
+ * resolves to invalid CSS and the browser drops it entirely (e.g. the
+ * mobile sidebar never slides off-screen).
+ */
+*,
+::before,
+::after {
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
 }
 
 body {
