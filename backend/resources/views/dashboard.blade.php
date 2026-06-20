@@ -75,7 +75,7 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('profile') }}" class="block bg-purple-50 hover:bg-purple-100 p-3 rounded-lg transition-colors">
+                    <a href="{{ route('profile.show') }}" class="block bg-purple-50 hover:bg-purple-100 p-3 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <div class="text-2xl mr-3">⚙️</div>
                             <div>
