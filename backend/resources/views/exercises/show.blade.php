@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'Flexiones - Detalle')
+@section('title', 'Exercise - Details')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4">
     <!-- Breadcrumb -->
     <nav class="mb-6">
         <ol class="flex space-x-2 text-sm text-gray-600">
-            <li><a href="{{ route('home') }}" class="hover:text-blue-600">Inicio</a></li>
+            <li><a href="{{ route('home') }}" class="hover:text-blue-600">Home</a></li>
             <li>/</li>
-            <li><a href="{{ route('exercises.index') }}" class="hover:text-blue-600">Ejercicios</a></li>
+            <li><a href="{{ route('exercises.index') }}" class="hover:text-blue-600">Exercises</a></li>
             <li>/</li>
-            <li class="text-gray-900">Flexiones</li>
+            <li>{{ $exercise->name }}</li>
         </ol>
     </nav>
 
@@ -20,36 +20,37 @@
         <div class="card-body">
             <div class="flex flex-col md:flex-row justify-between items-start">
                 <div class="flex-1">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-4">Flexiones</h1>
-                    
+                    <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ $exercise->name }}</h1>
+
                     <div class="flex flex-wrap gap-2 mb-4">
-                        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                            Intermedio
+                        <span class="inline-block bg-{{ $colorDifficultyLevels[$exercise->difficulty_level] }}-100 text-{{ $colorDifficultyLevels[$exercise->difficulty_level] }}-800 px-3 py-1 rounded-full text-sm">
+                            {{ $exercise->difficulty_level }}
                         </span>
                         <span class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
-                            Pecho
+                            {{ is_array($exercise->muscle_groups) ? implode(', ', $exercise->muscle_groups) : $exercise->muscle_groups }}
                         </span>
-                        <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                            Sin equipo
-                        </span>
+                        @if(!empty($exercise->equipment_needed))
+                            <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                                {{ is_array($exercise->equipment_needed) ? implode(', ', $exercise->equipment_needed) : $exercise->equipment_needed }}
+                            </span>
+                        @endif
                     </div>
-                    
-                    <p class="text-gray-600 text-lg">
-                        Las flexiones son un ejercicio básico y fundamental para desarrollar la fuerza del tren superior, 
-                        especialmente el pecho, hombros y tríceps.
-                    </p>
+
+                    <p class="text-gray-600 text-lg"> {{ $exercise->description }} </p>
                 </div>
-                
-                @auth
-                    <div class="mt-4 md:mt-0 flex space-x-2">
-                        <button class="btn-secondary">
+
+                @if(auth()->check() && auth()->user()->isAdmin())
+                    <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
+                        <button type="button"
+                                onclick="toggleFavorite('{{ route('exercises.favorite', $exercise->_id) }}', this)"
+                                class="btn-secondary">
                             ❤️ Favorito
                         </button>
-                        <a href="{{ route('exercises.edit', 1) }}" class="btn-primary">
+                        <a href="{{ route('exercises.edit', $exercise->_id) }}" class="btn-secondary">
                             Editar
                         </a>
                     </div>
-                @endauth
+                @endif
             </div>
         </div>
     </div>
@@ -58,30 +59,16 @@
         <!-- Instructions -->
         <div class="card">
             <div class="card-header">
-                <h2 class="text-xl font-semibold">Instrucciones</h2>
+                <h2 class="text-xl font-semibold">Instructions</h2>
             </div>
             <div class="card-body">
                 <ol class="space-y-3">
-                    <li class="flex">
-                        <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">1</span>
-                        <span>Colócate en posición de plancha con las manos apoyadas en el suelo, separadas al ancho de los hombros.</span>
-                    </li>
-                    <li class="flex">
-                        <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">2</span>
-                        <span>Mantén el cuerpo recto desde la cabeza hasta los talones, contrayendo el core.</span>
-                    </li>
-                    <li class="flex">
-                        <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">3</span>
-                        <span>Desciende lentamente hasta que el pecho casi toque el suelo.</span>
-                    </li>
-                    <li class="flex">
-                        <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">4</span>
-                        <span>Empuja el cuerpo hacia arriba hasta la posición inicial.</span>
-                    </li>
-                    <li class="flex">
-                        <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">5</span>
-                        <span>Repite el movimiento manteniendo la forma correcta.</span>
-                    </li>
+                    @foreach ($exercise->instructions as $key => $instruction)
+                        <li class="flex">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium mr-3">{{ $key + 1 }}</span>
+                            <span>{{ $instruction }}</span>
+                        </li>
+                    @endforeach
                 </ol>
             </div>
         </div>
@@ -91,96 +78,99 @@
             <!-- Muscles Worked -->
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-xl font-semibold">Músculos Trabajados</h2>
+                    <h2 class="text-xl font-semibold">Muscles Worked</h2>
                 </div>
                 <div class="card-body">
+                    @php
+                        $muscleGroups = is_array($exercise->muscle_groups)
+                            ? $exercise->muscle_groups
+                            : array_filter([$exercise->muscle_groups]);
+                    @endphp
                     <div class="space-y-2">
                         <div class="flex justify-between">
-                            <span>Pectorales</span>
-                            <span class="text-blue-600 font-medium">Principal</span>
+                            <span> {{ $muscleGroups[0] ?? '—' }}</span>
+                            <span class="text-blue-600 font-medium">Main</span>
                         </div>
-                        <div class="flex justify-between">
-                            <span>Tríceps</span>
-                            <span class="text-green-600 font-medium">Secundario</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Deltoides anterior</span>
-                            <span class="text-green-600 font-medium">Secundario</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Core</span>
-                            <span class="text-yellow-600 font-medium">Estabilizador</span>
-                        </div>
+                        @foreach (array_slice($muscleGroups, 1) as $muscle)
+                            <div class="flex justify-between">
+                                <span>{{ $muscle }}</span>
+                                <span class="text-green-400">Secondary</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
 
-            <!-- Recommendations -->
+            <!-- Line of work -->
+            @if (isset($exercise['recommendations']))
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-xl font-semibold">Recomendaciones</h2>
+                    <h2 class="text-xl font-semibold">Line of Work</h2>
                 </div>
                 <div class="card-body">
                     <div class="space-y-3">
-                        <div>
-                            <strong class="text-gray-900">Repeticiones:</strong>
-                            <span class="text-gray-600">8-15 repeticiones</span>
-                        </div>
-                        <div>
-                            <strong class="text-gray-900">Series:</strong>
-                            <span class="text-gray-600">3-4 series</span>
-                        </div>
-                        <div>
-                            <strong class="text-gray-900">Descanso:</strong>
-                            <span class="text-gray-600">60-90 segundos</span>
-                        </div>
-                        <div>
-                            <strong class="text-gray-900">Frecuencia:</strong>
-                            <span class="text-gray-600">2-3 veces por semana</span>
-                        </div>
+                            <div>
+                                <strong class="text-gray-900">Repetitions:</strong>
+                                <span class="text-gray-600">{{ $exercise->recommendations['repetitions'] }}</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-900">Sets:</strong>
+                                <span class="text-gray-600">{{ $exercise->recommendations['sets'] }}</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-900">Rest Time:</strong>
+                                <span class="text-gray-600">{{ $exercise->recommendations['rest'] }}</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-900">Frequency:</strong>
+                                <span class="text-gray-600">{{ $exercise->recommendations['frequency'] }}</span>
+                            </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+            @endif
 
     <!-- Tips -->
+    @if(isset($exercise['tips']))
     <div class="card mt-6">
         <div class="card-header">
-            <h2 class="text-xl font-semibold">Consejos y Variaciones</h2>
+            <h2 class="text-xl font-semibold">Tips and Variations</h2>
         </div>
         <div class="card-body">
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
-                    <h3 class="font-semibold text-gray-900 mb-3">💡 Consejos</h3>
+                    <h3 class="font-semibold text-gray-900 mb-3">💡 Tips</h3>
                     <ul class="space-y-2 text-gray-600">
-                        <li>• Mantén la mirada hacia abajo para alinear el cuello</li>
-                        <li>• No dejes que las caderas se hundan o se eleven</li>
-                        <li>• Respira de forma controlada durante el ejercicio</li>
-                        <li>• Si es muy difícil, apoya las rodillas en el suelo</li>
+                        @foreach($exercise['tips'] as $tip)
+                            <li>• {{ $tip }}</li>
+                        @endforeach
                     </ul>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-gray-900 mb-3">🔄 Variaciones</h3>
+                    <h3 class="font-semibold text-gray-900 mb-3">🔄 Variations</h3>
                     <ul class="space-y-2 text-gray-600">
-                        <li>• Flexiones con rodillas (principiantes)</li>
-                        <li>• Flexiones diamante (tríceps)</li>
-                        <li>• Flexiones inclinadas (hombros)</li>
-                        <li>• Flexiones con palmada (explosivas)</li>
+                        @foreach($exercise['variations'] as $variation)
+                            <li>• {{ $variation }}</li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
         </div>
     </div>
+    @endif
 
-    <!-- Navigation -->
-    <div class="mt-8 flex justify-between">
-        <a href="{{ route('exercises.index') }}" class="btn-secondary">
-            ← Volver a Ejercicios
+</div>
+
+<!-- Navigation -->
+@php($nextExercise = ($relatedExercises ?? collect())->first())
+<div class="mt-8 flex justify-between">
+    <a href="{{ route('exercises.index') }}" class="btn-secondary">
+        ← Back to Exercises
+    </a>
+    @if($nextExercise)
+        <a href="{{ route('exercises.show', $nextExercise->_id) }}" class="btn-primary">
+            Next Exercise →
         </a>
-        <a href="{{ route('exercises.show', 2) }}" class="btn-primary">
-            Siguiente Ejercicio →
-        </a>
-    </div>
+   @endif
 </div>
 @endsection

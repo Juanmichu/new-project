@@ -37,17 +37,33 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'current_password' => ['nullable', 'current_password'],
-            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id
         ]);
 
         // Actualizar información básica
         $user->name = $validated['name'];
         $user->email = $validated['email'];
 
-        // Actualizar contraseña si se proporcionó
+        $user->save();
+
+        return redirect()->route('profile.show')
+            ->with('success', 'Profile updated successfully');
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    public function updatePassword(Request $request)
+    {
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'current_password' => 'required|current_password',
+            'password' => ['required','confirmed',Rules\Password::defaults()]
+        ]);
+
         if (!empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
         }
@@ -55,7 +71,7 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('profile.show')
-            ->with('success', 'Perfil actualizado exitosamente');
+            ->with('success', 'Profile updated successfully');
     }
 
     /**
@@ -77,6 +93,6 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('home')
-            ->with('success', 'Tu cuenta ha sido eliminada exitosamente');
+            ->with('success', 'Your account has been successfully deleted');
     }
 }

@@ -15,31 +15,11 @@
 	@if (app()->environment('local'))
 		@vite(['resources/css/app.css', 'resources/css/custom_tailwind.css', 'resources/js/app.js'])
 	@else
-		<link rel="stylesheet" href="{{ asset('build/assets/app.css') }}">
-		<script src="{{ asset('build/assets/app.js') }}" defer></script>
+        @vite(['resources/css/app.css', 'resources/css/custom_tailwind.css', 'resources/js/app.js'], 'build')
 	@endif
 
 	<style>
 		/* Asegurar que las clases personalizadas estén disponibles */
-		.card {
-			@apply bg-white rounded-lg shadow-md;
-		}
-		.card-header {
-			@apply px-6 py-4 border-b border-gray-200 bg-gray-50 rounded-t-lg;
-		}
-		.card-body {
-			@apply p-6;
-		}
-		.btn-primary {
-			@apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline;
-		}
-		.btn-secondary {
-			@apply bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md transition duration-200 inline-block text-center no-underline;
-		}
-		.form-input {
-			@apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
-		}
-
 		/* Menu dropdown styles */
 		.dropdown-menu {
 			transform: translateY(-10px);
@@ -71,16 +51,26 @@
 					<div class="hidden md:ml-8 md:flex md:items-center md:space-x-8">
 						<a href="{{ route('home') }}"
 						   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('home') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
-							Inicio
+							Home
 						</a>
 						<a href="{{ route('exercises.index') }}"
 						   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('exercises.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
-							Ejercicios
+							Exercises
 						</a>
 						<a href="{{ route('blog.index') }}"
 						   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('blog.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
 							Blog
 						</a>
+						@if(auth()->check() && auth()->user()->isAdmin())
+							<a href="{{ route('users.index') }}"
+							   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('users.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
+								Users
+							</a>
+							<a href="{{ route('workouts.index') }}"
+							   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('workouts.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
+								Workouts
+							</a>
+						@endif
 					</div>
 				</div>
 
@@ -89,11 +79,11 @@
 					@auth
 						<!-- User Dropdown -->
 						<div class="relative">
-							<button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 p-1"
+							<button class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 p-1 cursor-pointer"
 									id="user-menu-button"
 									onclick="toggleUserMenu()"
 									type="button">
-								<span class="sr-only">Abrir menú de usuario</span>
+								<span class="sr-only">Open User Menu</span>
 								<div class="h-8 w-8 rounded-full bg-blue-600 flex items-center justify-center">
 									<span class="text-sm font-medium text-white">{{ substr(Auth::user()->name, 0, 1) }}</span>
 								</div>
@@ -107,28 +97,28 @@
 								 id="user-menu">
 								<div class="py-1">
 									<a href="{{ route('dashboard') }}"
-									   class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+									   class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
 										<svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
 										</svg>
 										Dashboard
 									</a>
-									<a href="{{ route('profile') }}"
-									   class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+									<a href="{{ route('profile.show') }}"
+									   class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
 										<svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
 										</svg>
-										Mi Perfil
+										My profile
 									</a>
 									<div class="border-t border-gray-100"></div>
 									<form method="POST" action="{{ route('logout') }}">
 										@csrf
 										<button type="submit"
-												class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">
+												class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer">
 											<svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
 											</svg>
-											Cerrar Sesión
+											Logout
 										</button>
 									</form>
 								</div>
@@ -138,11 +128,11 @@
 						<!-- Guest Navigation -->
 						<a href="{{ route('login') }}"
 						   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-							Iniciar Sesión
+							Login
 						</a>
 						<a href="{{ route('register') }}"
 						   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-							Registrarse
+							Register
 						</a>
 					@endauth
 
@@ -164,16 +154,26 @@
 				<div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
 					<a href="{{ route('home') }}"
 					   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('home') ? 'text-blue-600 bg-blue-50' : '' }}">
-						Inicio
+						Home
 					</a>
 					<a href="{{ route('exercises.index') }}"
 					   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('exercises.*') ? 'text-blue-600 bg-blue-50' : '' }}">
-						Ejercicios
+						Exercises
 					</a>
 					<a href="{{ route('blog.index') }}"
 					   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('blog.*') ? 'text-blue-600 bg-blue-50' : '' }}">
 						Blog
 					</a>
+					@if(auth()->check() && auth()->user()->isAdmin())
+						<a href="{{ route('users.index') }}"
+						   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('users.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+							Users
+						</a>
+						<a href="{{ route('workouts.index') }}"
+						   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('workouts.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+							Workouts
+						</a>
+					@endif
 				</div>
 			</div>
 		</div>
@@ -254,32 +254,32 @@
 						<h3 class="text-xl font-bold">FitCoacher</h3>
 					</div>
 					<p class="text-gray-300 mb-4">
-						Tu aplicación completa para entrenamientos, ejercicios y consejos de fitness.
-						Alcanza tus objetivos con nuestras herramientas y recursos.
+                        Your complete app to manage trainings, exercises, and fitness tips.
+                        Manage your trainees with our tools and resources.
 					</p>
 				</div>
 
 				<div>
 					<h4 class="text-lg font-semibold mb-4">Enlaces Rápidos</h4>
 					<ul class="space-y-2">
-						<li><a href="{{ route('exercises.index') }}" class="text-gray-300 hover:text-white transition-colors">Ejercicios</a></li>
+						<li><a href="{{ route('exercises.index') }}" class="text-gray-300 hover:text-white transition-colors">Exercises</a></li>
 						<li><a href="{{ route('blog.index') }}" class="text-gray-300 hover:text-white transition-colors">Blog</a></li>
-						<li><a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition-colors">Acerca de</a></li>
-						<li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition-colors">Contacto</a></li>
+						<li><a href="{{ route('about') }}" class="text-gray-300 hover:text-white transition-colors">About us</a></li>
+						<li><a href="{{ route('contact') }}" class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
 					</ul>
 				</div>
 
 				<div>
 					<h4 class="text-lg font-semibold mb-4">Legal</h4>
 					<ul class="space-y-2">
-						<li><a href="{{ route('privacy') }}" class="text-gray-300 hover:text-white transition-colors">Privacidad</a></li>
-						<li><a href="{{ route('terms') }}" class="text-gray-300 hover:text-white transition-colors">Términos</a></li>
+						<li><a href="{{ route('privacy') }}" class="text-gray-300 hover:text-white transition-colors">Privacy</a></li>
+						<li><a href="{{ route('terms') }}" class="text-gray-300 hover:text-white transition-colors">T&C</a></li>
 					</ul>
         </div>
 			</div>
 
 			<div class="border-t border-gray-700 mt-8 pt-8 text-center">
-				<p class="text-gray-300">&copy; {{ date('Y') }} FitCoacher. Todos los derechos reservados.</p>
+				<p class="text-gray-300">&copy; {{ date('Y') }} FitCoacher. All rights reserved.</p>
 			</div>
 		</div>
 	</footer>
@@ -318,7 +318,7 @@
 
 	// Auto-hide flash messages after 5 seconds
 	setTimeout(function() {
-		const alerts = document.querySelectorAll('[class*="bg-green-50"], [class*="bg-red-50"]');
+		const alerts = document.querySelectorAll('.alert');
 		alerts.forEach(function(alert) {
 			if (alert.parentElement) {
 				alert.style.transition = 'opacity 0.5s ease-out';

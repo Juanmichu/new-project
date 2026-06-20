@@ -2,300 +2,256 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Constants\Exercises;
+use App\Models\Exercise;
 use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
     /**
-     * Mostrar lista de ejercicios con filtros
+     * Show the exercise list.
      */
     public function index(Request $request)
     {
-        $exercises = $this->getFilteredExercises($request);
-        $muscleGroups = $this->getMuscleGroups();
-        $difficulties = $this->getDifficulties();
-        
-        return view('exercises.index', compact('exercises', 'muscleGroups', 'difficulties'));
+        $exercises              = $this->getFilteredExercises($request);
+        $muscleGroups           = $this->getMuscleGroups();
+        $equipmentTypes         = $this->getEquipmentTypes();
+        $difficulties           = $this->getDifficulties();
+        $colorDifficultyLevels  = $this->getColorDifficultyLevels();
+
+        return view('exercises.index', compact('exercises', 'muscleGroups', 'equipmentTypes' ,'difficulties', 'colorDifficultyLevels'));
     }
-    
+
     /**
-     * Mostrar un ejercicio específico
+     * Show a specific exercise.
      */
-    public function show($id)
+    public function show(string $id)
     {
-        $exercise = $this->getExerciseById($id);
-        
+        $exercise               = $this->getExerciseById($id);
+        $colorDifficultyLevels  = $this->getColorDifficultyLevels();
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
+
         $relatedExercises = $this->getRelatedExercises($exercise);
-        
-        return view('exercises.show', compact('exercise', 'relatedExercises'));
+
+        return view('exercises.show', compact('exercise', 'relatedExercises', 'colorDifficultyLevels'));
     }
-    
+
     /**
-     * Mostrar formulario para crear ejercicio
+     * Show the form for creating a new exercise.
      */
     public function create()
     {
-        $muscleGroups = $this->getMuscleGroups();
-        $difficulties = $this->getDifficulties();
+        $muscleGroups   = $this->getMuscleGroups();
+        $difficulties   = $this->getDifficulties();
         $equipmentTypes = $this->getEquipmentTypes();
-        
+
         return view('exercises.create', compact('muscleGroups', 'difficulties', 'equipmentTypes'));
     }
-    
+
     /**
-     * Guardar nuevo ejercicio
+     * Save new exercise
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'muscle_group' => 'required|string',
-            'difficulty' => 'required|in:principiante,intermedio,avanzado',
-            'equipment' => 'required|string',
-            'instructions' => 'required|array',
-            'instructions.*' => 'required|string'
-        ]);
-        
-        // Aquí guardarías en la base de datos
-        // Exercise::create($validated);
-        
+        $validated = $this->getValidatedExerciseData($request);
+
+        Exercise::create($validated);
+
         return redirect()->route('exercises.index')
             ->with('success', 'Ejercicio creado exitosamente');
     }
-    
+
     /**
-     * Mostrar formulario de edición
+     * Show the form for editing an existing exercise.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $exercise = $this->getExerciseById($id);
-        
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
-        $muscleGroups = $this->getMuscleGroups();
-        $difficulties = $this->getDifficulties();
+
+        $muscleGroups   = $this->getMuscleGroups();
+        $difficulties   = $this->getDifficulties();
         $equipmentTypes = $this->getEquipmentTypes();
-        
+
         return view('exercises.edit', compact('exercise', 'muscleGroups', 'difficulties', 'equipmentTypes'));
     }
-    
+
     /**
-     * Actualizar ejercicio
+     * Update exercise
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
         $exercise = $this->getExerciseById($id);
-        
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'muscle_group' => 'required|string',
-            'difficulty' => 'required|in:principiante,intermedio,avanzado',
-            'equipment' => 'required|string',
-            'instructions' => 'required|array'
-        ]);
-        
-        // Aquí actualizarías en la base de datos
-        
+
+        $validated = $this->getValidatedExerciseData($request);
+
+        $exercise->update($validated);
+
         return redirect()->route('exercises.show', $id)
             ->with('success', 'Ejercicio actualizado exitosamente');
     }
-    
+
     /**
-     * Eliminar ejercicio
+     * Delete exercise
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $exercise = $this->getExerciseById($id);
-        
+
         if (!$exercise) {
             abort(404, 'Ejercicio no encontrado');
         }
-        
+
         // Aquí eliminarías de la base de datos
-        
+        $exercise->delete();
+
         return redirect()->route('exercises.index')
             ->with('success', 'Ejercicio eliminado exitosamente');
     }
-    
+
     /**
-     * Alternar favorito
+     * Toggle favorite condition to certain exercise
      */
-    public function toggleFavorite($id)
+    public function toggleFavorite(string $id)
     {
         // Lógica para agregar/quitar de favoritos
-        
+        $exercise = $this->getExerciseById($id);
+
+        if (!$exercise) {
+            abort(404, 'Ejercicio no encontrado');
+        }
+
+        $exercise->is_favorite = !$exercise->is_favorite;
+        $exercise->save();
+
         return response()->json([
             'success' => true,
             'message' => 'Favorito actualizado',
-            'is_favorite' => true // o false
+            'is_favorite' => $exercise->is_favorite
         ]);
     }
-    
+
     /**
-     * Buscar ejercicios (API)
+     * Search exercises (API)
      */
     public function search(Request $request)
     {
-        $query = $request->get('q', '');
+        $query = $request->input('q', '');
         $exercises = $this->searchExercises($query);
-        
+
         return response()->json($exercises);
     }
-    
+
     /**
      * Métodos helper privados
      */
     private function getFilteredExercises(Request $request)
     {
-        // Datos estáticos por ahora, luego conectarás con BD
-        $allExercises = [
-            [
-                'id' => 1,
-                'name' => 'Flexiones',
-                'muscle_group' => 'pecho',
-                'difficulty' => 'intermedio',
-                'description' => 'Ejercicio básico para desarrollar la fuerza del tren superior.',
-                'equipment' => 'Sin equipo'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Sentadillas',
-                'muscle_group' => 'piernas',
-                'difficulty' => 'principiante',
-                'description' => 'Ejercicio fundamental para fortalecer las piernas y glúteos.',
-                'equipment' => 'Sin equipo'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Dominadas',
-                'muscle_group' => 'espalda',
-                'difficulty' => 'avanzado',
-                'description' => 'Ejercicio completo para el desarrollo de la espalda y brazos.',
-                'equipment' => 'Barra de dominadas'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Plancha',
-                'muscle_group' => 'core',
-                'difficulty' => 'intermedio',
-                'description' => 'Ejercicio isométrico para fortalecer el core.',
-                'equipment' => 'Sin equipo'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Press de Banca',
-                'muscle_group' => 'pecho',
-                'difficulty' => 'intermedio',
-                'description' => 'Ejercicio clásico para el desarrollo del pecho.',
-                'equipment' => 'Banca y barra'
-            ],
-            [
-                'id' => 6,
-                'name' => 'Peso Muerto',
-                'muscle_group' => 'espalda',
-                'difficulty' => 'avanzado',
-                'description' => 'Ejercicio compuesto para trabajar múltiples grupos musculares.',
-                'equipment' => 'Barra y discos'
-            ]
-        ];
-        
-        // Aplicar filtros
-        if ($request->filled('search')) {
-            $search = strtolower($request->search);
-            $allExercises = array_filter($allExercises, function($exercise) use ($search) {
-                return strpos(strtolower($exercise['name']), $search) !== false;
-            });
+        // Lógica de páginación y filtrado según los parámetros de la solicitud. Mantenemos la lógica de abajo.
+        $query = Exercise::query();
+
+        if($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
         }
-        
-        if ($request->filled('muscle_group')) {
-            $allExercises = array_filter($allExercises, function($exercise) use ($request) {
-                return $exercise['muscle_group'] === $request->muscle_group;
-            });
+        if($request->filled('muscle_groups')) {
+            // En MongoDB la igualdad sobre un campo array coincide si el array contiene el valor.
+            $query->where('muscle_groups', 'like', '%' . $request->input('muscle_groups') . '%');
         }
-        
-        if ($request->filled('difficulty')) {
-            $allExercises = array_filter($allExercises, function($exercise) use ($request) {
-                return $exercise['difficulty'] === $request->difficulty;
-            });
+        if($request->filled('difficulty_level')) {
+            $query->where('difficulty_level', $request->input('difficulty_level'));
         }
-        
-        return array_values($allExercises);
+        if($request->filled('equipment_needed')) {
+            $query->where('equipment_needed', 'like', '%' . $request->input('equipment_needed') . '%');
+        }
+        if($request->filled('is_favorite')) {
+            $query->where('is_favorite', $request->boolean('is_favorite'));
+        }
+
+        return $query->paginate(10);
     }
-    
-    private function getExerciseById($id)
+
+    private function getExerciseById(string $id)
     {
-        $exercises = [
-            1 => [
-                'id' => 1,
-                'name' => 'Flexiones',
-                'muscle_group' => 'Pecho',
-                'difficulty' => 'Intermedio',
-                'description' => 'Las flexiones son un ejercicio básico y fundamental para desarrollar la fuerza del tren superior, especialmente el pecho, hombros y tríceps.',
-                'equipment' => 'Sin equipo',
-                'instructions' => [
-                    'Colócate en posición de plancha con las manos apoyadas en el suelo, separadas al ancho de los hombros.',
-                    'Mantén el cuerpo recto desde la cabeza hasta los talones, contrayendo el core.',
-                    'Desciende lentamente hasta que el pecho casi toque el suelo.',
-                    'Empuja el cuerpo hacia arriba hasta la posición inicial.',
-                    'Repite el movimiento manteniendo la forma correcta.'
-                ],
-                'muscles_worked' => [
-                    ['name' => 'Pectorales', 'type' => 'Principal'],
-                    ['name' => 'Tríceps', 'type' => 'Secundario'],
-                    ['name' => 'Deltoides anterior', 'type' => 'Secundario'],
-                    ['name' => 'Core', 'type' => 'Estabilizador']
-                ],
-                'recommendations' => [
-                    'repetitions' => '8-15 repeticiones',
-                    'sets' => '3-4 series',
-                    'rest' => '60-90 segundos',
-                    'frequency' => '2-3 veces por semana'
-                ]
-            ]
-        ];
-        
-        return $exercises[$id] ?? null;
+        // Conecta con BBDD de mongo
+        $exercise = Exercise::find($id);
+
+        return $exercise ?? null;
     }
-    
-    private function getRelatedExercises($exercise)
+
+    private function getRelatedExercises(Exercise $exercise)
     {
-        return [
-            ['id' => 2, 'name' => 'Press de banca', 'muscle_group' => 'Pecho'],
-            ['id' => 3, 'name' => 'Flexiones diamante', 'muscle_group' => 'Pecho'],
-            ['id' => 4, 'name' => 'Flexiones inclinadas', 'muscle_group' => 'Pecho']
-        ];
+        // Conecta con BBDD de mongo
+        $muscleGroup = is_array($exercise->muscle_groups)
+            ? ($exercise->muscle_groups[0] ?? null)
+            : $exercise->muscle_groups;
+
+        return Exercise::where('muscle_groups', $muscleGroup)
+            ->where('id', '!=', $exercise->id)
+            ->get();
     }
-    
-    private function getMuscleGroups()
+
+    private function getMuscleGroups(): array
     {
-        return ['pecho', 'espalda', 'piernas', 'brazos', 'core', 'hombros'];
+        return Exercises::MUSCLE_GROUPS;
     }
-    
-    private function getDifficulties()
+
+    private function getDifficulties(): array
     {
-        return ['principiante', 'intermedio', 'avanzado'];
+        return Exercises::DIFFICULTY_LEVELS;
     }
-    
-    private function getEquipmentTypes()
+
+    private function getEquipmentTypes(): array
     {
-        return ['Sin equipo', 'Mancuernas', 'Barra', 'Máquinas', 'Bandas elásticas', 'Peso corporal'];
+        return Exercises::EQUIPMENT_TYPES;
     }
-    
-    private function searchExercises($query)
+
+    private function searchExercises(string $query)
     {
         // Implementar búsqueda
-        return [];
+        return Exercise::where('name', 'like', '%' . $query . '%')
+            ->orWhere('description', 'like', '%' . $query . '%')
+            ->get();
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function getValidatedExerciseData(Request $request): array
+    {
+        $validated = $request->validate([
+            'name'              => 'required|string|max:255',
+            'description'       => 'required|string',
+            'muscle_groups'     => 'required|array',
+            'difficulty_level'  => 'required|in:' . implode(',', Exercises::DIFFICULTY_LEVELS),
+            'equipment_needed'  => 'nullable|array',
+            'instructions'      => 'required|array',
+            'instructions.*'    => 'required|string'
+        ]);
+
+        // Equipment needed is retrieved as string with words possibly separated by commas.
+        // First, we check if there are spaces and replace them with commas. Then, we save the array by exploding
+        // string with commas as separator
+        $validated['equipment_needed'] = !empty($validated['equipment_needed']) ? $validated['equipment_needed'] : [Exercises::DEFAULT_EQUIPMENT_TYPE];
+
+        return $validated;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getColorDifficultyLevels(): array
+    {
+        return Exercises::COLOR_DIFFICULTY_LEVELS;
     }
 }

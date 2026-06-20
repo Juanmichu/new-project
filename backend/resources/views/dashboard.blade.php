@@ -8,10 +8,10 @@
     <div class="card mb-6">
         <div class="card-body">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                ¡Hola, {{ Auth::user()->name }}! 👋
+                ¡Hi there, {{ $user->name }}! 👋
             </h1>
             <p class="text-gray-600">
-                Aquí tienes un resumen de tu actividad en FitCoacher
+                Here is a summary of your activity on FitCoacher
             </p>
         </div>
     </div>
@@ -21,28 +21,28 @@
         <div class="card">
             <div class="card-body text-center">
                 <div class="text-3xl font-bold text-blue-600 mb-2">0</div>
-                <p class="text-gray-600">Entrenamientos Completados</p>
+                <p class="text-gray-600">Completed Workouts</p>
             </div>
         </div>
 
         <div class="card">
             <div class="card-body text-center">
                 <div class="text-3xl font-bold text-green-600 mb-2">0</div>
-                <p class="text-gray-600">Ejercicios Favoritos</p>
+                <p class="text-gray-600">Favorite exercises</p>
             </div>
         </div>
 
         <div class="card">
             <div class="card-body text-center">
                 <div class="text-3xl font-bold text-purple-600 mb-2">0</div>
-                <p class="text-gray-600">Días Activos</p>
+                <p class="text-gray-600">Active Days</p>
             </div>
         </div>
 
         <div class="card">
             <div class="card-body text-center">
                 <div class="text-3xl font-bold text-orange-600 mb-2">0</div>
-                <p class="text-gray-600">Metas Alcanzadas</p>
+                <p class="text-gray-600">Completed Goals</p>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@
     <div class="grid md:grid-cols-2 gap-6 mb-8">
         <div class="card">
             <div class="card-header">
-                <h2 class="text-xl font-semibold">Acciones Rápidas</h2>
+                <h2 class="text-xl font-semibold">Quick actions</h2>
             </div>
             <div class="card-body">
                 <div class="space-y-3">
@@ -59,28 +59,28 @@
                         <div class="flex items-center">
                             <div class="text-2xl mr-3">🏋️‍♀️</div>
                             <div>
-                                <div class="font-medium">Explorar Ejercicios</div>
-                                <div class="text-sm text-gray-600">Descubre nuevos ejercicios</div>
+                                <div class="font-medium">Explore Exercises</div>
+                                <div class="text-sm text-gray-600">Discover new exercises</div>
                             </div>
                         </div>
                     </a>
 
-                    <a href="{{ route('blog.index') }}" class="block bg-green-50 hover:bg-green-100 p-3 rounded-lg transition-colors">
+                    <a href="{{ route('blog.index') }}" class="block bg-amber-50 hover:bg-amber-100 p-3 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <div class="text-2xl mr-3">📝</div>
                             <div>
-                                <div class="font-medium">Leer Blog</div>
-                                <div class="text-sm text-gray-600">Consejos y artículos</div>
+                                <div class="font-medium">Read Blog</div>
+                                <div class="text-sm text-gray-600">Articles and Tips</div>
                             </div>
                         </div>
                     </a>
 
-                    <a href="{{ route('profile') }}" class="block bg-purple-50 hover:bg-purple-100 p-3 rounded-lg transition-colors">
+                    <a href="{{ route('profile.show') }}" class="block bg-purple-50 hover:bg-purple-100 p-3 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <div class="text-2xl mr-3">⚙️</div>
                             <div>
-                                <div class="font-medium">Configurar Perfil</div>
-                                <div class="text-sm text-gray-600">Personaliza tu cuenta</div>
+                                <div class="font-medium">Manage Profile</div>
+                                <div class="text-sm text-gray-600">Customize your account</div>
                             </div>
                         </div>
                     </a>
@@ -91,13 +91,13 @@
         <!-- Recent Activity -->
         <div class="card">
             <div class="card-header">
-                <h2 class="text-xl font-semibold">Actividad Reciente</h2>
+                <h2 class="text-xl font-semibold">Recent Activity</h2>
             </div>
             <div class="card-body">
                 <div class="text-center text-gray-500 py-8">
                     <div class="text-4xl mb-4">📊</div>
-                    <p>No hay actividad reciente</p>
-                    <p class="text-sm">¡Comienza tu primer entrenamiento!</p>
+                    <p>No recent activity</p>
+                    <p class="text-sm">Start your first training!</p>
                 </div>
             </div>
         </div>
@@ -106,13 +106,13 @@
     <!-- Progress Chart Placeholder -->
     <div class="card">
         <div class="card-header">
-            <h2 class="text-xl font-semibold">Progreso Semanal</h2>
+            <h2 class="text-xl font-semibold">Weekly Progress</h2>
         </div>
         <div class="card-body">
             <div class="text-center text-gray-500 py-12">
                 <div class="text-6xl mb-4">📈</div>
-                <p class="text-lg">Gráfico de Progreso</p>
-                <p class="text-sm">Aquí aparecerá tu progreso cuando tengas datos registrados</p>
+                <p class="text-lg">Progress Graphs</p>
+                <p class="text-sm">Here you can check your trainees progress when it has been recorded</p>
             </div>
         </div>
     </div>

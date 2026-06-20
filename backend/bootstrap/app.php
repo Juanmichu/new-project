@@ -12,15 +12,12 @@ return Application::configure(basePath: dirname(__DIR__))
 		health: '/up',
 	)
 	->withMiddleware(function (Middleware $middleware) {
-		$middleware->api(prepend: [
-			\Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-		]);
-
 		$middleware->alias([
 			'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+			'admin' => \App\Http\Middleware\AdminMiddleware::class,
 		]);
 
-		// CORS for API
+		// CORS for API. But it won't be used as is no longer needed since the CORS is handled by the frontend. But it is kept here for future reference.
 		$middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
 	})
 	->withExceptions(function (Exceptions $exceptions) {

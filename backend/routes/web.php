@@ -8,6 +8,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebAuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +40,10 @@ Route::middleware('auth')->group(function () {
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 	// Perfil de usuario
-	Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+	Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 	Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update_password');
 	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
@@ -48,10 +51,9 @@ Route::middleware('auth')->group(function () {
 Route::controller(ExerciseController::class)->group(function () {
 	// Rutas públicas
 	Route::get('/exercises', 'index')->name('exercises.index');
-	Route::get('/exercises/{exercise}', 'show')->name('exercises.show');
 
-	// Rutas protegidas (solo usuarios autenticados)
-	Route::middleware('auth')->group(function () {
+    // Rutas protegidas (solo administradores / coaches)
+    Route::middleware(['auth', 'admin'])->group(function () {
 		Route::get('/exercises/create', 'create')->name('exercises.create');
 		Route::post('/exercises', 'store')->name('exercises.store');
 		Route::get('/exercises/{exercise}/edit', 'edit')->name('exercises.edit');
@@ -60,25 +62,34 @@ Route::controller(ExerciseController::class)->group(function () {
 
 		// Funcionalidades adicionales
 		Route::post('/exercises/{exercise}/favorite', 'toggleFavorite')->name('exercises.favorite');
-		Route::get('/exercises/{exercise}/start-workout', 'startWorkout')->name('exercises.start-workout');
 	});
+
+    // Debe ir la última para que no interfiera con las rutas anteriores
+    Route::get('/exercises/{exercise}', 'show')->name('exercises.show');
+});
+
+// Rutas de administración (coaches): gestión de usuarios y workouts
+Route::middleware(['auth', 'admin'])->group(function () {
+	Route::resource('users', UserController::class)->except(['show']);
+	Route::resource('workouts', WorkoutController::class)->except(['show']);
 });
 
 // Rutas del blog (públicas)
 Route::controller(BlogController::class)->group(function () {
 	Route::get('/blog', 'index')->name('blog.index');
-	Route::get('/blog/{slug}', 'show')->name('blog.show');
-	Route::get('/blog/category/{category}', 'category')->name('blog.category');
-	Route::get('/blog/author/{author}', 'author')->name('blog.author');
+    Route::get('/blog/category/{category}', 'category')->name('blog.category');
+    Route::get('/blog/author/{author}', 'author')->name('blog.author');
 
-	// Rutas administrativas del blog (solo para usuarios autenticados)
-	Route::middleware('auth')->group(function () {
+    // Rutas administrativas del blog (solo para usuarios autenticados)
+    Route::middleware('auth')->group(function () {
 		Route::get('/blog/create', 'create')->name('blog.create');
 		Route::post('/blog', 'store')->name('blog.store');
 		Route::get('/blog/{slug}/edit', 'edit')->name('blog.edit');
 		Route::patch('/blog/{slug}', 'update')->name('blog.update');
 		Route::delete('/blog/{slug}', 'destroy')->name('blog.destroy');
 	});
+
+    Route::get('/blog/{slug}', 'show')->name('blog.show');
 });
 
 // Rutas adicionales de utilidad

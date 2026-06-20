@@ -24,7 +24,7 @@ class ExerciseController extends Controller
 			$query->where('difficulty_level', $request->difficulty);
 		}
 
-		$exercises = $query->paginate(20);
+		$exercises = $query->paginate(10);
 
 		return response()->json($exercises);
 	}

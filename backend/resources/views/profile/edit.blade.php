@@ -7,8 +7,8 @@
 		<!-- Header -->
 		<div class="card mb-6">
 			<div class="card-body">
-				<h1 class="text-3xl font-bold text-gray-900 mb-2">Editar Perfil</h1>
-				<p class="text-gray-600">Actualiza tu información personal y configuración de seguridad</p>
+				<h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Profile</h1>
+				<p class="text-gray-600">Update your personal information and security setup</p>
 			</div>
 		</div>
 
@@ -16,7 +16,7 @@
 			<!-- Información Personal -->
 			<div class="card">
 				<div class="card-header">
-					<h2 class="text-xl font-semibold">Información Personal</h2>
+					<h2 class="text-xl font-semibold">Personal information</h2>
 				</div>
 				<div class="card-body">
 					<form action="{{ route('profile.update') }}" method="POST">
@@ -26,7 +26,7 @@
 						<div class="grid md:grid-cols-2 gap-6">
 							<div>
 								<label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-									Nombre *
+									Name *
 								</label>
 								<input type="text" id="name" name="name"
 									   value="{{ old('name', $user->name) }}"
@@ -64,10 +64,10 @@
 			<!-- Cambiar Contraseña -->
 			<div class="card">
 				<div class="card-header">
-					<h2 class="text-xl font-semibold">Cambiar Contraseña</h2>
+					<h2 class="text-xl font-semibold">Change Password</h2>
 				</div>
 				<div class="card-body">
-					<form action="{{ route('profile.update') }}" method="POST">
+					<form action="{{ route('profile.update_password') }}" method="POST">
 						@csrf
 						@method('PATCH')
 

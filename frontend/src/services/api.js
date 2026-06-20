@@ -9,7 +9,6 @@ const api = axios.create({
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     },
-    withCredentials: true,
 });
 
 // Request interceptor to add auth token
@@ -56,8 +55,9 @@ export const workoutAPI = {
     getWorkout: (id) => api.get(`/workouts/${id}`),
     updateWorkout: (id, data) => api.put(`/workouts/${id}`, data),
     deleteWorkout: (id) => api.delete(`/workouts/${id}`),
-    markExerciseComplete: (workoutId, exerciseId) =>
-        api.post(`/workouts/${workoutId}/exercises/${exerciseId}/complete`),
+    markExerciseComplete: (workoutId, exerciseId, completed) =>
+        api.post(`/workouts/${workoutId}/exercises/${exerciseId}/complete`, { completed }),
+    completeWorkout: (workoutId) => api.post(`/workouts/${workoutId}/complete`),
 };
 
 // Exercise API

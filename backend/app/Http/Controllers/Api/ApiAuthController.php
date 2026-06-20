@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Constants\UserProfile;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class ApiAuthController extends Controller
 			'age' => 'nullable|integer|min:13|max:120',
 			'weight' => 'nullable|numeric|min:30|max:500',
 			'height' => 'nullable|numeric|min:100|max:250',
-			'fitness_level' => 'nullable|in:beginner,intermediate,advanced',
+			'fitness_level' => 'nullable|in:' . implode( ',', UserProfile::FITNESS_LEVEL),
 			'goals' => 'nullable|array'
 		]);
 

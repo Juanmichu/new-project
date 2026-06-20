@@ -14,6 +14,7 @@ RUN npm ci
 # Copy source files needed for build
 COPY resources/ ./resources/
 COPY public/ ./public/
+COPY lang/ ./lang/
 
 # Build assets
 RUN npm run build

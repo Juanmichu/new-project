@@ -3,249 +3,160 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\WorkoutExercise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
+/**
+ * Coach-facing (admin only) management of client/coach accounts.
+ *
+ * Server-rendered Blade CRUD, mirroring {@see ExerciseController}. Access is
+ * restricted to admins via the 'admin' middleware on the routes (see web.php).
+ */
 class UserController extends Controller
 {
-	public function __construct()
-	{
-		$this->middleware('auth:api');
-		$this->middleware('admin')->except(['profile', 'updateProfile']);
-	}
+    /** Roles a user can be assigned. */
+    private const ROLES = [User::USER_ROL, User::ADMIN_ROL];
 
-	/**
-	 * Display a listing of users (Admin only).
-	 */
-	public function index(Request $request)
-	{
-		$query = User::query();
+    /**
+     * List users with optional search / role / status filters.
+     */
+    public function index(Request $request)
+    {
+        $query = User::query();
 
-		// Search by name or email
-		if ($request->has('search')) {
-			$search = $request->search;
-			$query->where(function($q) use ($search) {
-				$q->where('name', 'like', "%{$search}%")
-					->orWhere('email', 'like', "%{$search}%");
-			});
-		}
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
 
-		// Filter by role
-		if ($request->has('role')) {
-			$query->where('role', $request->role);
-		}
+        if ($request->filled('role')) {
+            $query->where('role', $request->input('role'));
+        }
 
-		// Filter by status
-		if ($request->has('is_active')) {
-			$query->where('is_active', $request->boolean('is_active'));
-		}
+        if ($request->filled('is_active') && $request->input('is_active') !== 'all') {
+            $query->where('is_active', $request->boolean('is_active'));
+        }
 
-		$users = $query->orderBy('created_at', 'desc')->paginate(15);
+        $users = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
+        $roles = self::ROLES;
 
-		return response()->json([
-			'success' => true,
-			'data' => $users
-		]);
-	}
+        return view('users.index', compact('users', 'roles'));
+    }
 
-	/**
-	 * Store a newly created user (Admin only).
-	 */
-	public function store(Request $request)
-	{
-		$validator = Validator::make($request->all(), [
-			'name' => 'required|string|max:255',
-			'email' => 'required|string|email|max:255|unique:users',
-			'password' => 'required|string|min:8|confirmed',
-			'role' => 'required|in:admin,user',
-			'is_active' => 'boolean',
-		]);
+    /**
+     * Show the create-user form.
+     */
+    public function create()
+    {
+        $roles = self::ROLES;
 
-		if ($validator->fails()) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Validation failed',
-				'errors' => $validator->errors()
-			], 422);
-		}
+        return view('users.create', compact('roles'));
+    }
 
-		$user = User::create([
-			'name' => $request->name,
-			'email' => $request->email,
-			'password' => Hash::make($request->password),
-			'role' => $request->role,
-			'is_active' => $request->is_active ?? true,
-		]);
+    /**
+     * Persist a new user.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:' . implode(',', self::ROLES),
+            'is_active' => 'nullable|boolean',
+        ]);
 
-		return response()->json([
-			'success' => true,
-			'message' => 'User created successfully',
-			'data' => $user
-		], 201);
-	}
+        User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
+            'is_active' => $request->boolean('is_active'),
+        ]);
 
-	/**
-	 * Display the specified user (Admin only).
-	 */
-	public function show($id)
-	{
-		$user = User::with('workouts')->find($id);
+        return redirect()->route('users.index')
+            ->with('success', 'Usuario creado exitosamente');
+    }
 
-		if (!$user) {
-			return response()->json([
-				'success' => false,
-				'message' => 'User not found'
-			], 404);
-		}
+    /**
+     * Show the edit-user form.
+     */
+    public function edit(string $id)
+    {
+        $user = User::find($id);
 
-		return response()->json([
-			'success' => true,
-			'data' => $user
-		]);
-	}
+        if (!$user) {
+            abort(404, 'Usuario no encontrado');
+        }
 
-	/**
-	 * Update the specified user (Admin only).
-	 */
-	public function update(Request $request, $id)
-	{
-		$user = User::find($id);
+        $roles = self::ROLES;
 
-		if (!$user) {
-			return response()->json([
-				'success' => false,
-				'message' => 'User not found'
-			], 404);
-		}
+        return view('users.edit', compact('user', 'roles'));
+    }
 
-		$validator = Validator::make($request->all(), [
-			'name' => 'sometimes|string|max:255',
-			'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
-			'password' => 'nullable|string|min:8|confirmed',
-			'role' => 'sometimes|in:admin,user',
-			'is_active' => 'sometimes|boolean',
-		]);
+    /**
+     * Update an existing user. Password is only changed when provided.
+     */
+    public function update(Request $request, string $id)
+    {
+        $user = User::find($id);
 
-		if ($validator->fails()) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Validation failed',
-				'errors' => $validator->errors()
-			], 422);
-		}
+        if (!$user) {
+            abort(404, 'Usuario no encontrado');
+        }
 
-		$data = $request->except(['password', 'password_confirmation']);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id . ',_id',
+            'password' => 'nullable|string|min:8|confirmed',
+            'role' => 'required|in:' . implode(',', self::ROLES),
+            'is_active' => 'nullable|boolean',
+        ]);
 
-		if ($request->filled('password')) {
-			$data['password'] = Hash::make($request->password);
-		}
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->role = $validated['role'];
+        $user->is_active = $request->boolean('is_active');
 
-		$user->update($data);
+        if (!empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
+        }
 
-		return response()->json([
-			'success' => true,
-			'message' => 'User updated successfully',
-			'data' => $user
-		]);
-	}
+        $user->save();
 
-	/**
-	 * Remove the specified user (Admin only).
-	 */
-	public function destroy($id)
-	{
-		$user = User::find($id);
+        return redirect()->route('users.index')
+            ->with('success', 'Usuario actualizado exitosamente');
+    }
 
-		if (!$user) {
-			return response()->json([
-				'success' => false,
-				'message' => 'User not found'
-			], 404);
-		}
+    /**
+     * Delete a user (and their workouts), preventing self-deletion.
+     */
+    public function destroy(string $id)
+    {
+        $user = User::find($id);
 
-		// Prevent admin from deleting themselves
-		if ($user->id === auth()->id()) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Cannot delete your own account'
-			], 403);
-		}
+        if (!$user) {
+            abort(404, 'Usuario no encontrado');
+        }
 
-		// Delete user's workouts and exercises
-		foreach ($user->workouts as $workout) {
-			$workout->exercises()->delete();
-			$workout->delete();
-		}
+        if ($user->_id === auth()->user()->_id) {
+            return redirect()->route('users.index')
+                ->with('error', 'No puedes eliminar tu propia cuenta');
+        }
 
-		$user->delete();
+        // Remove the user's workouts and their exercise rows.
+        foreach ($user->workouts as $workout) {
+            WorkoutExercise::where('workout_id', $workout->_id)->delete();
+            $workout->delete();
+        }
 
-		return response()->json([
-			'success' => true,
-			'message' => 'User deleted successfully'
-		]);
-	}
+        $user->delete();
 
-	/**
-	 * Get user profile (authenticated user).
-	 */
-	public function profile()
-	{
-		$user = auth()->user();
-		$user->load(['workouts' => function($query) {
-			$query->orderBy('scheduled_date', 'desc')->limit(5);
-		}]);
-
-		return response()->json([
-			'success' => true,
-			'data' => $user
-		]);
-	}
-
-	/**
-	 * Update user profile (authenticated user).
-	 */
-	public function updateProfile(Request $request)
-	{
-		$user = auth()->user();
-
-		$validator = Validator::make($request->all(), [
-			'name' => 'sometimes|string|max:255',
-			'email' => 'sometimes|string|email|max:255|unique:users,email,' . $user->id,
-			'current_password' => 'required_with:password|string',
-			'password' => 'nullable|string|min:8|confirmed',
-		]);
-
-		if ($validator->fails()) {
-			return response()->json([
-				'success' => false,
-				'message' => 'Validation failed',
-				'errors' => $validator->errors()
-			], 422);
-		}
-
-		// Check current password if changing password
-		if ($request->filled('password')) {
-			if (!Hash::check($request->current_password, $user->password)) {
-				return response()->json([
-					'success' => false,
-					'message' => 'Current password is incorrect'
-				], 422);
-			}
-		}
-
-		$data = $request->only(['name', 'email']);
-
-		if ($request->filled('password')) {
-			$data['password'] = Hash::make($request->password);
-		}
-
-		$user->update($data);
-
-		return response()->json([
-			'success' => true,
-			'message' => 'Profile updated successfully',
-			'data' => $user
-		]);
-	}
+        return redirect()->route('users.index')
+            ->with('success', 'Usuario eliminado exitosamente');
+    }
 }

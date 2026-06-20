@@ -4,6 +4,9 @@ namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
+/**
+ * @deprecated This class is deprecated and will be removed in a future version. Please use bootstrap/app.php
+ */
 class Kernel extends HttpKernel
 {
 	/**

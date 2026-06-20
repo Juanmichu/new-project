@@ -1,4 +1,5 @@
-// src/api/workouts.js
+// Future development to separate API calls into their own files for better organization and maintainability.
+// NOT CURRENTLY IN USE
 import API from '../services/api';
 
 export const getUserWorkouts = () => API.get('/user/workouts');
