@@ -51,6 +51,7 @@ cd fitcoacher
 ```
 ### Construye los assets y dependencias (si es tu primera vez):
 ```bash cd backend
+bash composer update
 bash composer install
 bash npm install
 bash npm run build
@@ -65,6 +66,7 @@ bash php artisan lang:publish
 
 ```
 bash cd ../frontend
+bash npm update
 bash npm install
 bash npm run build
 ```
