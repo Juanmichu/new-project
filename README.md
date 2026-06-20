@@ -35,8 +35,8 @@ Una aplicación integral de fitness construida con Laravel y MongoDB que ayuda a
 
 * **PHP:** 8.2 o superior
 * **Composer:** Gestor de paquetes PHP
-* **MongoDB:** 4.4+
-* **Node.js:** 18+ y npm
+* **MongoDB:** 7.0+
+* **Node.js:** 20+ y npm 11+
 * **Docker y Docker Compose:** (opcional)
 
 ## 🔧 Instalación
@@ -50,8 +50,11 @@ bash git clone <url-del-repositorio>
 cd fitcoacher
 ```
 ### Construye los assets y dependencias (si es tu primera vez):
-```bash cd backend
+```
+bash cd backend
+bash composer update
 bash composer install
+bash npm update
 bash npm install
 bash npm run build
 ```
@@ -65,6 +68,7 @@ bash php artisan lang:publish
 
 ```
 bash cd ../frontend
+bash npm update
 bash npm install
 bash npm run build
 ```

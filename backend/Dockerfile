@@ -1,5 +1,5 @@
 # Stage 1: Node.js para construir assets
-FROM node:18-alpine AS node-builder
+FROM node:lts-alpine AS node-builder
 
 WORKDIR /app
 
