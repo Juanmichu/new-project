@@ -1,4 +1,6 @@
 {
+	"name": "FitCoacher/Backend",
+	"version": 0.9,
 	"private": true,
     "type": "module",
 	"scripts": {
