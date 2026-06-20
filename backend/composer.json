@@ -1,6 +1,6 @@
 {
-    "name": "FitCoacher/backend",
-	"version": 0.9,
+    "name": "fitcoacher/backend",
+	"version": "0.9",
     "type": "project",
     "description": "Workout Management API",
     "keywords": ["laravel", "framework", "workout", "mongodb"],
