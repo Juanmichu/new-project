@@ -218,6 +218,7 @@ class WorkoutController extends Controller
 
             $exerciseInstructions = Exercise::where('id', $data['exercise_id'])
                                         ->pluck('instructions')
+                                        ->flatten()
                                         ->filter()
                                         ->unique()
                                         ->values()
