@@ -50,9 +50,11 @@ bash git clone <url-del-repositorio>
 cd fitcoacher
 ```
 ### Construye los assets y dependencias (si es tu primera vez):
-```bash cd backend
+```
+bash cd backend
 bash composer update
 bash composer install
+bash npm update
 bash npm install
 bash npm run build
 ```
