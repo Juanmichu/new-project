@@ -100,7 +100,7 @@
 									<div class="text-sm font-medium">Ver Dashboard</div>
 								</div>
 							</a>
-							<a href="{{ route('exercises.index') }}" class="block bg-green-50 hover:bg-green-100 p-3 rounded-lg transition-colors">
+							<a href="{{ route('exercises.index') }}" class="block bg-amber-50 hover:bg-amber-100 p-3 rounded-lg transition-colors">
 								<div class="flex items-center">
 									<div class="text-xl mr-3">🏋️‍♀️</div>
 									<div class="text-sm font-medium">Explorar Ejercicios</div>

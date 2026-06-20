@@ -65,7 +65,7 @@
                         </div>
                     </a>
 
-                    <a href="{{ route('blog.index') }}" class="block bg-green-50 hover:bg-amber-100 p-3 rounded-lg transition-colors">
+                    <a href="{{ route('blog.index') }}" class="block bg-amber-50 hover:bg-amber-100 p-3 rounded-lg transition-colors">
                         <div class="flex items-center">
                             <div class="text-2xl mr-3">📝</div>
                             <div>
