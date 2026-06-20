@@ -35,8 +35,8 @@ Una aplicación integral de fitness construida con Laravel y MongoDB que ayuda a
 
 * **PHP:** 8.2 o superior
 * **Composer:** Gestor de paquetes PHP
-* **MongoDB:** 4.4+
-* **Node.js:** 18+ y npm
+* **MongoDB:** 7.0+
+* **Node.js:** 20+ y npm 11+
 * **Docker y Docker Compose:** (opcional)
 
 ## 🔧 Instalación
