@@ -10,7 +10,7 @@ use MongoDB\Laravel\Eloquent\Model;
  * @property string $exercise_id
  * @property int $sets
  * @property int $reps
- * @property int $weight
+ * @property float $weight
  * @property int $duration
  * @property int $rest_time
  * @property int $order
@@ -40,15 +40,16 @@ class WorkoutExercise extends Model
     ];
 
     protected $casts = [
-        'sets' => 'integer',
-        'reps' => 'integer',
-        'weight' => 'decimal:2',
-        'duration' => 'integer',
-        'rest_time' => 'integer',
-        'order' => 'integer',
-        'completed' => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'sets'          => 'integer',
+        'reps'          => 'integer',
+        'weight'        => 'float',
+        'duration'      => 'integer',
+        'rest_time'     => 'integer',
+        'order'         => 'integer',
+        'notes'         => 'string',
+        'completed'     => 'boolean',
+        'created_at'    => 'datetime',
+        'updated_at'    => 'datetime'
     ];
 
     // Relationships

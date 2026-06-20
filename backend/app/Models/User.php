@@ -12,8 +12,8 @@ use MongoDB\Laravel\Auth\User as MongoAuthenticatable;
  * @property string $name
  * @property string $email
  * @property string $password
- * @property int $weight
- * @property int $height
+ * @property float $weight
+ * @property float $height
  * @property string $fitness_level
  * @property array $goals
  * @property string $avatar

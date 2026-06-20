@@ -62,7 +62,7 @@
         <!-- @var $article \App\Models\Article -->
         @foreach($articles as $article)
             <!-- Avoid displaying the featured article again in the grid -->
-            @if($article->is_featured)
+            @if($article->is_featured && $article->_id === $featuredArticle->_id)
                 @continue
             @endif
             <article class="card hover:shadow-lg transition-shadow">

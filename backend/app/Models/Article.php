@@ -49,6 +49,7 @@ class Article extends Model
     ];
 
     protected $casts = [
+        'tags'          => 'array',
         'published_at'  => 'datetime',
         'views'         => 'integer',
         'likes'         => 'integer',

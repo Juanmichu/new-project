@@ -61,6 +61,16 @@
 						   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('blog.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
 							Blog
 						</a>
+						@if(auth()->check() && auth()->user()->isAdmin())
+							<a href="{{ route('users.index') }}"
+							   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('users.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
+								Usuarios
+							</a>
+							<a href="{{ route('workouts.index') }}"
+							   class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('workouts.*') ? 'text-blue-600 border-b-2 border-blue-600' : '' }}">
+								Workouts
+							</a>
+						@endif
 					</div>
 				</div>
 
@@ -154,6 +164,16 @@
 					   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('blog.*') ? 'text-blue-600 bg-blue-50' : '' }}">
 						Blog
 					</a>
+					@if(auth()->check() && auth()->user()->isAdmin())
+						<a href="{{ route('users.index') }}"
+						   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('users.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+							Usuarios
+						</a>
+						<a href="{{ route('workouts.index') }}"
+						   class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md {{ request()->routeIs('workouts.*') ? 'text-blue-600 bg-blue-50' : '' }}">
+							Workouts
+						</a>
+					@endif
 				</div>
 			</div>
 		</div>

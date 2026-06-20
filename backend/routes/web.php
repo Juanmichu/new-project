@@ -8,6 +8,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebAuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\WorkoutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,8 +51,8 @@ Route::controller(ExerciseController::class)->group(function () {
 	// Rutas públicas
 	Route::get('/exercises', 'index')->name('exercises.index');
 
-    // Rutas protegidas (solo usuarios autenticados)
-    Route::middleware('auth')->group(function () {
+    // Rutas protegidas (solo administradores / coaches)
+    Route::middleware(['auth', 'admin'])->group(function () {
 		Route::get('/exercises/create', 'create')->name('exercises.create');
 		Route::post('/exercises', 'store')->name('exercises.store');
 		Route::get('/exercises/{exercise}/edit', 'edit')->name('exercises.edit');
@@ -63,6 +65,12 @@ Route::controller(ExerciseController::class)->group(function () {
 
     // Debe ir la última para que no interfiera con las rutas anteriores
     Route::get('/exercises/{exercise}', 'show')->name('exercises.show');
+});
+
+// Rutas de administración (coaches): gestión de usuarios y workouts
+Route::middleware(['auth', 'admin'])->group(function () {
+	Route::resource('users', UserController::class)->except(['show']);
+	Route::resource('workouts', WorkoutController::class)->except(['show']);
 });
 
 // Rutas del blog (públicas)

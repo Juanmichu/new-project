@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
 	->withMiddleware(function (Middleware $middleware) {
 		$middleware->alias([
 			'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+			'admin' => \App\Http\Middleware\AdminMiddleware::class,
 		]);
 
 		// CORS for API. But it won't be used as is no longer needed since the CORS is handled by the frontend. But it is kept here for future reference.

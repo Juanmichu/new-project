@@ -39,7 +39,7 @@
                     <p class="text-gray-600 text-lg"> {{ $exercise->description }} </p>
                 </div>
 
-                @auth
+                @if(auth()->check() && auth()->user()->isAdmin())
                     <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
                         <button type="button"
                                 onclick="toggleFavorite('{{ route('exercises.favorite', $exercise->_id) }}', this)"
@@ -50,7 +50,7 @@
                             Editar
                         </a>
                     </div>
-                @endauth
+                @endif
             </div>
         </div>
     </div>

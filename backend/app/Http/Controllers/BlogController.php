@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Constants\Articles;
 use App\Models\Article;
 use Illuminate\Http\Request;
 
@@ -152,14 +153,20 @@ class BlogController extends Controller
     }
 
     /**
-     * Métodos helper privados
+     * @param Request $request
+     * @param bool $isFeatured - Determines if the articles should be featured or not
+     * @return Article[]
      */
-    private function getFilteredArticles(Request $request)
+    private function getFilteredArticles(Request $request, bool $isFeatured = false)
     {
         $allArticles = Article::query();
 
         if ($request->filled('category') && $request->category !== 'all') {
             $allArticles = $allArticles->where('category', $request->category);
+        }
+
+        if(!$isFeatured) {
+            $allArticles = $allArticles->where('is_featured', $isFeatured);
         }
 
         return $allArticles->paginate(6);
@@ -185,7 +192,7 @@ class BlogController extends Controller
 
     private function getCategories(): array
     {
-        return ['Exercises', 'Nutrition', 'Tips', 'Routines', 'Fitness'];
+        return Articles::CATEGORIES;
     }
 
     private function getArticlesByCategory(string $category)

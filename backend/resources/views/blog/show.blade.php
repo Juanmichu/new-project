@@ -17,7 +17,12 @@
         </nav>
 
         <h1 class="text-3xl font-bold mb-4">{{ $article->title }}</h1>
-        <p class="text-gray-600 mb-6">Publicado el {{ $article->created_at->format('d/m/Y') }}</p>
+        <div class="mb-6">
+            <span class="text-gray-600 mb-6"><b>Published on:</b> {{ $article->created_at->format('d/m/Y') }}</span>
+            <span class="text-gray-600 mb-6"><b>Category:</b> {{ $article->category }}</span>
+            <span class="text-gray-600 mb-6"><b>Tags:</b> {{ implode(', ', $article->tags) }}</span>
+            <p class="text-gray-600 mb-6"><b>Author:</b> {{ $article->author }}</p>
+        </div>
         <div class="prose max-w-none mb-6">
             {!! $article->content !!}
         </div>

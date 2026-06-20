@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Http\Constants\UserProfile;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -32,12 +33,12 @@ class UserFactory extends Factory
             'age'                   => $this->faker->numberBetween(18, 100),
             'weight'                => $this->faker->numberBetween(50, 180),
             'height'                => $this->faker->numberBetween(110, 250),
-            'fitness_level'         => $this->faker->randomElement(['Beginner', 'Intermediate', 'Advanced']),
-            'goals'                 => $this->faker->randomElement(['Weight Loss', 'Muscle Gain', 'General Fitness']),
+            'fitness_level'         => $this->faker->randomElement(UserProfile::FITNESS_LEVEL),
+            'goals'                 => $this->faker->randomElements(UserProfile::FITNESS_GOALS),
             'avatar'                => $this->faker->optional(0.5)->sentence,
             'preferences'           => $this->faker->optional(0.5)->sentence,
             'role'                  => $this->faker->randomElement(['user', 'admin']),
-            'is_active'             => $this->faker->boolean()
+            'is_active'             => $this->faker->boolean(80)
         ];
     }
 

@@ -13,9 +13,9 @@
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">Exercises Library</h1>
                     <p class="text-gray-600">Find the perfect exercise for your training</p>
                 </div>
-                @auth
+                @if(auth()->check() && auth()->user()->isAdmin())
                     <a href="{{ route('exercises.create') }}" class="btn-primary mt-4 p-4 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Add New Exercise</a>
-                @endauth
+                @endif
             </div>
         </div>
     </div>
@@ -114,14 +114,14 @@
                         <a href="{{ route('exercises.show', $exercise['id']) }}" class="btn-primary flex-1 text-center rounded bg-blue-600 text-white hover:bg-blue-700 transition">
                             View details
                         </a>
-                        @auth
+                        @if(auth()->check() && auth()->user()->isAdmin())
                             <button class="btn-secondary">
                                 @php
                                     // Añadir funcionalidad al botón favoritos
                                 @endphp
                                 ❤️
                             </button>
-                        @endauth
+                        @endif
                     </div>
                 </div>
             </div>

@@ -15,7 +15,6 @@ class WorkoutExerciseFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'       => User::factory(),
             'workout_id'    => Workout::factory(),
             'exercise_id'   => Exercise::factory(),
             'sets'          => $this->faker->numberBetween(3, 5),

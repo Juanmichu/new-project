@@ -45,5 +45,14 @@ final class Exercises
         'Cable'
     ];
 
+    const CATEGORIES = [
+        'Strength',
+        'Cardio',
+        'Flexibility',
+        'HIIT',
+        'Pilates',
+        'Conditioning'
+    ];
+
     const DEFAULT_EQUIPMENT_TYPE = 'Bodyweight';
 }

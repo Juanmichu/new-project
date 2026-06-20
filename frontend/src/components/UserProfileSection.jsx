@@ -25,7 +25,7 @@ export const ProfileSection = ({ user, updateProfile }) => {
                 age: user.age || '',
                 weight: user.weight || '',
                 height: user.height || '',
-                fitness_level: user.fitness_level || 'beginner',
+                fitness_level: user.fitness_level || 'Beginner',
                 goals: user.goals || []
             });
         }

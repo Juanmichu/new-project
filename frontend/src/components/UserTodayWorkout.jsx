@@ -73,6 +73,17 @@ export const TodaySection = ({ todayWorkout, completionPercentage, onToggleExerc
                                                 <p className="text-gray-300 text-sm">
                                                     {workoutExercise.sets} sets × {workoutExercise.reps} reps • Rest: {workoutExercise.rest_time}s
                                                 </p>
+                                                <p className="text-gray-300 text-sm">
+                                                    {workoutExercise.weight ?? 'N/A'} kg  • {workoutExercise.duration ?? 'N/A'} secs
+                                                </p>
+                                                {workoutExercise.notes && (
+                                                    <p className="text-gray-300 text-sm">
+                                                        { workoutExercise.notes.split(',').map((note, index) => (
+                                                            <p key={index}>{note}</p>
+                                                            )
+                                                        )}
+                                                    </p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -84,10 +95,7 @@ export const TodaySection = ({ todayWorkout, completionPercentage, onToggleExerc
             ) : (
                 <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/10 p-8 text-center">
                     <h2 className="text-2xl font-bold text-white mb-4">No Workout Today</h2>
-                    <p className="text-gray-300 mb-6">Ready to start your fitness journey? Let's create a workout!</p>
-                    <button className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                        Create Workout
-                    </button>
+                    <p className="text-gray-300 mb-6">Today just relax. Every athlete needs a day to take a break</p>
                 </div>
             )}
         </>
